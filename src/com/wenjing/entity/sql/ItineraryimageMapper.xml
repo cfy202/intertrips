@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.ItineraryimageMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Itineraryimage" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="itinId" property="itinid" jdbcType="VARCHAR" />
+    <result column="imageId" property="imageid" jdbcType="VARCHAR" />
+    <association property="imageImageid" column="imageid" select="com.wenjing.dao.ImageMapper.selectByPrimaryKey" />
+    <association property="itineraryItinid" column="itinid" select="com.wenjing.dao.ItineraryMapper.selectByPrimaryKey" />
+  </resultMap>
+  <select id="selectByImageid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from itineraryimage where imageId =#{imageId}
+  </select>
+  <select id="selectByItinid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from itineraryimage where itinId =#{itinId}
+  </select>
+  <sql id="Base_Column_List" >
+    id, itinId, imageId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from itineraryimage
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from itineraryimage
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Itineraryimage" flushCache="true" >
+    insert into itineraryimage (id, itinId, imageId
+      )
+    values (#{id,jdbcType=VARCHAR}, #{itinid,jdbcType=VARCHAR}, #{imageid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Itineraryimage" flushCache="true" >
+    insert into itineraryimage
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      itinId,
+      imageId,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{itinid,jdbcType=VARCHAR},
+      #{imageid,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Itineraryimage" flushCache="true" >
+    update itineraryimage
+    <set >
+      <if test="itinid != null" >
+        itinId = #{itinid,jdbcType=VARCHAR},
+      </if>
+      <if test="imageid != null" >
+        imageId = #{imageid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Itineraryimage" flushCache="true" >
+    update itineraryimage
+    set itinId = #{itinid,jdbcType=VARCHAR},
+      imageId = #{imageid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <delete id="deleteByImageId" parameterType="java.lang.String" flushCache="true">
+  	delete from itineraryimage where imageId = #{imageId,jdbcType=VARCHAR} and itinId = #{itineraryid,jdbcType=VARCHAR}
+  </delete>
+
+  <!-- 根据线路Id删除关联的行程图片 -->
+  <delete id="deleteWithTourlineId">
+   delete from itineraryimage where itinId in(select itinerary.id from itinerary where tourLineId = #{tourlineId});
+  </delete>
+
+  <delete id="deleteByImageId2" parameterType="java.lang.String" flushCache="true">
+  	delete from itineraryimage where imageId = #{imageId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByItineraryId" parameterType="java.lang.String" flushCache="true">
+  	delete from itineraryimage where itinId = #{itineraryId,jdbcType=VARCHAR}
+  </delete>
+
+</mapper>

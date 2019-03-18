@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.OrdercontacterMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Ordercontacter" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="orderId" property="orderid" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="firstName" property="firstName" jdbcType="VARCHAR" />
+    <result column="lastName" property="lastName" jdbcType="VARCHAR"/>
+    <result column="nationality" property="nationality" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="isDefault" property="isdefault" jdbcType="BIT" />
+    <result column="pronvice" property="pronvice" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="postalcode" property="postalcode" jdbcType="VARCHAR" />
+    <result column="fax" property="fax" jdbcType="VARCHAR" />
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+    <result column="userId" property="userid" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="WholeResultMap" type="com.wenjing.entity.Ordercontacter" extends="BaseResultMap">
+    <association property="memberUserid" column="userid" select="com.wenjing.dao.MemberMapper.selectByPrimaryKey" />
+    <association property="ordersOrderid" column="orderid" select="com.wenjing.dao.OrdersMapper.selectByPrimaryKey" />
+  </resultMap>
+  
+  <select id="selectByUserId" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from ordercontacter where userId =#{userId}
+  </select>
+  <select id="selectByOrderId" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from ordercontacter where orderId =#{orderId}
+  </select>
+  <sql id="Base_Column_List" >
+    id, orderId, title, firstName,lastName,nationality, email, tel, isDefault, pronvice, city, address, 
+    postalcode, fax, costNumber, userId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from ordercontacter
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from ordercontacter
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Ordercontacter" flushCache="true" >
+    insert into ordercontacter (id, orderId, title, 
+      firstName,lastName, nationality, email, 
+      tel, isDefault, pronvice, 
+      city, address, postalcode, 
+      fax, costNumber, userId
+      )
+    values (#{id,jdbcType=VARCHAR}, #{orderid,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{firstName,jdbcType=VARCHAR},#{lastName,jdbcType=VARCHAR}, #{nationality,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{tel,jdbcType=VARCHAR}, #{isdefault,jdbcType=BIT}, #{pronvice,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{postalcode,jdbcType=VARCHAR}, 
+      #{fax,jdbcType=VARCHAR}, #{costnumber,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Ordercontacter" flushCache="true" >
+    insert into ordercontacter
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      orderId,
+      title,
+      firstName,
+      lastName,
+      nationality,
+      email,
+      tel,
+      isDefault,
+      pronvice,
+      city,
+      address,
+      postalcode,
+      fax,
+      costNumber,
+      userId,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{orderid,jdbcType=VARCHAR},
+      #{title,jdbcType=VARCHAR},
+      #{firstName,jdbcType=VARCHAR},
+      #{lastName,jdbcType=VARCHAR},
+      #{nationality,jdbcType=VARCHAR},
+      #{email,jdbcType=VARCHAR},
+      #{tel,jdbcType=VARCHAR},
+      #{isdefault,jdbcType=BIT},
+      #{pronvice,jdbcType=VARCHAR},
+      #{city,jdbcType=VARCHAR},
+      #{address,jdbcType=VARCHAR},
+      #{postalcode,jdbcType=VARCHAR},
+      #{fax,jdbcType=VARCHAR},
+      #{costnumber,jdbcType=VARCHAR},
+      #{userid,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Ordercontacter" flushCache="true" >
+    update ordercontacter
+    <set >
+      <if test="orderid != null" >
+        orderId = #{orderid,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="firstName != null" >
+        firstName = #{firstName,jdbcType=VARCHAR},
+      </if>
+      <if test="lastName != null" >
+        lastName = #{lastName,jdbcType=VARCHAR},
+      </if>
+      <if test="nationality != null" >
+        nationality = #{nationality,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        tel = #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="isdefault != null" >
+        isDefault = #{isdefault,jdbcType=BIT},
+      </if>
+      <if test="pronvice != null" >
+        pronvice = #{pronvice,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="postalcode != null" >
+        postalcode = #{postalcode,jdbcType=VARCHAR},
+      </if>
+      <if test="fax != null" >
+        fax = #{fax,jdbcType=VARCHAR},
+      </if>
+      <if test="costnumber != null" >
+        costNumber = #{costnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null" >
+        userId = #{userid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Ordercontacter" flushCache="true" >
+    update ordercontacter
+    set orderId = #{orderid,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      firstName = #{firstName,jdbcType=VARCHAR},
+      lastName = #{lastName,jdbcType=VARCHAR},
+      nationality = #{nationality,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      tel = #{tel,jdbcType=VARCHAR},
+      isDefault = #{isdefault,jdbcType=BIT},
+      pronvice = #{pronvice,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      postalcode = #{postalcode,jdbcType=VARCHAR},
+      fax = #{fax,jdbcType=VARCHAR},
+      costNumber = #{costnumber,jdbcType=VARCHAR},
+      userId = #{userid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="findOrderContacterByEmail" resultType="java.lang.String" parameterType="java.lang.String">
+     select orderId
+     from ordercontacter where email=#{email}
+  </select>
+  
+  <select id="findByOrdersId" resultMap="BaseResultMap" parameterType="java.lang.String">
+	SELECT
+		oc.*
+	FROM
+		orders o,
+		ordercontacter oc
+	WHERE
+		o.Id = oc.orderId
+	AND
+		o.Id = #{ordersId,jdbcType=VARCHAR}
+  </select>
+</mapper>

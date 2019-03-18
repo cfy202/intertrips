@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.AirTicketPriceMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.AirTicketPrice" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="departureId" property="departureId" jdbcType="VARCHAR" />
+    <result column="departureName" property="departureName" jdbcType="VARCHAR" />
+    <result column="tourpriceId" property="tourpriceId" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, price, departureId, departureName, tourpriceId, sort
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" flushCache="true">
+    select 
+    <include refid="Base_Column_List" />
+    from airticketprice
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true">
+    delete from airticketprice
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.AirTicketPrice" flushCache="true">
+    insert into airticketprice (id, price, departureId, departureName, tourpriceId, sort
+      )
+    values (#{id,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{departureId,jdbcType=VARCHAR}, 
+            #{departureName,jdbcType=VARCHAR}, #{tourpriceId,jdbcType=VARCHAR},  #{sort,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.AirTicketPrice" flushCache="true">
+    insert into airticketprice
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id, price, departureId, departureName, tourpriceId, sort,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+     #{id,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{departureId,jdbcType=VARCHAR}, 
+     #{departureName,jdbcType=VARCHAR}, #{tourpriceId,jdbcType=VARCHAR},  #{sort,jdbcType=INTEGER},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.AirTicketPrice" flushCache="true">
+    update airticketprice
+    set price = #{price,jdbcType=DECIMAL}, departureId = #{departureId,jdbcType=VARCHAR}, departureName = #{departureName,jdbcType=VARCHAR},
+        tourpriceId = #{tourpriceId,jdbcType=VARCHAR},sort = #{sort,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 批量插入 -->
+   <insert id="batchAdd" parameterType="java.util.List" flushCache="true">
+    insert into airticketprice (id, price, departureId, departureName, tourpriceId, sort)
+    values 
+    <foreach collection="list" index="index" item="item" separator=",">
+         (#{item.id,jdbcType=VARCHAR}, #{item.price,jdbcType=DECIMAL}, #{item.departureId,jdbcType=VARCHAR}, 
+            #{item.departureName,jdbcType=VARCHAR}, #{item.tourpriceId,jdbcType=VARCHAR}, #{item.sort,jdbcType=INTEGER}
+         )
+    </foreach>
+  </insert>
+  
+  <!-- 根据出发地ID和费用ID查找出机票费用 -->
+  <select id="getAirTicketPriceByTourpriceId" resultMap="BaseResultMap">
+  	SELECT
+  	<include refid="Base_Column_List" />
+  	FROM airticketprice
+	WHERE tourpriceId = #{tourPriceId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="findAirTicketByPriceId" parameterType="java.lang.String" resultMap="BaseResultMap">
+     select <include refid="Base_Column_List" />
+      from airticketprice 
+      where tourpriceId=#{tourpriceId}
+      order by sort
+  </select>
+  
+  <delete id="deleteAirTickerByPriceId" parameterType="java.lang.String" flushCache="true">
+    delete from airticketprice
+    where tourpriceId = #{tourpriceId,jdbcType=VARCHAR}
+  </delete>
+</mapper>

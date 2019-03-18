@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.CostMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Cost" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="sign" property="sign" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="exchangeRate" property="exchangerate" jdbcType="DECIMAL" />
+    <!--  
+    <collection property="rolecostsCostnumber" ofType="com.wenjing.entity.Rolecost" column="id" select="com.wenjing.dao.RolecostMapper.selectByCostnumber" />
+     -->
+
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, `name`, remark, sign, code,exchangeRate
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from cost
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from cost
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Cost" >
+    insert into cost (id, `name`, remark,sign,code,exchangeRate
+      )
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},
+    #{sign,jdbcType=VARCHAR},#{code,jdbcType=VARCHAR},#{exchangerate,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Cost" >
+    insert into cost
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      `name`,
+      remark,
+      sign,
+      code,
+      exchangeRate,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR},
+      #{remark,jdbcType=VARCHAR},
+      #{sign,jdbcType=VARCHAR},
+      #{code,jdbcType=VARCHAR},
+      #{exchangerate,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Cost" >
+    update cost
+    <set >
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="sign != null" >
+        sign = #{sign,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="exchangerate != null" >
+        exchangeRate = #{exchangerate,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Cost" >
+    update cost
+    set `name` = #{name,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      sign = #{sign,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      exchangeRate = #{exchangerate,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- findAll -->
+  <select id="findAll" resultMap="BaseResultMap">
+   select  <include refid="Base_Column_List" /> from cost order by id desc
+  </select>
+  
+  <!-- findAllByCostNumber -->
+  <select id="findAllByCostNumber" resultMap="BaseResultMap">
+   select  <include refid="Base_Column_List" /> from cost where id in
+   <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+        #{item}
+   </foreach>
+   order by id desc
+  </select>
+  
+  <!-- findAllByRoleId -->
+  <select id="findAllByRoleId" resultMap="BaseResultMap" parameterType="java.lang.String">
+   select 
+<include refid="Base_Column_List1" />
+
+ from cost, rolecost where cost.id = costNumber and roleId = #{roleId, jdbcType=VARCHAR}  order by cost.id desc 
+  </select>
+  <sql id="Base_Column_List1" >
+    cost.id, `name`, remark, code, sign
+  </sql>
+  
+  <!-- 根据运营中心名称查询运营中心id -->
+  <select id="findIdByName" parameterType="java.lang.String" resultType="java.lang.String">
+  select id from cost where `name` = #{name}
+  </select>
+  
+  <!-- 根据运营中心名称查询销售中心code -->
+  <select id="findIdByCode" parameterType="java.lang.String" resultType="java.lang.String">
+  select id from cost where `code` = #{code}
+  </select>
+  
+  <!-- cost、currency关联查询 -->
+  <resultMap id="CostAndCurrencyMap" type="com.wenjing.entity.Cost" extends="BaseResultMap">
+    <association  property="currency" javaType="com.wenjing.entity.Currency">
+      <id column="currencyid" property="id" jdbcType="VARCHAR" />
+      <id column="currencyName" property="name" jdbcType="VARCHAR" />
+    </association>
+  </resultMap>
+  <select id="getCurrencyByid" parameterType="java.lang.String" resultMap="CostAndCurrencyMap">
+    select cost.*,currency.id currencyid,currency.name currencyName from cost,currency where cost.`code`=currency.`code` and cost.id=#{costnumber};
+  </select>
+  
+  <!-- 查询处理美国运营中心外的costnum -->
+  <select id="findNotUSDCostNum" parameterType="java.lang.String" resultMap="BaseResultMap">
+     select * from cost where id <![CDATA[<>]]> #{id}
+  </select>
+  <select id="findByCode" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from cost
+    where `code` = #{code,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 查询不是此销售中心的 -->
+  <select id="getIsNoThisCostNum" parameterType="java.lang.String" resultMap="CostAndCurrencyMap">
+    select cost.*,
+           currency.id as currencyId
+      from cost cost,
+           currency currency
+      where cost.`code` = currency.`code` 
+            and cost.id = #{costnumber}
+            
+  </select>
+</mapper>

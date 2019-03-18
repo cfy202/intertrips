@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.HotelimageMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Hotelimage" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="hotelId" property="hotelid" jdbcType="VARCHAR" />
+    <result column="imageId" property="imageid" jdbcType="VARCHAR" />
+    <association property="imageImageid" column="imageid" select="com.wenjing.dao.ImageMapper.selectByPrimaryKey" />
+    <association property="hotelHotelid" column="hotelid" select="com.wenjing.dao.HotelMapper.selectByPrimaryKey" />
+  </resultMap>
+  <select id="selectByImageid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from hotelimage where imageId =#{imageId}
+  </select>
+  <select id="selectByHotelid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from hotelimage where hotelId =#{hotelId}
+  </select>
+  <sql id="Base_Column_List" >
+    id, hotelId, imageId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from hotelimage
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from hotelimage
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Hotelimage" flushCache="true" >
+    insert into hotelimage (id, hotelId, imageId
+      )
+    values (#{id,jdbcType=VARCHAR}, #{hotelid,jdbcType=VARCHAR}, #{imageid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Hotelimage" flushCache="true" >
+    insert into hotelimage
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      hotelId,
+      imageId,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{hotelid,jdbcType=VARCHAR},
+      #{imageid,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Hotelimage" flushCache="true" >
+    update hotelimage
+    <set >
+      <if test="hotelid != null" >
+        hotelId = #{hotelid,jdbcType=VARCHAR},
+      </if>
+      <if test="imageid != null" >
+        imageId = #{imageid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Hotelimage" flushCache="true" >
+    update hotelimage
+    set hotelId = #{hotelid,jdbcType=VARCHAR},
+      imageId = #{imageid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

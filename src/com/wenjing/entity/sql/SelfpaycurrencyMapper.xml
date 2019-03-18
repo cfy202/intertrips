@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.SelfpaycurrencyMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Selfpaycurrency" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="currencyid" property="currencyid" jdbcType="VARCHAR" />
+    <result column="adultprice" property="adultprice" jdbcType="DECIMAL" />
+    <result column="childprice" property="childprice" jdbcType="DECIMAL" />
+    <result column="selfpayid" property="selfpayid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, currencyid, adultprice, childprice, selfpayid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from selfpaycurrency
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from selfpaycurrency
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Selfpaycurrency" flushCache="true" >
+    insert into selfpaycurrency (id, currencyid, adultprice, childprice, selfpayid
+      )
+    values (#{id,jdbcType=VARCHAR}, #{currencyid,jdbcType=VARCHAR}, #{adultprice,jdbcType=DECIMAL}, #{childprice,jdbcType=DECIMAL},  #{selfpayid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Selfpaycurrency" flushCache="true" >
+    update selfpaycurrency
+    <set >
+      <if test="currencyid != null" >
+        currencyid = #{currencyid,jdbcType=VARCHAR},
+      </if>
+      <if test="adultprice != null" >
+        adultprice = #{adultprice,jdbcType=DECIMAL},
+      </if>
+      <if test="childprice != null" >
+        childprice = #{childprice,jdbcType=DECIMAL},
+      </if>
+      <if test="selfpayid != null" >
+        selfpayid = #{selfpayid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Selfpaycurrency" flushCache="true" >
+    update selfpaycurrency
+    set currencyid = #{currencyid,jdbcType=VARCHAR},
+        adultprice = #{adultprice,jdbcType=DECIMAL},
+        childprice = #{childprice,jdbcType=DECIMAL},
+         selfpayid = #{selfpayid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 批量插入数据 -->
+   <insert id="batchAdd" parameterType="java.util.List" flushCache="true" >
+    insert into selfpaycurrency (id, currencyid, adultprice, childprice, selfpayid
+      )
+    values
+    <foreach collection="list" item="item" index="index" separator="," >  
+        (#{item.id,jdbcType=VARCHAR}, #{item.currencyid,jdbcType=VARCHAR},
+         #{item.adultprice,jdbcType=DECIMAL}, #{item.childprice,jdbcType=DECIMAL},
+         #{item.selfpayid,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  
+  <!-- 根据selfpayid查询价格 -->
+  
+    <resultMap id="ResultSelfpayAndPrice" type="com.wenjing.entity.Selfpaycurrency" extends="BaseResultMap">
+    <association property="currency" javaType="com.wenjing.entity.Currency">
+	    <result column="name" property="name" jdbcType="VARCHAR" />
+	    <result column="sign" property="sign" jdbcType="VARCHAR" />
+    </association>
+  </resultMap>
+  
+  <select id="findPriceBySelfpayId" parameterType="java.lang.String" resultMap="ResultSelfpayAndPrice">
+    select selfpaycurrency.*,currency.`name`,currency.sign from selfpaycurrency,currency 
+      where selfpaycurrency.currencyid = currency.id and selfpayid=#{selfpayid}
+       order by currency.code='USD' desc,currency.sort;
+  </select>
+  
+  <!-- 根据selfpayid删除 -->
+  <delete id="deleteBySelfpayId" parameterType="java.lang.Integer" flushCache="true">
+    delete from selfpaycurrency where selfpayid = #{selfpayid,jdbcType=VARCHAR}
+  </delete>
+</mapper>

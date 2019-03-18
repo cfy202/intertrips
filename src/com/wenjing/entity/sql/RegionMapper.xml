@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.RegionMapper">
+	<cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+	<resultMap id="BaseResultMap" type="com.wenjing.entity.Region">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="upId" property="upid" jdbcType="VARCHAR" />
+		<result column="pName" property="pname" jdbcType="VARCHAR" />
+		<result column="level" property="level" jdbcType="INTEGER" />
+		<result column="sort" property="sort" jdbcType="INTEGER" />
+		<result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="sonmaxsort" property="sonmaxsort" jdbcType="INTEGER" />
+		<result column="url" property="url" jdbcType="VARCHAR" />
+		<result column="namePY" property="namepy" jdbcType="VARCHAR" />
+		<result column="isShow" property="isShow" jdbcType="INTEGER" />
+		<result column="costNumberIds" property="costNumberIds" jdbcType="VARCHAR" />
+		<result column="destinationList" property="destinationList" jdbcType="VARCHAR" />
+		<result column="destinationShow" property="destinationShow" jdbcType="VARCHAR" />
+		<result column="pageid" property="pageid" jdbcType="VARCHAR" />
+		<!-- 
+		<collection property="tourlinesRegionid" ofType="com.wenjing.entity.Tourline" 
+			column="id" select="com.wenjing.dao.TourlineMapper.selectByRegionid" /> 
+		-->
+		<association property="cost" javaType="com.wenjing.entity.Cost">
+			<result column="costname" property="name" jdbcType="VARCHAR" />
+		</association>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, `name`, upId,pName, `level`, sort, costNumber, type, sonmaxsort, url,
+		namePY, isShow, costNumberIds,destinationList, pageid,destinationShow
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from region
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String"
+		flushCache="true">
+		delete from region
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.wenjing.entity.Region"
+		flushCache="true">
+		insert into region (id, `name`, upId,pName,
+		`level`, sort, costNumber, type, sonmaxsort,
+		 url, namePY, isShow, costNumberIds,destinationList, pageid,destinationShow)
+		values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+		#{upid,jdbcType=VARCHAR}, #{pname,jdbcType=VARCHAR},
+		#{level,jdbcType=INTEGER},
+		#{sort,jdbcType=INTEGER},#{costnumber,jdbcType=VARCHAR},#{type,jdbcType=INTEGER},
+		#{sonmaxsort,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR},
+		#{namepy,jdbcType=VARCHAR},#{isShow,jdbcType=INTEGER},
+		#{costNumberIds,jdbcType=VARCHAR},#{destinationList,jdbcType=VARCHAR}, #{pageid,jdbcType=VARCHAR},
+		#{destinationShow,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.wenjing.entity.Region"
+		flushCache="true">
+		insert into region
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,
+			`name`,
+			upId,
+			pName,
+			`level`,
+			sort,
+			costNumber,
+			type,
+			sonmaxsort,
+			url,
+			namePY,
+			isShow,
+			costNumberIds,
+			destinationList,
+			pageid,
+			destinationShow,
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id,jdbcType=VARCHAR},
+			#{name,jdbcType=VARCHAR},
+			#{upid,jdbcType=VARCHAR},
+			#{pname,jdbcType=VARCHAR},
+			#{level,jdbcType=INTEGER},
+			#{sort,jdbcType=INTEGER},
+			#{costnumber,jdbcType=VARCHAR},
+			#{type,jdbcType=INTEGER},
+			#{sonmaxsort,jdbcType=INTEGER},
+			#{url,jdbcType=VARCHAR},
+			#{namepy,jdbcType=VARCHAR},
+			#{isShow,jdbcType=INTEGER},
+			#{costNumberIds,jdbcType=VARCHAR},
+			#{destinationList,jdbcType=VARCHAR},
+			#{pageid,jdbcType=VARCHAR},
+			#{destinationShow,jdbcType=VARCHAR},
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Region"
+		flushCache="true">
+		update region
+		<set>
+			<if test="name != null">
+				`name` = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="upid != null">
+				upId = #{upid,jdbcType=VARCHAR},
+			</if>
+			<if test="pname != null">
+				pName = #{pname,jdbcType=VARCHAR},
+			</if>
+			<if test="level != null">
+				`level` = #{level,jdbcType=INTEGER},
+			</if>
+			<if test="sort != null">
+				sort = #{sort,jdbcType=INTEGER},
+			</if>
+			<if test="costnumber != null">
+				costNumber = #{costnumber,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=INTEGER},
+			</if>
+			<if test="sonmaxsort != null">
+				sonmaxsort = #{sonmaxsort,jdbcType=INTEGER},
+			</if>
+			<if test="url != null">
+				url = #{url,jdbcType=INTEGER},
+			</if>
+			<if test="namepy != null">
+				namePY = #{namepy,jdbcType=INTEGER},
+			</if>
+			<if test="isShow != null">
+				isShow = #{isShow,jdbcType=INTEGER},
+			</if>
+			<if test="costNumberIds !=null">
+			    costNumberIds = #{costNumberIds,jdbcType=VARCHAR},
+			</if>
+			<if test="destinationList !=null">
+			    destinationList = #{destinationList,jdbcType=VARCHAR},
+			</if>
+			<if test="pageid !=null">
+			    pageid = #{pageid,jdbcType=VARCHAR},
+			</if>	
+			<if test="destinationShow !=null">
+			    destinationShow = #{destinationShow,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Region"
+		flushCache="true">
+		update region
+		set `name` = #{name,jdbcType=VARCHAR},
+		upId = #{upid,jdbcType=VARCHAR},
+		pName = #{pname,jdbcType=VARCHAR},
+		`level` = #{level,jdbcType=INTEGER},
+		sort = #{sort,jdbcType=INTEGER},
+		costNumber = #{costnumber,jdbcType=VARCHAR},
+		type = #{type,jdbcType=VARCHAR},
+		sonmaxsort = #{sonmaxsort,jdbcType=VARCHAR},
+		url = #{url,jdbcType=INTEGER},
+		namePY = #{namepy,jdbcType=VARCHAR},
+		isShow = #{isShow,jdbcType=INTEGER},
+		costNumberIds = #{costNumberIds,jdbcType=VARCHAR},
+		destinationList = #{destinationList,jdbcType=VARCHAR},
+		pageid = #{pageid,jdbcType=VARCHAR},
+		destinationShow = #{destinationShow,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<select id="getMaxSort" resultType="java.lang.Integer" parameterType="java.lang.String">
+		select ifnull(max(sort),0) from region where type=#{type}
+	</select>
+
+	<!-- 根据sort查询 -->
+	<select id="getIdBySort" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select * from region where sort = #{sort} and type=#{type}
+	</select>
+
+	<!-- 查询upid相同的sort最大值 -->
+	<select id="getMaxSortByUpId" resultType="java.lang.Integer" parameterType="java.lang.String">
+		select ifnull(max(sort),0) from region where upId=#{upid,jdbcType=VARCHAR}
+	</select>
+
+	<!-- 根据分类的upid查询id -->
+	<select id="getIdByUpid" resultType="java.lang.String"
+		parameterType="java.lang.String">
+		select upId from region where id=#{upid,jdbcType=VARCHAR}
+	</select>
+
+	<!-- 更新排序号,所有排序号>maxSort的sort+1 -->
+	<update id="updateSort" flushCache="true">
+		update region set sort = sort <![CDATA[+]]>1 where sort >#{sonmaxsort,jdbcType=INTEGER} and type=#{type}
+	</update>
+
+	<!-- 修改删除后的排序 -->
+	<update id="updateDeleteSort" flushCache="true">
+		update region set sort = sort <![CDATA[-]]>#{a} where type = #{type} and sort > #{sort,jdbcType=INTEGER}
+	</update>
+
+	<!-- 更儿子最大排序号 -->
+	<update id="updateSonMaxSort" flushCache="true">
+		update region set sonmaxsort = #{sort,jdbcType=INTEGER}
+	</update>
+
+	<!-- 第一个儿子到最后一个儿子的sort-(oldsort-新sort) -->
+	<update id="updateSonSort" flushCache="true">
+		update region set sort = sort <![CDATA[-]]>#{a}, sonmaxsort = 1 where type = #{type} and sort between #{start} and #{end} and sonmaxsort<![CDATA[<>]]>1
+	</update>
+
+	<!-- 修改后新sort之后的到oldsort之间的sort+(oldsort-新sort) -->
+	<update id="updateNewSortBack" flushCache="true">
+		update region set sort = sort <![CDATA[+]]>#{a}, sonmaxsort = 1 where type = #{type} and sort between #{start} and #{end} and sonmaxsort<![CDATA[<>]]>1
+	</update>
+
+	<!-- 修改儿子的级别 -->
+	<update id="updateSonLevel" flushCache="true">
+		update region set level = #{a} where type = #{type} and sort between #{start} and #{end}
+	</update>
+
+	<!-- 删除所有的儿子 -->
+	<delete id="deleteAllSon" flushCache="true">
+		delete from region where type = #{type} and sort between #{start} and #{end}
+	</delete>
+
+	<select id="findByupId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select * from region where sort =(select MAX(sort) from region where upId = #{oldparentid});
+	</select>
+
+	<!-- findAllInCost -->
+	<select id="findAllInCost" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select region.*,cost.name costname
+		from region,cost
+		where region.costNumber=cost.id and region.costNumber in
+		<foreach collection="list" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		order by costNumber,type,sort
+	</select>
+	<!-- findAllInCostBytype -->
+	<select id="findAllInCostBytype" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select *
+		from region
+		where  type=#{type,jdbcType=INTEGER}
+		order by costNumber,type,sort
+	</select>
+	<select id="findByUpIdAndCostid" resultMap="BaseResultMap">
+		select * from region where type=#{type} and costNumber=#{costnumber} order by sort
+	</select>
+	<select id="findAllByCostnumber" resultMap="BaseResultMap">
+		select * from region where costNumber=#{costnumber,jdbcType=VARCHAR}
+		and type=#{type,jdbcType=INTEGER}
+		order by sort
+	</select>
+	<select id="findByCostnumber" resultMap="BaseResultMap">
+		select * from region where 
+		type=#{type,jdbcType=INTEGER}
+		and isShow = 1
+		and costNumber = #{costnumber}
+		order by sort
+	</select>
+	<select id="findTopRegionByCostnumber" resultMap="BaseResultMap">
+		select * from region where 
+		<!--  
+		costNumber=#{costnumber,jdbcType=VARCHAR}
+		-->
+		upId="root" 
+		and type=1 
+		and isShow = 1
+		and costNumberIds like '%${costnumber}%'
+		order by sort
+	</select>
+	<select id="findDownRegion" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select * from region where upId=#{id,jdbcType=VARCHAR} order by sort
+	</select>
+
+	<!-- 查询不等于此orderid的所有 -->
+	<select id="findNotContainSelf" resultMap="BaseResultMap">
+		select * from region where sort <![CDATA[<>]]> #{sort} and type=#{type} ORDER BY sort
+	</select>
+
+	<!-- 查询不等于此orderid和其所有儿子的所有 -->
+	<select id="findNotContainSelfAndSon" resultMap="BaseResultMap">
+		select * from region where sort not BETWEEN #{start} and #{end} and type=#{type} ORDER BY sort;
+	</select>
+	<select id="findIdByUrl" resultType="java.lang.String"
+		parameterType="java.lang.String">
+		select id from region where url=#{url,jdbcType=VARCHAR} and type=1;
+	</select>
+	
+	<!-- 查询所有分类 -->
+	<select id="findAll" resultMap="BaseResultMap">
+		select * from region order by type,sort
+	</select>
+	
+	<!-- 更新目的地冗余字段 -->
+	<update id="updateRegionDestinationList" flushCache="true">
+	update region set destinationList = #{destinationList} where id = #{id}
+	  
+	</update>
+	
+	<!-- 向上移动，查询移动到位置的sort -->
+	<select id="findUpSort" resultType="java.lang.Integer">
+	   select IFNULL(max(sort),0) FROM region where type=#{type} and upId = #{upid} and sort<![CDATA[<]]>#{sort};
+	</select>
+	
+	<!-- 向上移动，查询移动到位置的sort -->
+	<select id="findDownSort" resultType="java.lang.Integer">
+	   select IFNULL(min(sort),0) FROM region where type=#{type} and upId = #{upid} and sort<![CDATA[>]]>#{sort};
+	</select>
+	
+	<!-- 根据分类id修改排序号 -->
+	<update id="updateSortById" flushCache="true">
+	   update region set sort=#{sort} where id=#{id}
+	</update>
+	
+	<!-- 根据url查找分类 -->
+	<select id="findByUrl" parameterType="java.lang.String" resultMap="BaseResultMap">
+	   select * from region where binary url=#{url}
+	</select>
+	
+	<!-- 根据regionid查询分类和page信息 -->
+	<resultMap type="com.wenjing.entity.Region" id="RgionAndPageMap" extends="BaseResultMap">
+	   <association property="page" column="pageid" select="com.wenjing.dao.PageMapper.selectByPrimaryKey"/>
+	</resultMap>
+	<select id="findRgionAndPageById" parameterType="java.lang.String" resultMap="RgionAndPageMap">
+	   select <include refid="Base_Column_List" /> from region where id = #{id}
+	</select>
+</mapper>

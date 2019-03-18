@@ -1,0 +1,597 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:aop="http://www.springframework.org/schema/aop" 
+       xmlns:tx="http://www.springframework.org/schema/tx" 
+       xmlns:p="http://www.springframework.org/schema/p" 
+       xmlns:context="http://www.springframework.org/schema/context" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:cache="http://www.springframework.org/schema/cache" 
+       xsi:schemaLocation="http://www.springframework.org/schema/beans  http://www.springframework.org/schema/beans/spring-beans-3.2.xsd  
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd          
+                           http://www.springframework.org/schema/aop  http://www.springframework.org/schema/aop/spring-aop-2.5.xsd          
+                           http://www.springframework.org/schema/tx  http://www.springframework.org/schema/tx/spring-tx-3.2.xsd   
+                           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd    
+                           http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-3.2.xsd" >
+    <!-- - - - - - 扫描业务层包，支持织入DAO -  - - -  - -->
+    <context:component-scan base-package="com.wenjing.service,com.wenjing.dao,com.wenjing.webservice"/>
+    <bean id="ehCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:sqlMapConfig.xml"/>
+        <property name="shared" value="true"/>
+    </bean>
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="ehCacheManager"/>
+    </bean>
+    <cache:annotation-driven cache-manager="cacheManager"/>
+    
+    <task:annotation-driven />
+    
+    <!-- - - - - - - - Apache 连接池 - - - - - - - -->
+    <bean id="datasource" class="org.apache.commons.dbcp.BasicDataSource"  destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="username" value="root"/>
+        <property name="password" value="NkY@wenjingQ521"/>
+        <property name="url" value="jdbc:mysql://47.88.18.248:3306/intertrips?useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull"/>
+        <!--maxActive: 最大连接数量-->    
+        <property name="maxActive" value="1000"/>  
+        <!--minIdle: 最小空闲连接-->    
+        <property name="minIdle" value="5"/>  
+        <!--maxIdle: 最大空闲连接-->    
+        <property name="maxIdle" value="20"/>  
+        <!--initialSize: 初始化连接-->    
+        <property name="initialSize" value="30"/>  
+        <!-- 连接被泄露时是否打印 -->  
+        <property name="logAbandoned" value="true"/>  
+        <!--removeAbandoned: 是否自动回收超时连接-->    
+        <property name="removeAbandoned"  value="true"/>  
+        <!--removeAbandonedTimeout: 超时时间(以秒数为单位)-->    
+        <property name="removeAbandonedTimeout" value="10"/>  
+        <!--maxWait: 超时等待时间以毫秒为单位 1000等于60秒-->  
+        <property name="maxWait" value="3000"/>  
+        <!-- 在空闲连接回收器线程运行期间休眠的时间值,以毫秒为单位. -->  
+        <property name="timeBetweenEvictionRunsMillis" value="10000"/>  
+        <!--  在每次空闲连接回收器线程(如果有)运行时检查的连接数量 -->  
+        <property name="numTestsPerEvictionRun" value="10"/>  
+        <!-- 1000 * 60 * 30  连接在池中保持空闲而不被空闲连接回收器线程-->  
+        <property name="minEvictableIdleTimeMillis" value="10000"/>  
+    </bean>
+    <!-- - - - - - - - sessionFactory - - - - - - - -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="datasource"/>
+        <property name="configLocation" value="classpath:sqlMapConfig.xml"/>
+    </bean>
+    <!-- - - - - - - spring 声明式事务 - - - - - - - -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="datasource"/>
+    </bean>
+    <!-- - - - - - - spring 事务属性 - - - - - - - -->
+    <tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="*"/>
+        </tx:attributes>
+    </tx:advice>
+    <!--******    织入，请修改成实际的业务层包名  *********-->
+    <aop:config>
+        <aop:advisor advice-ref="transactionAdvice" pointcut="execution(* com.wenjing.service.*.*(..))"/>
+    </aop:config>
+   <!-- - - - - - - DAO - - - - - - - -->
+        <bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">  
+        <property name="triggers">  
+            <list>  
+                <ref bean="correctionCronTrigger-init" />
+                <!-- 
+                <ref bean="correctionCronTrigger-autoSynchrorizeProduct" />
+                -->
+                <ref bean="correctionCronTrigger-autoCreateTourline" />
+                <!-- 
+                <ref bean="correctionCronTrigger-autoSynchronizeOrders" />
+                 -->
+                <ref bean="correctionCronTrigger-autoReturnStore"/>
+            </list>  
+        </property>  
+    </bean>  
+     <bean id="correctionCronTrigger-init" class="org.springframework.scheduling.quartz.CronTriggerBean">  
+        <property name="jobDetail">  
+            <ref bean="correctionJobDetailFactory-init"/>  
+        </property>  
+        <property name="cronExpression">  
+            <value>0 0 0 * * ?</value>  
+        </property>         
+    </bean>  
+    <bean id="correctionJobDetailFactory-init" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+        <property name="targetObject">  
+            <ref bean="timetask"/>  
+        </property>  
+        <property name="targetMethod">  
+            <value>initorder</value>  
+        </property>         
+    </bean>  
+    <!-- 
+    <bean id="correctionCronTrigger-autoSynchrorizeProduct" class="org.springframework.scheduling.quartz.CronTriggerBean">  
+        <property name="jobDetail">  
+            <ref bean="correctionJobDetailFactory-autoSynchrorizeProduct"/>  
+        </property>  
+        <property name="cronExpression">  
+            <value>0 0 12 * * ?</value>  
+        </property>         
+    </bean>  
+    <bean id="correctionJobDetailFactory-autoSynchrorizeProduct" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+        <property name="targetObject">  
+            <ref bean="timetask"/>  
+        </property>  
+        <property name="targetMethod">  
+            <value>autoSynchronizeProduct</value>  
+        </property>         
+    </bean>  
+     -->
+    <bean id="correctionCronTrigger-autoCreateTourline" class="org.springframework.scheduling.quartz.CronTriggerBean">  
+        <property name="jobDetail">  
+            <ref bean="correctionJobDetailFactory-autoCreateTourline"/>  
+        </property>  
+        <property name="cronExpression">  
+            <value>0 0 13 * * ?</value>  
+        </property>         
+    </bean>  
+    <bean id="correctionJobDetailFactory-autoCreateTourline" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+        <property name="targetObject">  
+            <ref bean="timetask"/>  
+        </property>  
+        <property name="targetMethod">  
+            <value>autoCreateTourline</value>  
+        </property>         
+    </bean>     
+    <bean id="correctionCronTrigger-autoSynchronizeOrders" class="org.springframework.scheduling.quartz.CronTriggerBean">  
+        <property name="jobDetail">  
+            <ref bean="correctionJobDetailFactory-autoSynchronizeOrders"/>  
+        </property>  
+        <property name="cronExpression">  
+            <value>0 0 14 * * ?</value>  
+        </property>         
+    </bean>  
+    <bean id="correctionJobDetailFactory-autoSynchronizeOrders" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+        <property name="targetObject">  
+            <ref bean="timetask"/>  
+        </property>  
+        <property name="targetMethod">  
+            <value>autoSynchronizeOrders</value>  
+        </property>         
+    </bean>  
+    <bean id="correctionCronTrigger-autoReturnStore" class="org.springframework.scheduling.quartz.CronTriggerBean">  
+        <property name="jobDetail">  
+            <ref bean="correctionJobDetailFactory-autoReturnStore"/>  
+        </property>  
+        <property name="cronExpression">  
+            <value>0 0/2 * * * ?</value>  
+        </property>         
+    </bean>  
+    <bean id="correctionJobDetailFactory-autoReturnStore" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+        <property name="targetObject">  
+            <ref bean="timetask"/>  
+        </property>  
+        <property name="targetMethod">  
+            <value>autoReturnStore</value>  
+        </property>         
+    </bean>      
+    <bean id="timetask" class="com.wenjing.service.TimeTaskService"/> 
+   <!--  
+    <bean id="timetask" class="com.wenjing.service.PageService"/>
+   
+    <task:scheduled-tasks>
+        <task:scheduled ref="timetask" method="createAll" cron=" 0 0 0 * * ?"/>
+    </task:scheduled-tasks>
+     -->
+    <bean id="sliderMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.SliderMapper"/>
+    </bean>
+    <bean id="regionMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.RegionMapper"/>
+    </bean>
+    <bean id="orderstatusMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.OrderstatusMapper"/>
+    </bean>
+    <bean id="setoperaterMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.SetoperaterMapper"/>
+    </bean>
+    <bean id="promotionMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.PromotionMapper"/>
+    </bean>
+    <bean id="orderexpenseMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.OrderexpenseMapper"/>
+    </bean>
+    <bean id="attractionMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.AttractionMapper"/>
+    </bean>
+    <bean id="currencyMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.CurrencyMapper"/>
+    </bean>
+    <bean id="tourdateMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.TourdateMapper"/>
+    </bean>
+    <bean id="treeMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.TreeMapper"/>
+    </bean>
+    <bean id="pageMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.PageMapper"/>
+    </bean>
+    <bean id="roleMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.RoleMapper"/>
+    </bean>
+    <bean id="itineraryMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.ItineraryMapper"/>
+    </bean>
+    <bean id="attractionimageMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.AttractionimageMapper"/>
+    </bean>
+    <bean id="tourlineMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.TourlineMapper"/>
+    </bean>
+    <bean id="memberinformationMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.MemberinformationMapper"/>
+    </bean>
+    <bean id="tourlineimageMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.TourlineimageMapper"/>
+    </bean>
+    <bean id="promotionassociationMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.PromotionProductMapper"/>
+    </bean>
+    <bean id="attractiontypeMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.AttractiontypeMapper"/>
+    </bean>
+    <bean id="memberMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.MemberMapper"/>
+    </bean>
+    <bean id="tourpriceMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.TourpriceMapper"/>
+    </bean>
+    <bean id="hotelimageMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.HotelimageMapper"/>
+    </bean>
+    <bean id="ordercontacterMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.OrdercontacterMapper"/>
+    </bean>
+    <bean id="tourlinehotelMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.TourlinehotelMapper"/>
+    </bean>
+    <bean id="imageMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.ImageMapper"/>
+    </bean>
+    <bean id="selfpayMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.SelfpayMapper"/>
+    </bean>
+    <bean id="tourlineattractionMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.TourlineattractionMapper"/>
+    </bean>
+    <bean id="costMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.CostMapper"/>
+    </bean>
+    <bean id="destinationMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.DestinationMapper"/>
+    </bean>
+    <bean id="tourlineselfpayMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.TourlineselfpayMapper"/>
+    </bean>
+    <bean id="productMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.ProductMapper"/>
+    </bean>
+    <bean id="navigationMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.NavigationMapper"/>
+    </bean>
+    <bean id="adminMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.AdminMapper"/>
+    </bean>
+    <bean id="costpaymentMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.CostpaymentMapper"/>
+    </bean>
+    <bean id="tourlinedestinationMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.TourlinedestinationMapper"/>
+    </bean>
+    <bean id="roletreeMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.RoletreeMapper"/>
+    </bean>
+    <bean id="sitparamMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.SitparamMapper"/>
+    </bean>
+    <bean id="ordersMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.OrdersMapper"/>
+    </bean>
+    <bean id="orderdetailMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.OrderdetailMapper"/>
+    </bean>
+    <bean id="hotelMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.HotelMapper"/>
+    </bean>
+    <bean id="itineraryimageMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.ItineraryimageMapper"/>
+    </bean>
+    <bean id="rolecostMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.RolecostMapper"/>
+    </bean>
+    <bean id="pageImageMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.PageImageMapper"/>
+    </bean>
+    <bean id="DepartureMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.DepartureMapper"/>
+    </bean>
+    <bean id="DepartureDateMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.DepartureDateMapper"/>
+    </bean>
+    <bean id="CoordinateMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+    	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    	<property name="mapperInterface" value="com.wenjing.dao.CoordinateMapper"/>
+    </bean>
+
+     <bean id="CouponsactivityMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+    	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    	<property name="mapperInterface" value="com.wenjing.dao.CouponsactivityMapper"/>
+    </bean>
+     <bean id="CouponsduijiangMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+    	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    	<property name="mapperInterface" value="com.wenjing.dao.CouponsduijiangMapper"/>
+    </bean>
+     <bean id="CouponseMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+    	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    	<property name="mapperInterface" value="com.wenjing.dao.CouponseMapper"/>
+    </bean>
+     <bean id="CouponslevelMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+    	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    	<property name="mapperInterface" value="com.wenjing.dao.CouponslevelMapper"/>
+    </bean>
+    <bean id="CouponsetourlineMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+    	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    	<property name="mapperInterface" value="com.wenjing.dao.CouponseproductMapper"/>
+    </bean>
+    <bean id="VisaMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+    	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    	<property name="mapperInterface" value="com.wenjing.dao.VisaMapper"/>
+    </bean>
+    <bean id="VisaoccupationMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+    	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    	<property name="mapperInterface" value="com.wenjing.dao.VisaoccupationMapper"/>
+    </bean>
+    <bean id="ActivateMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+    	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    	<property name="mapperInterface" value="com.wenjing.dao.ActivateMapper"/>
+    </bean>
+	<bean id="TourPassengerMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="mapperInterface" value="com.wenjing.dao.TourPassengerMapper"/>
+	</bean>
+	<bean id="ShoppingCartMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+		<property name="mapperInterface" value="com.wenjing.dao.ShoppingCartMapper"/>
+	</bean>
+    <bean id="SelfpaycurrencyMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+    	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    	<property name="mapperInterface" value="com.wenjing.dao.SelfpaycurrencyMapper"/>
+    </bean>
+    <bean id="EmailMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+    	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    	<property name="mapperInterface" value="com.wenjing.dao.EmailMapper"/>
+    </bean>
+    <bean id="GetScoreMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+    	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    	<property name="mapperInterface" value="com.wenjing.dao.GetScoreMapper"/>
+    </bean>
+    <bean id="AirportPickUpMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+    	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    	<property name="mapperInterface" value="com.wenjing.dao.AirportPickUpMapper"/>
+    </bean>
+     <bean id="AirTicketPriceMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+    	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    	<property name="mapperInterface" value="com.wenjing.dao.AirTicketPriceMapper"/>
+    </bean>
+    <bean id="PayDetailMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+    	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    	<property name="mapperInterface" value="com.wenjing.dao.PayDetailMapper"/>
+    </bean>
+    <bean id="HotTourlineMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+    	<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    	<property name="mapperInterface" value="com.wenjing.dao.HotTourlineMapper"/>
+    </bean>
+
+    <bean id="showtourlineMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.ShowtourlineMapper"/>
+    </bean>
+    <bean id="indexshowtourlineMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.IndexshowtourlineMapper"/>
+    </bean>
+    
+     <bean id="qnaAnswerMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.QnaAnswerMapper"/>
+    </bean>
+     <bean id="qnaQuestionMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.QnaQuestionMapper"/>
+    </bean>
+     <bean id="reviewMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.ReviewMapper"/>
+    </bean>
+    
+    <bean id="shipCompanyMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.ShipCompanyMapper"/>
+    </bean>
+    <bean id="shipMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.ShipMapper"/>
+    </bean>
+    <bean id="shipLineMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.ShipLineMapper"/>
+    </bean>
+    <bean id="tagMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.TagMapper"/>
+    </bean>
+    <bean id="producttagMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.ProducttagMapper"/>
+    </bean>
+    <bean id="tourlineTourdateMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.TourlineTourdateMapper"/>
+    </bean>
+     <bean id="priceMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.PriceMapper"/>
+    </bean>
+    <bean id="attractionLevelMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.AttractionLevelMapper"/>
+    </bean>
+    <bean id="destinationLevelMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.DestinationLevelMapper"/>
+    </bean>
+     <bean id="productvideoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.ProductvideoMapper"/>
+    </bean>
+    <bean id="videoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.VideoMapper"/>
+    </bean>
+    <bean id="activityrulesMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.ActivityrulesMapper"/>
+    </bean>
+    <bean id="serviceItemMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.ServiceItemMapper"/>
+    </bean>
+    <bean id="serviceItemProductMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.ServiceItemProductMapper"/>
+    </bean>
+    <bean id="indexShowDestinationMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.IndexShowDestinationMapper"/>
+    </bean>
+    
+     <bean id="blogMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.BlogMapper"/>
+    </bean>
+    <bean id="blogCategoryMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.BlogCategoryMapper"/>
+    </bean>
+    <bean id="blogTagAssociationMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.BlogTagAssociationMapper"/>
+    </bean>
+    <bean id="blogTagMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.BlogTagMapper"/>
+    </bean>
+    <bean id="commentsToBlogMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.CommentsToBlogMapper"/>
+    </bean>
+    <bean id="busMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.BusMapper"/>
+    </bean>
+    <bean id="charterServiceMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.CharterServiceMapper"/>
+    </bean>
+    <bean id="officeContactsMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+    	<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    	<property name="mapperInterface" value="com.wenjing.dao.OfficeContactsMapper"/>
+    </bean>
+    <bean id="contactUsMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+    	<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    	<property name="mapperInterface" value="com.wenjing.dao.ContactUsMapper"/>
+    </bean>    
+    <bean id="sellInfoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+    	<property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+    	<property name="mapperInterface" value="com.wenjing.dao.SellInfoMapper"/>
+    </bean> 
+     <bean id="foodMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.FoodMapper"/>
+    </bean>
+     <bean id="admissionticketMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.AdmissionticketMapper"/>
+    </bean>  
+    <bean id="additionalProductMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.AdditionalProductMapper"/>
+    </bean>  
+    <bean id="iataMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.IataMapper"/>
+    </bean> 
+    <bean id="cancelRecordsMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.CancelrecordsMapper"/>
+    </bean> 
+     <bean id="agentCodeMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.AgentCodeMapper"/>
+    </bean>    
+     <bean id="preBookingOfAgentMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.PreBookingOfAgentMapper"/>
+    </bean> 
+    <bean id="creditCardInfoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.CreditCardInfoMapper"/>
+    </bean>   
+        <bean id="OrderAttachmentMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"/>
+        <property name="mapperInterface" value="com.wenjing.dao.OrderAttachmentMapper"/>
+    </bean>            
+</beans>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.AttractionimageMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Attractionimage" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="attractionId" property="attractionid" jdbcType="VARCHAR" />
+    <result column="imageId" property="imageid" jdbcType="VARCHAR" />
+    <association property="attractionAttractionid" column="attractionid" select="com.wenjing.dao.AttractionMapper.selectByPrimaryKey" />
+    <association property="imageImageid" column="imageid" select="com.wenjing.dao.ImageMapper.selectByPrimaryKey" />
+  </resultMap>
+  <select id="selectByAttractionid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from attractionimage where attractionId =#{attractionId}
+  </select>
+  <select id="selectByImageid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from attractionimage where imageId =#{imageId}
+  </select>
+  <sql id="Base_Column_List" >
+    id, attractionId, imageId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from attractionimage
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from attractionimage
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Attractionimage" flushCache="true" >
+    insert into attractionimage (id, attractionId, imageId
+      )
+    values (#{id,jdbcType=VARCHAR}, #{attractionid,jdbcType=VARCHAR}, #{imageid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Attractionimage" flushCache="true" >
+    insert into attractionimage
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      attractionId,
+      imageId,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{attractionid,jdbcType=VARCHAR},
+      #{imageid,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Attractionimage" flushCache="true" >
+    update attractionimage
+    <set >
+      <if test="attractionid != null" >
+        attractionId = #{attractionid,jdbcType=VARCHAR},
+      </if>
+      <if test="imageid != null" >
+        imageId = #{imageid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Attractionimage" flushCache="true" >
+    update attractionimage
+    set attractionId = #{attractionid,jdbcType=VARCHAR},
+      imageId = #{imageid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <delete id="deleteByImageId" parameterType="java.lang.String" flushCache="true" >
+    delete from attractionimage
+    where imageId = #{imageId,jdbcType=VARCHAR} and attractionId = #{attractionid,jdbcType=VARCHAR}
+  </delete>
+  <select id="findByAttractionId" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from attractionimage where attractionId in
+    <foreach collection="attractionId" separator="," index="index" open="(" close=")" item="item">
+    #{item}
+    </foreach>
+    limit #{startPos},#{pageSize}
+  </select>
+  <select id="getTotalCount" resultType="java.lang.Integer" >
+    select count(*) from attractionimage where attractionId in
+    <foreach collection="attractionId" separator="," index="index" open="(" close=")" item="item">
+    #{item}
+    </foreach>
+  </select>
+  <delete id="deleteByAttractionId" parameterType="java.lang.String" flushCache="true" >
+    delete from attractionimage
+    where attractionId = #{attractionId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByImageId2" parameterType="java.lang.String" flushCache="true" >
+    delete from attractionimage
+    where imageId = #{imageId,jdbcType=VARCHAR}
+  </delete>
+  <update id="replaceByAttractionId" parameterType="java.lang.String" flushCache="true">
+  	update attractionimage set attractionId=#{replaceId} where attractionId=#{attractionId}
+  </update>
+</mapper>

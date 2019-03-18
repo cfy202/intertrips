@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns:mvc="http://www.springframework.org/schema/mvc" 
+       xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:p="http://www.springframework.org/schema/p" 
+       xmlns:context="http://www.springframework.org/schema/context" 
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+                           http://www.springframework.org/schema/context 
+                           http://www.springframework.org/schema/context/spring-context-3.2.xsd 
+                           http://www.springframework.org/schema/mvc 
+                           http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+    <context:annotation-config></context:annotation-config>
+    <context:component-scan base-package="com.wenjing.action"></context:component-scan>
+    
+    <mvc:annotation-driven />
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/admin/**" />
+            <bean id="webContentInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+                <property name="cacheSeconds" value="0" />
+            </bean>
+        </mvc:interceptor>
+        
+        <mvc:interceptor>
+            <mvc:mapping path="/admin/**" />
+            <bean id="listInterceptor" class="com.wenjing.interceptor.ListInterceptor" />
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/admin/**" />
+            <bean id="loginInterceptor" class="com.wenjing.interceptor.LoginInterceptor" />
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/admin/**" />
+            <bean id="logInterceptor" class="com.wenjing.interceptor.LogInterceptor" />
+        </mvc:interceptor>
+        
+        <!-- 判断会员登录状态拦截器 -->
+        <mvc:interceptor>
+			<mvc:mapping path="/member/**" />
+			<!-- 
+			<mvc:mapping path="/front/orders/**" />
+			 -->
+			<bean id="memberInterceptor" class="com.wenjing.interceptor.MemberInterceptor" />
+		</mvc:interceptor>
+		
+		<!-- 判断用户位置 -->
+		<!--  
+		<mvc:interceptor>
+			<mvc:mapping path="/front/**" />
+			<bean id="frontIndexInterceptor" class="com.wenjing.interceptor.FrontIndexInterceptor" />
+		</mvc:interceptor>
+		-->
+    </mvc:interceptors>
+    
+    <!--  annotation默认的方法映射适配器 -->
+    <bean id="handlerMapping" class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+    <!-- 设置freeMarker的配置文件路径 -->
+    <bean id="freemarkerConfiguration" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location" value="classpath:freemarker.properties" />
+    </bean>
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="utf-8"></property>
+    </bean>
+    <!-- 配置freeMarker的模板路径 -->
+    <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <!--property name="freemarkerSettings" ref="freemarkerConfiguration"/-->
+        <property name="templateLoaderPath">
+            <value>/WEB-INF/template</value>
+        </property>
+        <property name="freemarkerVariables">
+            <map>
+                <entry key="xml_escape" value-ref="fmXmlEscape" />
+            </map>
+        </property>
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="defaultEncoding">UTF-8</prop>
+            </props>
+        </property>
+    </bean>
+    <bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape" />
+    <!-- 配置freeMarker视图解析器 -->
+    <bean id="freeMarkerViewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <!--        <property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"/> -->
+        <property name="viewNames" value="*.ftl" />
+        <property name="allowSessionOverride" value="true" />
+        <property name="exposeSpringMacroHelpers" value="true" />
+        <property name="exposeRequestAttributes" value="true" />
+        <property name="exposeSessionAttributes" value="true" />
+        <property name="requestContextAttribute" value="request" />
+        <property name="contentType" value="text/html; charset=utf-8" />
+        <property name="cache" value="true"/>
+        <property name="prefix" value="" />
+        <property name="suffix" value="" />
+        <property name="order" value="2" />
+    </bean>
+    <!-- 配置JSP视图解析器 -->
+    <bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+        <property name="prefix" value="" />
+        <property name="suffix" value="" />
+    </bean>
+    <!-- 输出对象转JSON支持 -->
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />
+            </list>
+        </property>
+    </bean>
+       
+</beans>

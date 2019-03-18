@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.ShipMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Ship" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="companyId" property="companyid" jdbcType="INTEGER" />
+    <result column="Rating" property="rating" jdbcType="INTEGER" />
+    <result column="Routename" property="routename" jdbcType="VARCHAR" />
+    <result column="Maiden" property="maiden" jdbcType="INTEGER" />
+    <result column="speed" property="speed" jdbcType="VARCHAR" />
+    <result column="Crew" property="crew" jdbcType="INTEGER" />
+    <result column="Capacity" property="capacity" jdbcType="DECIMAL" />
+    <result column="Length" property="length" jdbcType="DECIMAL" />
+    <result column="Width" property="width" jdbcType="DECIMAL" />
+    <result column="AirconditioningSystem" property="airconditioningsystem" jdbcType="VARCHAR" />
+    <result column="Decks" property="decks" jdbcType="INTEGER" />
+    <result column="Voltage" property="voltage" jdbcType="INTEGER" />
+    <result column="TotalTonnage" property="totaltonnage" jdbcType="DECIMAL" />
+    <result column="TotalArea" property="totalarea" jdbcType="DECIMAL" />
+    <result column="TotalDrainage" property="totaldrainage" jdbcType="DECIMAL" />
+    <result column="Description" property="description" jdbcType="VARCHAR" />
+    <result column="CabinInfo" property="cabininfo" jdbcType="VARCHAR" />
+    <result column="Amenities" property="amenities" jdbcType="VARCHAR" />
+    <result column="logourl" property="logourl" jdbcType="VARCHAR" />
+    <result column="productId" property="productid" jdbcType="VARCHAR" />
+    <result column="costNumberIds" property="costnumberids" jdbcType="VARCHAR" />
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+    <result column="RouteId" property="routeid" jdbcType="VARCHAR" />
+    <association property="shipCompanyCompanyid" column="companyid" select="com.wenjing.dao.ShipCompanyMapper.selectByPrimaryKey" />
+  </resultMap>
+  <select id="selectByCompanyid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from ship where companyId =#{companyId}
+  </select>
+  <resultMap id="ResultMapWithBLOBs" type="com.wenjing.entity.Ship" extends="BaseResultMap" >
+    <result column="DeckPlan" property="deckplan" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, `name`, companyId, Rating, Routename, Maiden, speed, Crew, Capacity, `Length`, 
+    Width, AirconditioningSystem, Decks, Voltage, TotalTonnage, TotalArea, TotalDrainage, 
+    Description, CabinInfo, Amenities, logourl, productId, costNumberIds, costNumber, 
+    RouteId
+  </sql>
+  <sql id="Blob_Column_List" >
+    DeckPlan
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from ship
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from ship
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Ship" >
+    insert into ship (id, `name`, companyId, 
+      Rating, Routename, Maiden, 
+      speed, Crew, Capacity, 
+      `Length`, Width, AirconditioningSystem, 
+      Decks, Voltage, TotalTonnage, 
+      TotalArea, TotalDrainage, Description, 
+      CabinInfo, Amenities, logourl, 
+      productId, costNumberIds, costNumber, 
+      RouteId, DeckPlan)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{companyid,jdbcType=INTEGER}, 
+      #{rating,jdbcType=INTEGER}, #{routename,jdbcType=VARCHAR}, #{maiden,jdbcType=INTEGER}, 
+      #{speed,jdbcType=VARCHAR}, #{crew,jdbcType=INTEGER}, #{capacity,jdbcType=DECIMAL}, 
+      #{length,jdbcType=DECIMAL}, #{width,jdbcType=DECIMAL}, #{airconditioningsystem,jdbcType=VARCHAR}, 
+      #{decks,jdbcType=INTEGER}, #{voltage,jdbcType=INTEGER}, #{totaltonnage,jdbcType=DECIMAL}, 
+      #{totalarea,jdbcType=DECIMAL}, #{totaldrainage,jdbcType=DECIMAL}, #{description,jdbcType=VARCHAR}, 
+      #{cabininfo,jdbcType=VARCHAR}, #{amenities,jdbcType=VARCHAR}, #{logourl,jdbcType=VARCHAR}, 
+      #{productid,jdbcType=VARCHAR}, #{costnumberids,jdbcType=VARCHAR}, #{costnumber,jdbcType=VARCHAR}, 
+      #{routeid,jdbcType=VARCHAR}, #{deckplan,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Ship" >
+    insert into ship
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      `name`,
+      companyId,
+      Rating,
+      Routename,
+      Maiden,
+      speed,
+      Crew,
+      Capacity,
+      `Length`,
+      Width,
+      AirconditioningSystem,
+      Decks,
+      Voltage,
+      TotalTonnage,
+      TotalArea,
+      TotalDrainage,
+      Description,
+      CabinInfo,
+      Amenities,
+      logourl,
+      productId,
+      costNumberIds,
+      costNumber,
+      RouteId,
+      DeckPlan,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR},
+      #{companyid,jdbcType=INTEGER},
+      #{rating,jdbcType=INTEGER},
+      #{routename,jdbcType=VARCHAR},
+      #{maiden,jdbcType=INTEGER},
+      #{speed,jdbcType=VARCHAR},
+      #{crew,jdbcType=INTEGER},
+      #{capacity,jdbcType=DECIMAL},
+      #{length,jdbcType=DECIMAL},
+      #{width,jdbcType=DECIMAL},
+      #{airconditioningsystem,jdbcType=VARCHAR},
+      #{decks,jdbcType=INTEGER},
+      #{voltage,jdbcType=INTEGER},
+      #{totaltonnage,jdbcType=DECIMAL},
+      #{totalarea,jdbcType=DECIMAL},
+      #{totaldrainage,jdbcType=DECIMAL},
+      #{description,jdbcType=VARCHAR},
+      #{cabininfo,jdbcType=VARCHAR},
+      #{amenities,jdbcType=VARCHAR},
+      #{logourl,jdbcType=VARCHAR},
+      #{productid,jdbcType=VARCHAR},
+      #{costnumberids,jdbcType=VARCHAR},
+      #{costnumber,jdbcType=VARCHAR},
+      #{routeid,jdbcType=VARCHAR},
+      #{deckplan,jdbcType=LONGVARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Ship" >
+    update ship
+    <set >
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="companyid != null" >
+        companyId = #{companyid,jdbcType=INTEGER},
+      </if>
+      <if test="rating != null" >
+        Rating = #{rating,jdbcType=INTEGER},
+      </if>
+      <if test="routename != null" >
+        Routename = #{routename,jdbcType=VARCHAR},
+      </if>
+      <if test="maiden != null" >
+        Maiden = #{maiden,jdbcType=INTEGER},
+      </if>
+      <if test="speed != null" >
+        speed = #{speed,jdbcType=VARCHAR},
+      </if>
+      <if test="crew != null" >
+        Crew = #{crew,jdbcType=INTEGER},
+      </if>
+      <if test="capacity != null" >
+        Capacity = #{capacity,jdbcType=DECIMAL},
+      </if>
+      <if test="length != null" >
+        `Length` = #{length,jdbcType=DECIMAL},
+      </if>
+      <if test="width != null" >
+        Width = #{width,jdbcType=DECIMAL},
+      </if>
+      <if test="airconditioningsystem != null" >
+        AirconditioningSystem = #{airconditioningsystem,jdbcType=VARCHAR},
+      </if>
+      <if test="decks != null" >
+        Decks = #{decks,jdbcType=INTEGER},
+      </if>
+      <if test="voltage != null" >
+        Voltage = #{voltage,jdbcType=INTEGER},
+      </if>
+      <if test="totaltonnage != null" >
+        TotalTonnage = #{totaltonnage,jdbcType=DECIMAL},
+      </if>
+      <if test="totalarea != null" >
+        TotalArea = #{totalarea,jdbcType=DECIMAL},
+      </if>
+      <if test="totaldrainage != null" >
+        TotalDrainage = #{totaldrainage,jdbcType=DECIMAL},
+      </if>
+      <if test="description != null" >
+        Description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="cabininfo != null" >
+        CabinInfo = #{cabininfo,jdbcType=VARCHAR},
+      </if>
+      <if test="amenities != null" >
+        Amenities = #{amenities,jdbcType=VARCHAR},
+      </if>
+      <if test="logourl != null" >
+        logourl = #{logourl,jdbcType=VARCHAR},
+      </if>
+      <if test="productid != null" >
+        productId = #{productid,jdbcType=VARCHAR},
+      </if>
+      <if test="costnumberids != null" >
+        costNumberIds = #{costnumberids,jdbcType=VARCHAR},
+      </if>
+      <if test="costnumber != null" >
+        costNumber = #{costnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="routeid != null" >
+        RouteId = #{routeid,jdbcType=VARCHAR},
+      </if>
+      <if test="deckplan != null" >
+        DeckPlan = #{deckplan,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.wenjing.entity.Ship" >
+    update ship
+    set `name` = #{name,jdbcType=VARCHAR},
+      companyId = #{companyid,jdbcType=INTEGER},
+      Rating = #{rating,jdbcType=INTEGER},
+      Routename = #{routename,jdbcType=VARCHAR},
+      Maiden = #{maiden,jdbcType=INTEGER},
+      speed = #{speed,jdbcType=VARCHAR},
+      Crew = #{crew,jdbcType=INTEGER},
+      Capacity = #{capacity,jdbcType=DECIMAL},
+      `Length` = #{length,jdbcType=DECIMAL},
+      Width = #{width,jdbcType=DECIMAL},
+      AirconditioningSystem = #{airconditioningsystem,jdbcType=VARCHAR},
+      Decks = #{decks,jdbcType=INTEGER},
+      Voltage = #{voltage,jdbcType=INTEGER},
+      TotalTonnage = #{totaltonnage,jdbcType=DECIMAL},
+      TotalArea = #{totalarea,jdbcType=DECIMAL},
+      TotalDrainage = #{totaldrainage,jdbcType=DECIMAL},
+      Description = #{description,jdbcType=VARCHAR},
+      CabinInfo = #{cabininfo,jdbcType=VARCHAR},
+      Amenities = #{amenities,jdbcType=VARCHAR},
+      logourl = #{logourl,jdbcType=VARCHAR},
+      productId = #{productid,jdbcType=VARCHAR},
+      costNumberIds = #{costnumberids,jdbcType=VARCHAR},
+      costNumber = #{costnumber,jdbcType=VARCHAR},
+      RouteId = #{routeid,jdbcType=VARCHAR},
+      DeckPlan = #{deckplan,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Ship" >
+    update ship
+    set `name` = #{name,jdbcType=VARCHAR},
+      companyId = #{companyid,jdbcType=INTEGER},
+      Rating = #{rating,jdbcType=INTEGER},
+      Routename = #{routename,jdbcType=VARCHAR},
+      Maiden = #{maiden,jdbcType=INTEGER},
+      speed = #{speed,jdbcType=VARCHAR},
+      Crew = #{crew,jdbcType=INTEGER},
+      Capacity = #{capacity,jdbcType=DECIMAL},
+      `Length` = #{length,jdbcType=DECIMAL},
+      Width = #{width,jdbcType=DECIMAL},
+      AirconditioningSystem = #{airconditioningsystem,jdbcType=VARCHAR},
+      Decks = #{decks,jdbcType=INTEGER},
+      Voltage = #{voltage,jdbcType=INTEGER},
+      TotalTonnage = #{totaltonnage,jdbcType=DECIMAL},
+      TotalArea = #{totalarea,jdbcType=DECIMAL},
+      TotalDrainage = #{totaldrainage,jdbcType=DECIMAL},
+      Description = #{description,jdbcType=VARCHAR},
+      CabinInfo = #{cabininfo,jdbcType=VARCHAR},
+      Amenities = #{amenities,jdbcType=VARCHAR},
+      logourl = #{logourl,jdbcType=VARCHAR},
+      productId = #{productid,jdbcType=VARCHAR},
+      costNumberIds = #{costnumberids,jdbcType=VARCHAR},
+      costNumber = #{costnumber,jdbcType=VARCHAR},
+      RouteId = #{routeid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

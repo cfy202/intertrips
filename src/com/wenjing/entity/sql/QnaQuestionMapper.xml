@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.QnaQuestionMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+ <resultMap id="BaseResultMap" type="com.wenjing.entity.QnaQuestion">
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+    <result column="createDate" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="productId" property="productId" jdbcType="VARCHAR" />
+    <result column="memberId" property="memberId" jdbcType="VARCHAR" />
+    <result column="isshow" property="isshow" jdbcType="BIT" />
+    <result column="costNumber" property="costNumber" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="BIT" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    id, name, email, title, content, createDate, ip, productId, memberId, isshow, costNumber, status
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM qnaquestion
+    WHERE id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    DELETE FROM qnaquestion
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.wenjing.entity.QnaQuestion" flushCache="true" >
+    insert into qnaquestion (id, name, email, title, content, createDate, ip, productId, memberId, isshow, costNumber, status)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+       #{title,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{ip,jdbcType=VARCHAR}, 
+      #{productId,jdbcType=VARCHAR}, #{memberId,jdbcType=VARCHAR}, #{isshow,jdbcType=BIT}, #{costNumber,jdbcType=VARCHAR}, #{status,jdbcType=BIT})
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.wenjing.entity.QnaQuestion" flushCache="true" >
+    insert into qnaquestion
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id, 
+      name, 
+      email, 
+      title,
+      content, 
+      createDate, 
+      ip, 
+      productId, 
+      memberId, 
+      isshow,
+      costNumber,
+      status
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+     #{id,jdbcType=VARCHAR}, 
+     #{name,jdbcType=VARCHAR}, 
+     #{email,jdbcType=VARCHAR}, 
+     #{title,jdbcType=VARCHAR}, 
+     #{content,jdbcType=LONGVARCHAR}, 
+     #{createDate,jdbcType=TIMESTAMP}, 
+     #{ip,jdbcType=VARCHAR}, 
+     #{productId,jdbcType=VARCHAR}, 
+     #{memberId,jdbcType=VARCHAR}, 
+     #{isshow,jdbcType=BIT},
+     #{costNumber,jdbcType=VARCHAR},
+     #{status,jdbcType=BIT}
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.QnaQuestion" flushCache="true" >
+    update qnaquestion
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+       <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="createDate != null" >
+        createDate = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ip != null" >
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="productId != null" >
+        productId = #{productId,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        memberId = #{memberId,jdbcType=VARCHAR},
+      </if>
+      <if test="isshow != null" >
+        isshow = #{isshow,jdbcType=BIT},
+      </if>
+      <if test="costNumber != null" >
+        costNumber = #{costNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.QnaQuestion" flushCache="true" >
+	update qnaquestion
+	set name = #{name,jdbcType=VARCHAR},
+	email = #{email,jdbcType=VARCHAR},
+	title = #{title,jdbcType=VARCHAR},
+	content = #{content,jdbcType=LONGVARCHAR},
+	createDate = #{createDate,jdbcType=TIMESTAMP},
+	ip = #{ip,jdbcType=VARCHAR},
+	productId = #{productId,jdbcType=VARCHAR},
+	memberId = #{memberId,jdbcType=VARCHAR},
+	isshow = #{isshow,jdbcType=BIT},
+	costNumber = #{costNumber,jdbcType=VARCHAR},
+	status = #{status,jdbcType=BIT}
+	where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 根据costnum查询总提问记录条数 -->
+  <select id="getCountByCostNum" resultType="java.lang.Integer">
+    select count(*) 
+        from qnaquestion question,
+             tourline tourline,
+             product product
+        where question.productId=product.id
+              and product.id = tourline.productid
+              and question.costNumber in 
+		      <foreach collection="costNumList" item="item" index="index" open="(" separator="," close=")">
+		        #{item}
+		      </foreach>
+		      <if test="tourname != null and !''.equals(tourname)" >
+			     and tourline.tourname like '%${tourname}%'
+		      </if>
+			  <if test="title != null and !''.equals(title)" >
+			     and  question.title like '%${title}%'
+		   	  </if>
+			  <if test="code != null and !''.equals(code)" >
+			     and  product.code like '%${code}%'
+			  </if>
+  </select>
+  
+  <!-- 分页查询question -->
+  <resultMap id="adminQuestionListMap" type="com.wenjing.entity.QnaQuestion" extends="BaseResultMap">
+     <association property="tourline" javaType="com.wenjing.entity.Tourline" >
+        <result column="tourname" property="tourname" jdbcType="VARCHAR" />
+     </association>
+     <association property="product" javaType="com.wenjing.entity.Product" >
+        <result column="code" property="code" jdbcType="VARCHAR" />
+     </association>
+     <association property="answerCount" column="id" select="com.wenjing.dao.QnaAnswerMapper.getCountByQuestionId"/>
+     <association property="answerUntreated" column="id" select="com.wenjing.dao.QnaAnswerMapper.getUntreatedByQuestionId"/>
+  </resultMap>
+  <select id="findByCostNumAndPage" resultMap="adminQuestionListMap">
+     select 
+		    question.id as id,
+		    question.name,
+			question.title,
+			question.content,
+			question.createDate,
+			question.isshow,
+			question.status,
+			tourline.tourname as tourname,
+			product.code as code 
+	  from qnaquestion question,
+	       tourline tourline,
+	       product product
+	  where question.productId = product.id
+	        and product.id = tourline.productid
+	        <if test="status !=null and status!=2">
+	          and question.status=#{status}
+	        </if>
+	          and question.costNumber in 
+		        <foreach collection="costNumList" item="item" index="index" open="(" separator="," close=")">
+			      #{item}
+			    </foreach>
+		    <if test="tourname != null and !''.equals(tourname)" >
+			     and tourline.tourname like '%${tourname}%'
+			</if>
+			<if test="title != null and !''.equals(title)" >
+			     and  question.title like '%${title}%'
+			</if>
+			<if test="code != null and !''.equals(code)" >
+			     and  product.code like '%${code}%'
+			</if>
+	  order by question.createDate desc
+	  limit #{startPos},#{pageSize}
+  </select>
+  
+  <!-- 根据questionid查询咨询问题的详细信息 -->
+  <resultMap id="adminQuestionDetailsMap" type="com.wenjing.entity.QnaQuestion" extends="BaseResultMap">
+     <association property="tourline" javaType="com.wenjing.entity.Tourline" >
+        <result column="tourname" property="tourname" jdbcType="VARCHAR" />
+     </association>
+     <association property="page" javaType="com.wenjing.entity.Page" >
+        <result column="filePath" property="filepath" jdbcType="VARCHAR" />
+     </association>
+     <association property="member" column="memberId" select="com.wenjing.dao.MemberMapper.selectByPrimaryKey"/>
+  </resultMap>
+  <select id="getQuestionByQid" parameterType="java.lang.String" resultMap="adminQuestionDetailsMap">
+     select 
+           question.*,
+           tourline.tourname as tourname,
+           page.filePath as filePath
+	    from qnaquestion question,
+		     tourline tourline,
+		     product product,
+		     page page
+		where question.productId = product.id
+		      and tourline.productId = product.id
+		      and product.pageId = page.id
+		      and question.id = #{id}
+  </select>
+  
+  <!-- 编辑是否显示 -->
+  <update id="editIsshow" parameterType="com.wenjing.entity.QnaQuestion" flushCache="true">
+    update qnaquestion
+      set isshow = #{isshow,jdbcType=BIT},
+          status = #{status,jdbcType=BIT}
+      where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 修改处理状态 -->
+  <update id="updateQStatus"  flushCache="true">
+      update qnaquestion
+      set status = #{status,jdbcType=BIT}
+      where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 根据questionId查询QA -->
+  <resultMap id="frontQAMap" type="com.wenjing.entity.QnaQuestion" extends="BaseResultMap">
+     <association property="member" column="memberId" select="com.wenjing.dao.MemberMapper.selectByPrimaryKey"/>
+     <association property="answerCount" column="id" select="com.wenjing.dao.QnaAnswerMapper.getShowCountByQuestionId"/>
+     <collection property="qnaAnswerList" javaType="java.util.List" ofType="com.wenjing.entity.QnaAnswer" column="id" select="com.wenjing.dao.QnaAnswerMapper.getShowAnswerByQid"/>
+  </resultMap>
+  <select id="findByproductId" resultMap="frontQAMap">
+     select id,
+            name,
+	        title,
+	        content,
+	        createDate,
+	        memberId,
+	        ip
+	   from qnaquestion
+	  where 
+	       isshow=1
+	       and status=1
+	       and costNumber=#{costnumber,jdbcType=VARCHAR}
+	       and productId = #{productId,jdbcType=VARCHAR}
+	       limit 0,3
+  </select>
+</mapper>

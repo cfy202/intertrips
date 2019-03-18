@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.CoordinateMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Coordinate" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="xAxis" property="xAxis" jdbcType="DECIMAL" />
+    <result column="yAxis" property="yAxis" jdbcType="DECIMAL" />
+    <result column="destinationId" property="destinationId" jdbcType="VARCHAR" />
+    <result column="attractionId" property="attractionId" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, xAxis,yAxis, destinationId, attractionId
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM coordinate
+    WHERE id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    DELETE FROM coordinate
+    WHERE id = #{id,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Coordinate" >
+    INSERT INTO coordinate
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      xAxis,
+      yAxis,
+      destinationId,
+      attractionId,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{xAxis,jdbcType=DECIMAL},
+      #{yAxis,jdbcType=DECIMAL},
+      #{destinationId,jdbcType=VARCHAR},
+      #{attractionId,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Coordinate" >
+    UPDATE coordinate
+    <set>
+      <if test="xAxis != null" >
+        xAxis = #{xAxis,jdbcType=DECIMAL},
+      </if>
+      <if test="yAxis != null" >
+        yAxis = #{yAxis,jdbcType=DECIMAL},
+      </if>
+      <if test="destinationId != null">
+      	destinationId = #{destinationId,jdbcType=VARCHAR},
+      </if>
+      <if test="attractionId != null">
+      	attractionId = #{attractionId,jdbcType=VARCHAR}
+      </if>
+    </set>
+    WHERE id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="findAll" resultMap="BaseResultMap">
+   SELECT  
+   <include refid="Base_Column_List" /> 
+   FROM coordinate
+  </select>
+  
+  <select id="findByDestinationId" resultMap="BaseResultMap">
+	  SELECT
+	  <include refid="Base_Column_List"/>
+	  FROM coordinate
+	  WHERE DestinationId = #{destinationId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="findByAttractionId" resultMap="BaseResultMap">
+	 SELECT
+	 <include refid="Base_Column_List"/>
+	 FROM coordinate
+	 WHERE AttractionId = #{attractionId,jdbcType=VARCHAR}  	  
+  </select>
+  
+  <select id="findDesCoordinatesByTourlineId" resultMap="BaseResultMap">
+  	SELECT
+  		c.id, xAxis, yAxis, c.destinationId, c.attractionId
+  	FROM
+		tourline t,
+		tourlinedestination td,
+		coordinate c
+	WHERE
+		td.tourLineId = #{tourlineId,jdbcType=VARCHAR}
+	AND
+		td.tourLineId = t.id
+	AND
+		td.destinationId = c.destinationId
+	ORDER BY
+		td.sort
+  </select>
+  
+  <select id="findAttrCoordinatesByDesId" resultMap="BaseResultMap">
+  	SELECT
+  		c.id, xAxis, yAxis, c.destinationId, c.attractionId
+  	FROM
+  		attraction a,
+  		coordinate c
+  	WHERE
+  		a.destinationId = #{destinationId,jdbcType=VARCHAR}
+  	AND
+  		a.id = c.attractionId
+  	ORDER BY	
+  		a.sort
+  </select>
+</mapper>

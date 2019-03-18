@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.CouponsduijiangMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Couponsduijiang" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="expirationDate" property="expirationdate" jdbcType="VARCHAR" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="useStatus" property="usestatus" jdbcType="INTEGER" />
+    <result column="emailStatus" property="emailstatus" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="releaseStatus" property="releasestatus" jdbcType="INTEGER" />
+    <result column="couponsName" property="couponsname" jdbcType="VARCHAR" />
+    <result column="winningTime" property="winningtime" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="time" property="time" jdbcType="VARCHAR" />
+    <result column="merberId" property="merberid" jdbcType="VARCHAR" />
+    <result column="couponseId" property="couponseid" jdbcType="VARCHAR" />
+    <result column="levelId" property="levelId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, code, expirationDate, ip, useStatus, emailStatus, username, email, releaseStatus, 
+    couponsName, winningTime, title, `time`, merberId,couponseId,levelID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from couponsduijiang
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from couponsduijiang
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Couponsduijiang" >
+    insert into couponsduijiang (id, code, expirationDate, 
+      ip, useStatus, emailStatus, 
+      username, email, releaseStatus, 
+      couponsName, winningTime, title, 
+      `time`, merberId,couponseId,levelId)
+    values (#{id,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{expirationdate,jdbcType=VARCHAR}, 
+      #{ip,jdbcType=VARCHAR}, #{usestatus,jdbcType=INTEGER}, #{emailstatus,jdbcType=INTEGER}, 
+      #{username,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{releasestatus,jdbcType=INTEGER}, 
+      #{couponsname,jdbcType=VARCHAR}, #{winningtime,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{time,jdbcType=VARCHAR},#{merberid,jdbcType=VARCHAR} ,#{couponseid,jdbcType=VARCHAR},#{levelId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Couponsduijiang" >
+    insert into couponsduijiang
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      code,
+      expirationDate,
+      ip,
+      useStatus,
+      emailStatus,
+      username,
+      email,
+      releaseStatus,
+      couponsName,
+      winningTime,
+      title,
+      `time`,
+      merberId,
+      couponseId,
+      levelId,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{code,jdbcType=VARCHAR},
+      #{expirationdate,jdbcType=VARCHAR},
+      #{ip,jdbcType=VARCHAR},
+      #{usestatus,jdbcType=INTEGER},
+      #{emailstatus,jdbcType=INTEGER},
+      #{username,jdbcType=VARCHAR},
+      #{email,jdbcType=VARCHAR},
+      #{releasestatus,jdbcType=INTEGER},
+      #{couponsname,jdbcType=VARCHAR},
+      #{winningtime,jdbcType=VARCHAR},
+      #{title,jdbcType=VARCHAR},
+      #{time,jdbcType=VARCHAR},
+      #{merberid,jdbcType=VARCHAR},
+      #{couponseid,jdbcType=VARCHAR},
+      #{levelId,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Couponsduijiang" >
+    update couponsduijiang
+    <set >
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="expirationdate != null" >
+        expirationDate = #{expirationdate,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null" >
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="usestatus != null" >
+        useStatus = #{usestatus,jdbcType=INTEGER},
+      </if>
+      <if test="emailstatus != null" >
+        emailStatus = #{emailstatus,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="releasestatus != null" >
+        releaseStatus = #{releasestatus,jdbcType=INTEGER},
+      </if>
+      <if test="couponsname != null" >
+        couponsName = #{couponsname,jdbcType=VARCHAR},
+      </if>
+      <if test="winningtime != null" >
+        winningTime = #{winningtime,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null" >
+        `time` = #{time,jdbcType=VARCHAR},
+      </if>
+      <if test="merberid != null" >
+        merberId = #{merberid,jdbcType=VARCHAR},
+      </if>
+      <if test="couponseid != null" >
+        couponseId = #{couponseid,jdbcType=VARCHAR},
+      </if>
+      <if test="levelId != null" >
+        levelId = #{levelId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Couponsduijiang" >
+    update couponsduijiang
+    set code = #{code,jdbcType=VARCHAR},
+      expirationDate = #{expirationdate,jdbcType=VARCHAR},
+      ip = #{ip,jdbcType=VARCHAR},
+      useStatus = #{usestatus,jdbcType=INTEGER},
+      emailStatus = #{emailstatus,jdbcType=INTEGER},
+      username = #{username,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      releaseStatus = #{releasestatus,jdbcType=INTEGER},
+      couponsName = #{couponsname,jdbcType=VARCHAR},
+      winningTime = #{winningtime,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      `time` = #{time,jdbcType=VARCHAR},
+      merberId = #{merberid,jdbcType=VARCHAR},
+      couponseId = #{couponseid,jdbcType=VARCHAR},
+      levelId = #{levelId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+   <select id="findByCouponseId" resultMap="BaseResultMap" >
+       select * from couponsduijiang where couponseId = #{couponseid}
+	   <if test="usestatus!=null">
+	    and useStatus = #{usestatus,jdbcType=INTEGER} 
+	   </if>
+  </select>
+  <select id="selectIp" resultMap="BaseResultMap" parameterType="java.lang.String">
+   select * from couponsduijiang where ip = #{ip,jdbcType=VARCHAR}
+  </select>
+  <select id="findBymailstatus" resultMap="BaseResultMap" >
+    select
+   <include refid="Base_Column_List" />
+    from couponsduijiang where emailStatus = 1
+  </select>
+  <!-- 根据code查询 -->
+  <select id="findWithExchange" resultMap="BaseResultMap">
+   select couponsduijiang.* from couponsduijiang,couponse where couponsduijiang.couponseId=couponse.id
+   <if test="costnumber !=null">
+    and couponse.costNumber=#{costnumber} 
+   </if>
+   <if test="code !=null">
+    and couponsduijiang.code = #{code,jdbcType=VARCHAR}
+   </if>
+  </select>
+  
+  <select id="findByMemberId" resultMap="BaseResultMap">
+  	select 
+  		*
+  	from
+  		couponsduijiang
+  	where
+  		merberId = #{memberId,jdbcType=VARCHAR}	
+  </select>
+</mapper>

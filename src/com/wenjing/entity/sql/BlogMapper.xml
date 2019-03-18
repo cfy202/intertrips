@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.BlogMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Blog" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="tittle" property="tittle" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="coverImageUrl" property="coverImageUrl" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="isRecommended" property="isRecommended" jdbcType="INTEGER" />
+    <result column="numberOfComments" property="numberOfComments" jdbcType="INTEGER" />
+    <result column="commentStatus" property="commentStatus" jdbcType="INTEGER" />
+    <result column="pingStatus" property="pingStatus" jdbcType="INTEGER" />
+    <result column="sticky" property="sticky" jdbcType="INTEGER" />
+    <result column="releaseTime" property="releaseTime" jdbcType="TIMESTAMP" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="lastUpdateTime" property="lastUpdateTime" jdbcType="TIMESTAMP" />
+    <result column="coverImageId" property="coverImageId" jdbcType="VARCHAR" />
+    <result column="releaseAdminId" property="releaseAdminId" jdbcType="VARCHAR" />
+    <result column="categoryId" property="categoryId" jdbcType="VARCHAR" />
+    <result column="pageId" property="pageId" jdbcType="VARCHAR"/> 
+    <result column="isCreate" property="isCreate" jdbcType="INTEGER"/>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.wenjing.entity.Blog" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  
+  <resultMap type="com.wenjing.entity.Blog" id="resultMapWithPage" extends="ResultMapWithBLOBs">
+	<association property="page" column="pageId" select="com.wenjing.dao.PageMapper.selectByPrimaryKey"/>
+  </resultMap>
+  
+  <resultMap type="com.wenjing.entity.Blog" id="ResultWithAll" extends="resultMapWithPage">
+  	<association property="blogCategory" column="categoryId" select="com.wenjing.dao.BlogCategoryMapper.selectByPrimaryKey"/>
+  	<association property="releaseAdmin" column="releaseAdminId" select="com.wenjing.dao.AdminMapper.selectByPrimaryKey"/>  
+  	<collection property="blogTagList" ofType="com.wenjing.entity.BlogTag" column="id" select="com.wenjing.dao.BlogTagMapper.findByBlogId"></collection>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, tittle, name, coverImageUrl, status, isRecommended, numberOfComments,  
+    commentStatus, pingStatus, sticky, releaseTime, createTime, lastUpdateTime, 
+    coverImageId, releaseAdminId, categoryId,pageId,isCreate
+  </sql>
+  
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  
+  <select id="findRecentBlog" resultMap="resultMapWithPage">
+	SELECT
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+	FROM
+	 	blog
+	WHERE
+		`status` = 0
+	AND
+		sticky = 1		
+	ORDER BY
+		isRecommended DESC,releaseTime DESC
+	LIMIT 5
+  </select>
+  
+  <select id="findRecentBlogByAdminId" resultMap="resultMapWithPage">
+  	SELECT
+  	<include refid="Base_Column_List"/>
+  	,
+  	<include refid="Blob_Column_List"/>
+  	FROM
+  		blog
+  	WHERE
+  		releaseAdminId = #{adminId,jdbcType=VARCHAR}
+  	ORDER BY 
+  		isRecommended DESC,releaseTime DESC
+  	LIMIT 5			
+  </select>
+  
+  <select id="findRecentBlogByCategoryId" resultMap="resultMapWithPage" parameterType="java.lang.String">
+	SELECT
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+	FROM
+	 	blog
+	WHERE
+		categoryId = #{categoryId,jdbcType=VARCHAR}
+	AND
+		`status` = 0
+	AND
+		sticky = 1		
+	ORDER BY
+		isRecommended DESC,releaseTime DESC
+	LIMIT 5
+  </select>
+  
+  <select id="findRecentBlogByTagId" resultMap="resultMapWithPage" parameterType="java.lang.String">
+	SELECT
+	    b.id as id, tittle, name, coverImageUrl, status, isRecommended, numberOfComments,  
+	    commentStatus, pingStatus, sticky, releaseTime, createTime, lastUpdateTime, 
+	    coverImageId, b.releaseAdminId as releaseAdminId, categoryId,pageId,content
+	FROM
+		blog b,
+		blogtagassociation bta
+	WHERE
+		bta.tagId = #{tagId,jdbcType=VARCHAR}
+	AND
+		b.`status` = 0
+	AND
+		b.sticky = 1
+	AND
+		bta.blogId = b.id
+	ORDER BY
+		b.isRecommended DESC,b.releaseTime DESC
+	LIMIT 5	
+  </select>
+  
+  <select id="findRecentBlogByPage" resultMap="ResultWithAll">
+	SELECT
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+	FROM
+	 	blog
+	WHERE
+		`status` = 0 
+	AND
+		sticky = 1		 	
+	<if test="searchTitle != null">
+	AND
+		tittle like '%${searchTitle}%'
+	</if> 	
+	ORDER BY
+		isRecommended DESC,releaseTime DESC
+	LIMIT #{startPos},#{pageSize}
+  </select>
+  
+  <select id="findRecentBlogWithTagByPage" resultMap="ResultWithAll">
+	SELECT
+		b.id as id, tittle, `name`, coverImageUrl, `status`, isRecommended, numberOfComments,  
+		 commentStatus, pingStatus, sticky, releaseTime, createTime, lastUpdateTime, 
+		coverImageId, releaseAdminId, categoryId,pageId,content
+	FROM
+		blog b,
+		blogtagassociation bta
+	WHERE
+		bta.tagId = #{blogTagId,jdbcType=VARCHAR}
+    AND
+    	b.`status` = 0 
+    AND
+    	b.sticky = 1		 			
+	<if test="searchTitle != null">
+	AND
+		b.tittle like '%${searchTitle}%'
+	</if>	
+	AND	
+		bta.blogId = b.id	
+	ORDER BY
+		b.isRecommended DESC,b.releaseTime DESC	
+	LIMIT #{startPos},#{pageSize}	
+  </select>
+  
+  <select id="findRecentBlogWithCategoryByPage" resultMap="ResultWithAll">
+	SELECT
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+	FROM
+	 	blog
+	WHERE
+		`status` = 0 
+	AND
+		sticky = 1	
+	AND
+		categoryId = #{blogCategoryId,jdbcType=VARCHAR}		 	
+	<if test="searchTitle != null">
+	AND
+		tittle like '%${searchTitle}%'
+	</if> 	
+	ORDER BY
+		isRecommended DESC,releaseTime DESC
+	LIMIT #{startPos},#{pageSize}
+  </select>  
+  
+  <select id="countAll" resultType="java.lang.Integer">
+	SELECT
+		COUNT(*)
+	FROM
+		blog
+	WHERE
+		status = 0	
+	AND
+		sticky = 1	
+	<if test="blogTitle != null">
+	AND
+		tittle like '%${blogTitle}%'
+	</if>	
+  </select>
+  
+  <select id="countAllByTagId" resultType="java.lang.Integer">
+	SELECT
+		COUNT(b.id)
+	FROM
+		blog b,
+		blogtagassociation bta
+	WHERE
+		bta.tagId = #{blogTagId,jdbcType=VARCHAR}
+	AND	
+		bta.blogId = b.id		
+	<if test="blogTitle != null">
+	AND	
+		b.tittle like '%${blogTitle}%'
+	</if>		
+  </select>
+  
+  <select id="countAllByCategoryId" resultType="java.lang.Integer">
+	SELECT
+		COUNT(*)
+	FROM
+		blog
+	WHERE
+		categoryId = #{categoryId,jdbcType=VARCHAR}	
+	AND
+		status = 0	
+	AND
+		sticky = 1	
+	<if test="blogTitle != null">
+	AND
+		tittle like '%${blogTitle}%'
+	</if>		
+  </select>  
+  
+  <select id="findAllByPage" resultMap="ResultWithAll">
+	SELECT
+		b.id AS id, tittle, b.`name` AS name, coverImageUrl, status, isRecommended, numberOfComments,  
+		commentStatus, pingStatus, sticky, releaseTime, createTime, lastUpdateTime, 
+		coverImageId, releaseAdminId, categoryId,b.pageId as pageId,content,b.isCreate as isCreate,bt.id AS tagId,bt.name AS tagName,bt.isHot AS tagIsHot
+	FROM
+		blog b
+	LEFT JOIN 
+		blogtagassociation bta
+	ON 
+		b.id = bta.blogId 
+	LEFT JOIN
+		blogtag bt
+	ON
+		bt.id = bta.tagId
+	LIMIT #{startPos},#{pageSize}	
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from blog
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Blog" >
+    insert into blog (id, tittle, name, 
+      coverImageUrl, status, isRecommended, 
+      numberOfComments,  
+      commentStatus, pingStatus, sticky, 
+      releaseTime, createTime, lastUpdateTime, 
+      coverImageId, releaseAdminId, categoryId,pageId
+      content)
+    values (#{id,jdbcType=VARCHAR}, #{tittle,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{coverImageUrl,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{isRecommended,jdbcType=INTEGER}, 
+      #{numberOfComments,jdbcType=INTEGER},  
+      #{commentStatus,jdbcType=INTEGER}, #{pingStatus,jdbcType=INTEGER}, #{sticky,jdbcType=INTEGER}, 
+      #{releaseTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{lastUpdateTime,jdbcType=TIMESTAMP}, 
+      #{coverImageId,jdbcType=VARCHAR}, #{releaseAdminId,jdbcType=VARCHAR}, #{categoryId,jdbcType=VARCHAR},#{pageId,jdbcType=VARCHAR}
+      #{content,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Blog" >
+    insert into blog
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="tittle != null" >
+        tittle,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="coverImageUrl != null" >
+        coverImageUrl,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="isRecommended != null" >
+        isRecommended,
+      </if>
+      <if test="numberOfComments != null" >
+        numberOfComments,
+      </if>
+      <if test="commentStatus != null" >
+        commentStatus,
+      </if>
+      <if test="pingStatus != null" >
+        pingStatus,
+      </if>
+      <if test="sticky != null" >
+        sticky,
+      </if>
+      <if test="releaseTime != null" >
+        releaseTime,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="lastUpdateTime != null" >
+        lastUpdateTime,
+      </if>
+      <if test="coverImageId != null" >
+        coverImageId,
+      </if>
+      <if test="releaseAdminId != null" >
+        releaseAdminId,
+      </if>
+      <if test="categoryId != null" >
+        categoryId,
+      </if>
+      <if test="pageId != null">
+      	pageId,
+      </if>
+      <if test="content != null" >
+        content
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="tittle != null" >
+        #{tittle,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="coverImageUrl != null" >
+        #{coverImageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="isRecommended != null" >
+        #{isRecommended,jdbcType=INTEGER},
+      </if>
+      <if test="numberOfComments != null" >
+        #{numberOfComments,jdbcType=INTEGER},
+      </if>
+      <if test="commentStatus != null" >
+        #{commentStatus,jdbcType=INTEGER},
+      </if>
+      <if test="pingStatus != null" >
+        #{pingStatus,jdbcType=INTEGER},
+      </if>
+      <if test="sticky != null" >
+        #{sticky,jdbcType=INTEGER},
+      </if>
+      <if test="releaseTime != null" >
+        #{releaseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateTime != null" >
+        #{lastUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="coverImageId != null" >
+        #{coverImageId,jdbcType=VARCHAR},
+      </if>
+      <if test="releaseAdminId != null" >
+        #{releaseAdminId,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=VARCHAR},
+      </if>
+      <if test="pageId != null">
+      	#{pageId,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR}
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Blog" >
+    update blog
+    <set >
+      <if test="tittle != null" >
+        tittle = #{tittle,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="coverImageUrl != null" >
+        coverImageUrl = #{coverImageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="isRecommended != null" >
+        isRecommended = #{isRecommended,jdbcType=INTEGER},
+      </if>
+      <if test="numberOfComments != null" >
+        numberOfComments = #{numberOfComments,jdbcType=INTEGER},
+      </if>
+      <if test="commentStatus != null" >
+        commentStatus = #{commentStatus,jdbcType=INTEGER},
+      </if>
+      <if test="pingStatus != null" >
+        pingStatus = #{pingStatus,jdbcType=INTEGER},
+      </if>
+      <if test="sticky != null" >
+        sticky = #{sticky,jdbcType=INTEGER},
+      </if>
+      <if test="releaseTime != null" >
+        releaseTime = #{releaseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateTime != null" >
+        lastUpdateTime = #{lastUpdateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="coverImageId != null" >
+        coverImageId = #{coverImageId,jdbcType=VARCHAR},
+      </if>
+      <if test="releaseAdminId != null" >
+        releaseAdminId = #{releaseAdminId,jdbcType=VARCHAR},
+      </if>
+      <if test="categoryId != null" >
+        categoryId = #{categoryId,jdbcType=VARCHAR},
+      </if>
+      <if test="pageId != null">
+		pageId = #{pageId,jdbcType=VARCHAR},      
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="isCreate != null">
+      	isCreate = #{isCreate,jdbcType=INTEGER}
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.wenjing.entity.Blog" >
+    update blog
+    set tittle = #{tittle,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      coverImageUrl = #{coverImageUrl,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      isRecommended = #{isRecommended,jdbcType=INTEGER},
+      numberOfComments = #{numberOfComments,jdbcType=INTEGER},
+      commentStatus = #{commentStatus,jdbcType=INTEGER},
+      pingStatus = #{pingStatus,jdbcType=INTEGER},
+      sticky = #{sticky,jdbcType=INTEGER},
+      releaseTime = #{releaseTime,jdbcType=TIMESTAMP},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      lastUpdateTime = #{lastUpdateTime,jdbcType=TIMESTAMP},
+      coverImageId = #{coverImageId,jdbcType=VARCHAR},
+      releaseAdminId = #{releaseAdminId,jdbcType=VARCHAR},
+      categoryId = #{categoryId,jdbcType=VARCHAR},
+      pageId = #{pageId,jdbcType=VARCHAR},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Blog" >
+    update blog
+    set tittle = #{tittle,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      coverImageUrl = #{coverImageUrl,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      isRecommended = #{isRecommended,jdbcType=INTEGER},
+      numberOfComments = #{numberOfComments,jdbcType=INTEGER},
+      commentStatus = #{commentStatus,jdbcType=INTEGER},
+      pingStatus = #{pingStatus,jdbcType=INTEGER},
+      sticky = #{sticky,jdbcType=INTEGER},
+      releaseTime = #{releaseTime,jdbcType=TIMESTAMP},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      lastUpdateTime = #{lastUpdateTime,jdbcType=TIMESTAMP},
+      coverImageId = #{coverImageId,jdbcType=VARCHAR},
+      releaseAdminId = #{releaseAdminId,jdbcType=VARCHAR},
+      categoryId = #{categoryId,jdbcType=VARCHAR},
+      pageId = #{pageId,jdbcType=VARCHAR},
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateIsCreateById">
+  	update blog
+  	set isCreate = #{isCreate}
+  	where id = #{id}
+  </update>
+  
+  <update id="updateCommentsNumber">
+	UPDATE
+		blog b,
+		(SELECT
+			blogId,COUNT(id) AS number
+		FROM
+			commentstoblog
+		WHERE
+			isShow = 1
+		AND
+			`status` = 1
+		AND
+			blogId = (
+				SELECT
+					blogId
+				FROM
+					commentstoblog
+				WHERE
+					id = #{commentsId,jdbcType=VARCHAR}
+			)
+		) ctb
+	SET
+		b.numberOfComments = ctb.number
+	WHERE
+		b.id = ctb.blogId 
+  </update>
+  
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from blog
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectWithPageById" resultMap="resultMapWithPage" parameterType="java.lang.String">
+  	select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from blog
+    where id = #{id,jdbcType=VARCHAR}
+  </select> 
+  
+  <select id="selectAllById" resultMap="ResultWithAll" parameterType="java.lang.String">
+  	select
+  	<include refid="Base_Column_List"/>
+  	,
+  	<include refid="Blob_Column_List"/>
+  	from blog
+  	where id = #{id,jdbcType=VARCHAR}
+  </select>
+</mapper>

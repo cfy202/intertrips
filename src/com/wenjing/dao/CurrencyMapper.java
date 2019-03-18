@@ -1,0 +1,74 @@
+package com.wenjing.dao;
+
+import java.util.List;
+
+import com.wenjing.entity.Currency;
+
+public interface CurrencyMapper {
+    /**
+     * 根据主键删除
+     * 参数:主键
+     * 返回:删除个数
+     * @ibatorgenerated 2015-04-22 23:01:22
+     */
+    int deleteByPrimaryKey(String id);
+
+    /**
+     * 插入，空属性也会插入
+     * 参数:pojo对象
+     * 返回:删除个数
+     * @ibatorgenerated 2015-04-22 23:01:22
+     */
+    int insert(Currency record);
+
+    /**
+     * 插入，空属性不会插入
+     * 参数:pojo对象
+     * 返回:删除个数
+     * @ibatorgenerated 2015-04-22 23:01:22
+     */
+    int insertSelective(Currency record);
+
+    /**
+     * 根据主键查询
+     * 参数:查询条件,主键值
+     * 返回:对象
+     * @ibatorgenerated 2015-04-22 23:01:22
+     */
+    Currency selectByPrimaryKey(String id);
+
+    /**
+     * 根据主键修改，空值条件不会修改成null
+     * 参数:1.要修改成的值
+     * 返回:成功修改个数
+     * @ibatorgenerated 2015-04-22 23:01:22
+     */
+    int updateByPrimaryKeySelective(Currency record);
+
+    /**
+     * 根据主键修改，空值条件会修改成null
+     * 参数:1.要修改成的值
+     * 返回:成功修改个数
+     * @ibatorgenerated 2015-04-22 23:01:22
+     */
+    int updateByPrimaryKey(Currency record);
+
+    /**
+     * 查询全部币种列表
+     * @return ：币种集合
+     */
+	List<Currency> findAll();
+
+	/**
+	 * 获取当前sort最大值
+	 * @return int
+	 */
+	int getMaxSort();
+
+	/**
+	 * 根据销售中心id查询币种
+	 * @param costnumber
+	 * @return
+	 */
+	Currency findByCostNumId(String costnumber);
+}

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.TourlinehotelMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Tourlinehotel" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="tourLineId" property="tourlineid" jdbcType="VARCHAR" />
+    <result column="hotelId" property="hotelid" jdbcType="VARCHAR" />
+    <!-- 
+    <association property="hotelHotelid" column="hotelid" select="com.wenjing.dao.HotelMapper.selectByPrimaryKey" />
+    <association property="tourlineTourlineid" column="tourlineid" select="com.wenjing.dao.TourlineMapper.selectByPrimaryKey" />
+     -->
+  </resultMap>
+  <select id="selectByHotelid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from tourlinehotel where hotelId =#{hotelId}
+  </select>
+  <select id="selectByTourlineid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from tourlinehotel where tourLineId =#{tourLineId}
+  </select>
+  <sql id="Base_Column_List" >
+    id, tourLineId, hotelId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tourlinehotel
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from tourlinehotel
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Tourlinehotel" flushCache="true" >
+    insert into tourlinehotel (id, tourLineId, hotelId
+      )
+    values (#{id,jdbcType=VARCHAR}, #{tourlineid,jdbcType=VARCHAR}, #{hotelid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Tourlinehotel" flushCache="true" >
+    insert into tourlinehotel
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      tourLineId,
+      hotelId,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{tourlineid,jdbcType=VARCHAR},
+      #{hotelid,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Tourlinehotel" flushCache="true" >
+    update tourlinehotel
+    <set >
+      <if test="tourlineid != null" >
+        tourLineId = #{tourlineid,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelid != null" >
+        hotelId = #{hotelid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Tourlinehotel" flushCache="true" >
+    update tourlinehotel
+    set tourLineId = #{tourlineid,jdbcType=VARCHAR},
+      hotelId = #{hotelid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <delete id="deleteByTourlineId" parameterType="java.lang.String">
+   delete from tourlinehotel where tourLineId = #{tourlineId}
+  </delete>
+  <delete id="deleteByHotelId" parameterType="java.lang.String" flushCache="true">
+   delete from tourlinehotel where hotelId = #{hotelId}
+  </delete>
+  
+</mapper>

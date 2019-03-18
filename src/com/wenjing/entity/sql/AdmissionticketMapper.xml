@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.AdmissionticketMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Admissionticket" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="ticketName" property="ticketname" jdbcType="VARCHAR" />
+    <result column="ticketCN" property="ticketcn" jdbcType="VARCHAR" />
+    <result column="ticketInclude" property="ticketinclude" jdbcType="VARCHAR" />
+    <result column="notInclude" property="notinclude" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="attractionId" property="attractionid" jdbcType="VARCHAR" />
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+    <result column="productId" property="productid" jdbcType="VARCHAR" />
+    <result column="costNumberIds" property="costnumberids" jdbcType="VARCHAR" />
+    <result column="regionId" property="regionid" jdbcType="VARCHAR" />
+    <result column="imageUrl" property="imageurl" jdbcType="LONGVARCHAR" />
+    <result column="ticketDescription" property="ticketdescription" jdbcType="LONGVARCHAR" />
+    <result column="ticketAmenities" property="ticketamenities" jdbcType="LONGVARCHAR" />
+    <association property="attractionAttractionid" column="attractionid" select="com.wenjing.dao.AttractionMapper.selectByPrimaryKey" />
+    <association property="productProductid" column="productid" select="com.wenjing.dao.ProductMapper.selectByPrimaryKey" />
+  </resultMap>
+  <resultMap type="com.wenjing.entity.Admissionticket" id="ResultMapWithPrice">
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="ticketName" property="ticketname" jdbcType="VARCHAR" />
+    <result column="ticketCN" property="ticketcn" jdbcType="VARCHAR" />
+    <result column="ticketInclude" property="ticketinclude" jdbcType="VARCHAR" />
+    <result column="notInclude" property="notinclude" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="attractionId" property="attractionid" jdbcType="VARCHAR" />
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+    <result column="productId" property="productid" jdbcType="VARCHAR" />
+    <result column="costNumberIds" property="costnumberids" jdbcType="VARCHAR" />
+    <result column="regionId" property="regionid" jdbcType="VARCHAR" />
+    <result column="imageUrl" property="imageurl" jdbcType="LONGVARCHAR" />
+    <result column="ticketDescription" property="ticketdescription" jdbcType="LONGVARCHAR" />
+    <result column="ticketAmenities" property="ticketamenities" jdbcType="LONGVARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL"/>
+    <result column="productId" property="productId" jdbcType="VARCHAR"/>
+  </resultMap>
+  
+  <select id="selectByAttractionid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from admissionticket where attractionId =#{attractionId}
+  </select>
+  <select id="selectByProductid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from admissionticket where productId =#{productId}
+  </select>
+ 
+  <sql id="Base_Column_List" >
+    id, ticketName, ticketCN, ticketInclude, notInclude, city, sort, attractionId, costNumber, 
+    productId, costNumberIds, regionId, imageUrl, ticketDescription, ticketAmenities
+  </sql>
+ 
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from admissionticket
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from admissionticket
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Admissionticket" flushCache="true" >
+    insert into admissionticket (id, ticketName, ticketCN, 
+      ticketInclude, notInclude, city, 
+      sort, attractionId, costNumber, 
+      productId, costNumberIds, regionId, 
+      imageUrl, ticketDescription, ticketAmenities
+      )
+    values (#{id,jdbcType=VARCHAR}, #{ticketname,jdbcType=VARCHAR}, #{ticketcn,jdbcType=VARCHAR}, 
+      #{ticketinclude,jdbcType=VARCHAR}, #{notinclude,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{sort,jdbcType=INTEGER}, #{attractionid,jdbcType=VARCHAR}, #{costnumber,jdbcType=VARCHAR}, 
+      #{productid,jdbcType=VARCHAR}, #{costnumberids,jdbcType=VARCHAR}, #{regionid,jdbcType=VARCHAR}, 
+      #{imageurl,jdbcType=LONGVARCHAR}, #{ticketdescription,jdbcType=LONGVARCHAR}, #{ticketamenities,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Admissionticket" flushCache="true" >
+    insert into admissionticket
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      ticketName,
+      ticketCN,
+      ticketInclude,
+      notInclude,
+      city,
+      sort,
+      attractionId,
+      costNumber,
+      productId,
+      costNumberIds,
+      regionId,
+      imageUrl,
+      ticketDescription,
+      ticketAmenities,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{ticketname,jdbcType=VARCHAR},
+      #{ticketcn,jdbcType=VARCHAR},
+      #{ticketinclude,jdbcType=VARCHAR},
+      #{notinclude,jdbcType=VARCHAR},
+      #{city,jdbcType=VARCHAR},
+      #{sort,jdbcType=INTEGER},
+      #{attractionid,jdbcType=VARCHAR},
+      #{costnumber,jdbcType=VARCHAR},
+      #{productid,jdbcType=VARCHAR},
+      #{costnumberids,jdbcType=VARCHAR},
+      #{regionid,jdbcType=VARCHAR},
+      #{imageurl,jdbcType=LONGVARCHAR},
+      #{ticketdescription,jdbcType=LONGVARCHAR},
+      #{ticketamenities,jdbcType=LONGVARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Admissionticket" flushCache="true" >
+    update admissionticket
+    <set >
+      <if test="ticketname != null" >
+        ticketName = #{ticketname,jdbcType=VARCHAR},
+      </if>
+      <if test="ticketcn != null" >
+        ticketCN = #{ticketcn,jdbcType=VARCHAR},
+      </if>
+      <if test="ticketinclude != null" >
+        ticketInclude = #{ticketinclude,jdbcType=VARCHAR},
+      </if>
+      <if test="notinclude != null" >
+        notInclude = #{notinclude,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="attractionid != null" >
+        attractionId = #{attractionid,jdbcType=VARCHAR},
+      </if>
+      <if test="costnumber != null" >
+        costNumber = #{costnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="productid != null" >
+        productId = #{productid,jdbcType=VARCHAR},
+      </if>
+      <if test="costnumberids != null" >
+        costNumberIds = #{costnumberids,jdbcType=VARCHAR},
+      </if>
+      <if test="regionid != null" >
+        regionId = #{regionid,jdbcType=VARCHAR},
+      </if>
+      <if test="imageurl != null" >
+        imageUrl = #{imageurl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="ticketdescription != null" >
+        ticketDescription = #{ticketdescription,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="ticketamenities != null" >
+        ticketAmenities = #{ticketamenities,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Admissionticket" flushCache="true" >
+    update admissionticket
+    set ticketName = #{ticketname,jdbcType=VARCHAR},
+      ticketCN = #{ticketcn,jdbcType=VARCHAR},
+      ticketInclude = #{ticketinclude,jdbcType=VARCHAR},
+      notInclude = #{notinclude,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER},
+      attractionId = #{attractionid,jdbcType=VARCHAR},
+      costNumber = #{costnumber,jdbcType=VARCHAR},
+      productId = #{productid,jdbcType=VARCHAR},
+      costNumberIds = #{costnumberids,jdbcType=VARCHAR},
+      regionId = #{regionid,jdbcType=VARCHAR},
+      imageUrl = #{imageurl,jdbcType=LONGVARCHAR},
+      ticketDescription = #{ticketdescription,jdbcType=LONGVARCHAR},
+      ticketAmenities = #{ticketamenities,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+   <!-- 查询总记录数 -->	
+ <select id="getMaxSort" resultType="java.lang.Integer">
+     select ifnull(max(sort),0) from admissionticket 
+  </select> 
+  <!-- 获取酒店总记录条数 -->
+	<select id="getAdmissionticketCount" resultType="java.lang.Integer">
+		select count(*) from admissionticket,cost,product,region where admissionticket.productId=product.id and 
+		admissionticket.costNumber=cost.id and admissionticket.regionId= region.id
+		<!--  and tourline.costNumber in
+		<foreach collection="costnumber" item="item" index="index"
+			separator="," close=")" open="(">
+			#{item}
+		</foreach>
+		-->
+		<if test="costnumberTD!=null">
+		  and admissionticket.costNumberIds like '%${costnumberTD}%'
+		</if>
+		
+		<if test="search != null" >
+	       and  CONCAT(admissionticket.ticketName,product.`code`,admissionticket.city) like '%${search}%'
+	    </if>
+	    <if test="indexShow != null and indexShow==1" >
+	      and admissionticket.id in (select tourlineId from indexshowtourline where costNumber=#{costnumberTD})
+	    </if>
+	    <if test="isShow != null and isShow==1" >
+	        and admissionticket.id in (select tourlineId from showtourline where costNumber=#{costnumberTD})
+	    </if>
+	    <if test="isHot != null and isHot==1" >
+	        and admissionticket.id in (select tourlineId from hottourline where costNumber=#{costnumberTD})
+	    </if>
+	</select>
+  <!-- 分页查询签证 -->
+	<select id="selectAllByPage" resultMap="BaseResultMap">
+		select
+		    admissionticket.*,
+		    cost.name costname,
+		    (SELECT addtime from showtourline where tourlineid = admissionticket.id
+		     <if test="costnumberTD!=null">
+	  		  and  costNumber=#{costnumberTD}
+			</if>
+		     limit 1) as showsort 
+		  from admissionticket,
+		       cost,
+		       product,
+		       region
+		  where admissionticket.productId=product.id 
+		        and admissionticket.costNumber=cost.id 
+		        and admissionticket.regionId= region.id
+				<!--  and tourline.costNumber in
+				<foreach collection="costnumber" item="item" index="index"
+					separator="," close=")" open="(">
+					#{item}
+				</foreach>
+				 -->
+				<if test="costnumberTD!=null">
+				  and admissionticket.costNumberIds like '%${costnumberTD}%'
+				</if>
+				<if test="search != null" >
+			      and  CONCAT(admissionticket.ticketName,product.`code`,admissionticket.city) like '%${search}%'
+			    </if> 
+			    <if test="indexShow != null and indexShow==1" >
+			      and admissionticket.id in (select tourlineId from indexshowtourline where costNumber=#{costnumberTD})
+			    </if>
+			    <if test="isShow != null and isShow==1" >
+			        and admissionticket.id in (select tourlineId from showtourline where costNumber=#{costnumberTD})
+			    </if>
+			    <if test="isHot != null and isHot==1" >
+			        and admissionticket.id in (select tourlineId from hottourline where costNumber=#{costnumberTD})
+			    </if>
+				order by showsort desc, sort desc limit #{startPos},#{pageSize}
+	</select>
+	<!-- 修改costNoIds-->
+  <update id="updateCostNumIds" flushCache="true">
+     update admissionticket set costNumberIds = #{costNumIds,jdbcType=VARCHAR} where productId = #{productid}
+  </update> 
+   <!-- 查询关联目的地信息 -->
+  <select id="selectByids" resultMap="BaseResultMap">
+   select * from admissionticket where id in 
+   <foreach collection="list" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+	</foreach>
+	</select>
+  <select id="selectWithPriceByDestinationId" resultMap="ResultMapWithPrice" parameterType="java.util.Map">
+	SELECT
+		adm.id AS id, ticketName, ticketCN, ticketInclude, notInclude, city, adm.sort, attractionId, adm.costNumber, 
+		productId, adm.costNumberIds, regionId, adm.imageUrl, ticketDescription, ticketAmenities,p.minPrice AS price,p.id As productId
+	FROM
+		attraction attr,
+		admissionticket adm,
+		product p
+	WHERE
+		attr.destinationId = #{destinationId}
+	AND
+		adm.attractionId = attr.id
+	AND
+		adm.costNumber = #{costnumber}
+	AND
+		adm.productId = p.id	
+  </select>
+  <select id="selectWithPriceByProductId" resultMap="ResultMapWithPrice">
+	SELECT
+		adm.id AS id, ticketName, ticketCN, ticketInclude, notInclude, city, adm.sort, attractionId, adm.costNumber, 
+		productId, adm.costNumberIds, regionId, adm.imageUrl, ticketDescription, ticketAmenities,p.minPrice AS price,p.id As productId
+	FROM
+		admissionticket adm,
+		product p
+	WHERE
+		adm.productId = #{costnumber,jdbcType=VARCHAR}
+	AND
+		adm.productId = p.id	
+  </select>
+</mapper>

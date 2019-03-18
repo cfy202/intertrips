@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.PageImageMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.PageImage" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="pageId" property="pageId" jdbcType="VARCHAR" />
+    <result column="imageId" property="imageId" jdbcType="VARCHAR" />
+  </resultMap> 
+  <sql id="Base_Column_List" >
+    id, pageId, imageId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from pageimage
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from pageimage
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.PageImage" flushCache="true" >
+    insert into pageimage (id, pageId, imageId
+      )
+    values (#{id,jdbcType=VARCHAR}, #{pageId,jdbcType=VARCHAR}, #{imageId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.PageImage" flushCache="true" >
+    insert into pageimage
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      pageId,
+      imageId,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{pageId,jdbcType=VARCHAR},
+      #{imageId,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.PageImage" flushCache="true" >
+    update pageimage
+    <set >
+      <if test="pageId != null" >
+        pageId = #{pageId,jdbcType=VARCHAR},
+      </if>
+      <if test="imageId != null" >
+        imageId = #{imageId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.PageImage" flushCache="true" >
+    update pageimage
+    set pageId = #{pageId,jdbcType=VARCHAR},
+      imageId = #{imageId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <delete id="deleteByImageId" parameterType="java.lang.String" flushCache="true" >
+    delete from pageimage
+    where imageId = #{imageId,jdbcType=VARCHAR} and pageId = #{pageid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByPageId" parameterType="java.lang.String" flushCache="true" >
+    delete from pageimage
+    where pageId = #{pageId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByImageId2" parameterType="java.lang.String" flushCache="true" >
+    delete from pageimage
+    where imageId = #{imageId,jdbcType=VARCHAR}
+  </delete>
+</mapper>

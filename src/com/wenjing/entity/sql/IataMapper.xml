@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.IataMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Iata" >
+    <id column="IATAcode" property="iatacode" jdbcType="CHAR" />
+    <result column="CityCode" property="citycode" jdbcType="CHAR" />
+    <result column="CityName" property="cityname" jdbcType="CHAR" />
+    <result column="CountryCode" property="countrycode" jdbcType="CHAR" />
+    <result column="CountryName" property="countryname" jdbcType="CHAR" />
+    <result column="StateCode" property="statecode" jdbcType="CHAR" />
+    <result column="StateName" property="statename" jdbcType="CHAR" />
+    <result column="NbrOfAirports" property="nbrofairports" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    IATAcode, CityCode, CityName, CountryCode, CountryName, StateCode, StateName, NbrOfAirports
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from iata
+    where IATAcode = #{iatacode,jdbcType=CHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from iata
+    where IATAcode = #{iatacode,jdbcType=CHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Iata" >
+    insert into iata (IATAcode, CityCode, CityName, 
+      CountryCode, CountryName, StateCode, 
+      StateName, NbrOfAirports)
+    values (#{iatacode,jdbcType=CHAR}, #{citycode,jdbcType=CHAR}, #{cityname,jdbcType=CHAR}, 
+      #{countrycode,jdbcType=CHAR}, #{countryname,jdbcType=CHAR}, #{statecode,jdbcType=CHAR}, 
+      #{statename,jdbcType=CHAR}, #{nbrofairports,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Iata" >
+    insert into iata
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      IATAcode,
+      CityCode,
+      CityName,
+      CountryCode,
+      CountryName,
+      StateCode,
+      StateName,
+      NbrOfAirports,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{iatacode,jdbcType=CHAR},
+      #{citycode,jdbcType=CHAR},
+      #{cityname,jdbcType=CHAR},
+      #{countrycode,jdbcType=CHAR},
+      #{countryname,jdbcType=CHAR},
+      #{statecode,jdbcType=CHAR},
+      #{statename,jdbcType=CHAR},
+      #{nbrofairports,jdbcType=CHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Iata" >
+    update iata
+    <set >
+      <if test="citycode != null" >
+        CityCode = #{citycode,jdbcType=CHAR},
+      </if>
+      <if test="cityname != null" >
+        CityName = #{cityname,jdbcType=CHAR},
+      </if>
+      <if test="countrycode != null" >
+        CountryCode = #{countrycode,jdbcType=CHAR},
+      </if>
+      <if test="countryname != null" >
+        CountryName = #{countryname,jdbcType=CHAR},
+      </if>
+      <if test="statecode != null" >
+        StateCode = #{statecode,jdbcType=CHAR},
+      </if>
+      <if test="statename != null" >
+        StateName = #{statename,jdbcType=CHAR},
+      </if>
+      <if test="nbrofairports != null" >
+        NbrOfAirports = #{nbrofairports,jdbcType=CHAR},
+      </if>
+    </set>
+    where IATAcode = #{iatacode,jdbcType=CHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Iata" >
+    update iata
+    set CityCode = #{citycode,jdbcType=CHAR},
+      CityName = #{cityname,jdbcType=CHAR},
+      CountryCode = #{countrycode,jdbcType=CHAR},
+      CountryName = #{countryname,jdbcType=CHAR},
+      StateCode = #{statecode,jdbcType=CHAR},
+      StateName = #{statename,jdbcType=CHAR},
+      NbrOfAirports = #{nbrofairports,jdbcType=CHAR}
+    where IATAcode = #{iatacode,jdbcType=CHAR}
+  </update>
+  <select id="selectByCityName" parameterType="java.lang.String">
+	SELECT
+		<include refid="Base_Column_List" />
+	FROM
+		iata
+	WHERE
+		CityName LIKE '%${cityName}%'
+  </select>
+</mapper>

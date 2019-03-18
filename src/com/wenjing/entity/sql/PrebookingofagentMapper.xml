@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.PreBookingOfAgentMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.PreBookingOfAgent" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="bookingNo" property="bookingNo" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="phoneNo" property="phoneno" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="pax" property="pax" jdbcType="INTEGER" />
+    <result column="gateWay" property="gateway" jdbcType="VARCHAR" />
+    <result column="departureId" property="departureid" jdbcType="VARCHAR" />
+    <result column="creditCardNo" property="creditcardno" jdbcType="VARCHAR" />
+    <result column="expirationDate" property="expirationdate" jdbcType="VARCHAR" />
+    <result column="securityCode" property="securitycode" jdbcType="VARCHAR" />
+    <result column="total" property="total" jdbcType="INTEGER" />
+    <result column="departureDate" property="departuredate" jdbcType="TIMESTAMP" />
+    <result column="productCode" property="productcode" jdbcType="VARCHAR" />
+    <result column="productName" property="productname" jdbcType="VARCHAR" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="agentcode" property="agentcode" jdbcType="VARCHAR" />
+    <result column="productId" property="productid" jdbcType="VARCHAR" />
+    <result column="tourdateId" property="tourdateid" jdbcType="VARCHAR" />
+    <result column="currencySign" property="currencysign" jdbcType="VARCHAR" />
+    <result column="tourpriceId" property="tourpriceid" jdbcType="VARCHAR" />
+    <result column="isSynchronize" property="isSynchronize" jdbcType="INTEGER" />
+    <result column="synchronizeNo" property="synchronizeNo" jdbcType="VARCHAR" />
+    <result column="costnumber" property="costnumber" jdbcType="VARCHAR"/>
+    <result column="isOnlinePay" property="isOnlinePay" jdbcType="BIT"/>
+  </resultMap>
+  <resultMap type="com.wenjing.entity.PreBookingOfAgent" id="SynchronizeInfoMap" extends="BaseResultMap">
+	<association property="product" column="productId" select="com.wenjing.dao.ProductMapper.selectByPrimaryKey"></association>  
+	<association property="departure" column="departureId" select="com.wenjing.dao.DepartureMapper.selectByPrimaryKey"></association>
+  </resultMap>
+  <resultMap type="com.wenjing.entity.PreBookingOfAgent" id="fullResultMap" extends="SynchronizeInfoMap">
+  	<association property="agentCode" column="agentCode" select="com.wenjing.dao.AgentCodeMapper.selectByCode"></association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, bookingNo,`name`, phoneNo, email, pax, gateWay, departureId, creditCardNo, expirationDate, 
+    securityCode, total, departureDate, productCode, productName, remarks, createTime, 
+    agentcode, productId, tourdateId, currencySign,tourpriceId,costnumber,isSynchronize,synchronizeNo,isOnlinePay
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from prebookingofagent
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAllById" resultMap="fullResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from prebookingofagent
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from prebookingofagent
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.PreBookingOfAgent" >
+    insert into prebookingofagent (id,bookingNo,`name`, phoneNo, 
+      email, pax, gateWay, 
+      departureId, creditCardNo, expirationDate, 
+      securityCode, total, departureDate, 
+      productCode, productName, remarks, 
+      createTime, agentcode, productId, 
+      tourdateId, currencySign,tourpriceId,costnumber,isSynchronize,synchronizeNo,isOnlinePay)
+    values (#{id,jdbcType=VARCHAR},#{bookingNo,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR}, #{phoneno,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{pax,jdbcType=INTEGER}, #{gateway,jdbcType=VARCHAR}, 
+      #{departureid,jdbcType=VARCHAR}, #{creditcardno,jdbcType=VARCHAR}, #{expirationdate,jdbcType=VARCHAR}, 
+      #{securitycode,jdbcType=VARCHAR}, #{total,jdbcType=INTEGER}, #{departuredate,jdbcType=TIMESTAMP}, 
+      #{productcode,jdbcType=VARCHAR}, #{productname,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{agentcode,jdbcType=VARCHAR}, #{productid,jdbcType=VARCHAR}, 
+      #{tourdateid,jdbcType=VARCHAR}, #{currencysign,jdbcType=VARCHAR},#{tourpriceid,jdbcType=VARCHAR},#{costnumber,jdbcType=VARCHAR},#{isSynchronize,jdbcType=INTEGER},#{synchronizeNo,jdbcType=VARCHAR},#{isOnlinePay,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.PreBookingOfAgent" >
+    insert into prebookingofagent
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      bookingNo,
+      `name`,
+      phoneNo,
+      email,
+      pax,
+      gateWay,
+      departureId,
+      creditCardNo,
+      expirationDate,
+      securityCode,
+      total,
+      departureDate,
+      productCode,
+      productName,
+      remarks,
+      createTime,
+      agentcode,
+      productId,
+      tourdateId,
+      currencySign,
+      tourpriceId,
+      costnumber,
+      isSynchronize,
+      synchronizeNo,
+      isOnlinePay
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{bookingNo,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR},
+      #{phoneno,jdbcType=VARCHAR},
+      #{email,jdbcType=VARCHAR},
+      #{pax,jdbcType=INTEGER},
+      #{gateway,jdbcType=VARCHAR},
+      #{departureid,jdbcType=VARCHAR},
+      #{creditcardno,jdbcType=VARCHAR},
+      #{expirationdate,jdbcType=VARCHAR},
+      #{securitycode,jdbcType=VARCHAR},
+      #{total,jdbcType=INTEGER},
+      #{departuredate,jdbcType=TIMESTAMP},
+      #{productcode,jdbcType=VARCHAR},
+      #{productname,jdbcType=VARCHAR},
+      #{remarks,jdbcType=VARCHAR},
+      #{createtime,jdbcType=TIMESTAMP},
+      #{agentcode,jdbcType=VARCHAR},
+      #{productid,jdbcType=VARCHAR},
+      #{tourdateid,jdbcType=VARCHAR},
+      #{currencysign,jdbcType=VARCHAR},
+      #{tourpriceid,jdbcType=VARCHAR},
+      #{costnumber,jdbcType=VARCHAR},
+      #{isSynchronize,jdbcType=INTEGER},
+      #{synchronizeNo,jdbcType=VARCHAR},
+      #{isOnlinePay,jdbcType=BIT}
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.PreBookingOfAgent" >
+    update prebookingofagent
+    <set >
+      <if test="bookingNo != null" >
+        bookingNo = #{bookingNo,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneno != null" >
+        phoneNo = #{phoneno,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="pax != null" >
+        pax = #{pax,jdbcType=INTEGER},
+      </if>
+      <if test="gateway != null" >
+        gateWay = #{gateway,jdbcType=VARCHAR},
+      </if>
+      <if test="departureid != null" >
+        departureId = #{departureid,jdbcType=VARCHAR},
+      </if>
+      <if test="creditcardno != null" >
+        creditCardNo = #{creditcardno,jdbcType=VARCHAR},
+      </if>
+      <if test="expirationdate != null" >
+        expirationDate = #{expirationdate,jdbcType=VARCHAR},
+      </if>
+      <if test="securitycode != null" >
+        securityCode = #{securitycode,jdbcType=VARCHAR},
+      </if>
+      <if test="total != null" >
+        total = #{total,jdbcType=INTEGER},
+      </if>
+      <if test="departuredate != null" >
+        departureDate = #{departuredate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="productcode != null" >
+        productCode = #{productcode,jdbcType=VARCHAR},
+      </if>
+      <if test="productname != null" >
+        productName = #{productname,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="agentcode != null" >
+        agentcode = #{agentcode,jdbcType=VARCHAR},
+      </if>
+      <if test="productid != null" >
+        productId = #{productid,jdbcType=VARCHAR},
+      </if>
+      <if test="tourdateid != null" >
+        tourdateId = #{tourdateid,jdbcType=VARCHAR},
+      </if>
+      <if test="currencysign != null" >
+        currencySign = #{currencysign,jdbcType=VARCHAR},
+      </if>
+      <if test="tourpriceid != null">
+      	tourpriceId = #{tourpriceid,jdbcType=VARCHAR},
+      </if>
+      <if test="costnumber != null">
+        costnumber = #{costnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="isSynchronize != null">
+        isSynchronize = #{isSynchronize,jdbcType=INTEGER},
+      </if>
+      <if test="synchronizeNo != null">
+        synchronizeNo = #{synchronizeNo,jdbcType=VARCHAR},
+      </if>
+      <if test="isOnlinePay != null">
+      	isOnlinePay = #{isOnlinePay,jdbcType=BIT}
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.PreBookingOfAgent" >
+    update prebookingofagent
+    set bookingNo = #{bookingNo,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      phoneNo = #{phoneno,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      pax = #{pax,jdbcType=INTEGER},
+      gateWay = #{gateway,jdbcType=VARCHAR},
+      departureId = #{departureid,jdbcType=VARCHAR},
+      creditCardNo = #{creditcardno,jdbcType=VARCHAR},
+      expirationDate = #{expirationdate,jdbcType=VARCHAR},
+      securityCode = #{securitycode,jdbcType=VARCHAR},
+      total = #{total,jdbcType=INTEGER},
+      departureDate = #{departuredate,jdbcType=TIMESTAMP},
+      productCode = #{productcode,jdbcType=VARCHAR},
+      productName = #{productname,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      agentcode = #{agentcode,jdbcType=VARCHAR},
+      productId = #{productid,jdbcType=VARCHAR},
+      tourdateId = #{tourdateid,jdbcType=VARCHAR},
+      currencySign = #{currencysign,jdbcType=VARCHAR},
+      tourpriceId = #{tourpriceid,jdbcType=VARCHAR},
+      costnumber = #{costnumber,jdbcType=VARCHAR},
+      isSynchronize = #{isSynchronize,jdbcType=INTEGER},
+      synchronizeNo = #{synchronizeNo,jdbcType=VARCHAR},
+      isOnlinePay = #{isOnlinePay,jdbcType=BIT}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="getTotalNumber" resultType="java.lang.Integer">
+    select 
+       count(id)
+    from 
+       prebookingofagent
+    where
+       costnumber = #{costNumber} 
+    <if test="name != null">
+	AND
+		bookingNo LIKE '%${name}%'
+	</if> 
+    <if test="productNameOrCode != null">
+	AND
+		CONCAT(productName,productCode) LIKE '%${productNameOrCode}%'
+	</if> 	        
+    <if test="gateWay != null">
+	AND
+		gateWay LIKE '%${gateWay}%'
+	</if>   
+	<if test="agentCode != null">
+	AND
+		agentCode LIKE '%${agentCode}%'
+	</if>
+	<if test="bookingTimeBeforeLimit != null">	
+	AND
+		createTime <![CDATA[>=]]> #{bookingTimeBeforeLimit}
+	</if>
+	<if test="bookingTimeAfterLimit != null">	
+	AND	
+		createTime <![CDATA[<=]]> #{bookingTimeAfterLimit}
+	</if>
+	<if test="departureDateBeforeLimit != null">	
+	AND
+		departureDate <![CDATA[>=]]> #{departureDateBeforeLimit}
+	</if>
+	<if test="departureDateAfterLimit != null">	
+	AND
+		departureDate <![CDATA[<=]]> #{departureDateAfterLimit}
+	</if>	
+	<if test="isOnlinePay != null">
+	AND
+		isOnlinePay = #{isOnlinePay,jdbcType=BIT}	
+	</if>
+  </select>
+  <select id="getOrdersByPage" resultMap="BaseResultMap">
+  	select
+  		<include refid="Base_Column_List" />
+  	from
+  		prebookingofagent
+  	where
+  		costnumber = #{costNumber}
+    <if test="name != null">
+	AND
+		bookingNo LIKE '%${name}%'
+	</if> 
+    <if test="productNameOrCode != null">
+	AND
+		CONCAT(productName,productCode) LIKE '%${productNameOrCode}%'
+	</if> 	        
+    <if test="gateWay != null">
+	AND
+		gateWay LIKE '%${gateWay}%'
+	</if>  
+	<if test="agentCode != null">
+	AND
+		agentCode LIKE '%${agentCode}%'
+	</if>	 
+	<if test="bookingTimeBeforeLimit != null">	
+	AND
+		createTime <![CDATA[>=]]> #{bookingTimeBeforeLimit}
+	</if>
+	<if test="bookingTimeAfterLimit != null">	
+	AND	
+		createTime <![CDATA[<=]]> #{bookingTimeAfterLimit}
+	</if>
+	<if test="departureDateBeforeLimit != null">	
+	AND
+		departureDate <![CDATA[>=]]> #{departureDateBeforeLimit}
+	</if>
+	<if test="departureDateAfterLimit != null">	
+	AND
+		departureDate <![CDATA[<=]]> #{departureDateAfterLimit}
+	</if>	
+    <if test="isOnlinePay != null">
+	AND
+		isOnlinePay = #{isOnlinePay,jdbcType=BIT}	
+	</if> 			
+  	ORDER BY
+		createTime DESC	
+	LIMIT #{startPos},#{pageSize}
+  </select>
+  <select id="findDetailById" resultMap="BaseResultMap">
+  	select
+  		<include refid="Base_Column_List" />
+  	from
+  		prebookingofagent
+  	where
+  		id = #{id}	
+  </select>
+  <select id="findByIds" resultMap="BaseResultMap">
+	select 
+		 <include refid="Base_Column_List" />
+	from
+		prebookingofagent
+	where
+		id in
+		<foreach collection="ids" item="item" open="(" separator="," close=")">
+		  #{item}
+		</foreach>		  
+  </select>
+  <select id="findSynchronizeInfoByIds" resultMap="fullResultMap">
+	select 
+		 <include refid="Base_Column_List" />
+	from
+		prebookingofagent
+	where
+		isSynchronize = 0
+	AND
+		id in
+		<foreach collection="ids" item="item" open="(" separator="," close=")">
+		  #{item}
+		</foreach>		  
+  </select>
+  <select id="getTotalCollectionAndOrderNumber" resultMap="BaseResultMap">
+    SELECT
+  		COUNT(id) AS pax,
+  		SUM(total) AS total
+  	FROM
+  		prebookingofagent
+  	where
+  		costnumber = #{costNumber}
+    <if test="name != null">
+	AND
+		bookingNo LIKE '%${name}%'
+	</if> 
+    <if test="productNameOrCode != null">
+	AND
+		CONCAT(productName,productCode) LIKE '%${productNameOrCode}%'
+	</if> 	        
+    <if test="gateWay != null">
+	AND
+		gateWay LIKE '%${gateWay}%'
+	</if>  
+	<if test="agentCode != null">
+	AND
+		agentCode LIKE '%${agentCode}%'
+	</if>	 
+	<if test="bookingTimeBeforeLimit != null">	
+	AND
+		createTime <![CDATA[>=]]> #{bookingTimeBeforeLimit}
+	</if>
+	<if test="bookingTimeAfterLimit != null">	
+	AND	
+		createTime <![CDATA[<=]]> #{bookingTimeAfterLimit}
+	</if>
+	<if test="departureDateBeforeLimit != null">	
+	AND
+		departureDate <![CDATA[>=]]> #{departureDateBeforeLimit}
+	</if>
+	<if test="departureDateAfterLimit != null">	
+	AND
+		departureDate <![CDATA[<=]]> #{departureDateAfterLimit}
+	</if>	
+    <if test="isOnlinePay != null">
+	AND
+		isOnlinePay = #{isOnlinePay,jdbcType=BIT}	
+	</if> 			
+  	ORDER BY
+		createTime DESC	
+  </select>
+</mapper>

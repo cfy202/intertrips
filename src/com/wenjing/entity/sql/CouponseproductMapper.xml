@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.CouponseproductMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Couponseproduct" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="productId" property="productid" jdbcType="VARCHAR" />
+    <result column="couponseId" property="couponseid" jdbcType="VARCHAR" />
+    <!-- 
+    <association property="attractionAttractionid" column="attractionid" select="com.wenjing.dao.AttractionMapper.selectByPrimaryKey" />
+    <association property="tourlineTourlineid" column="productid" select="com.wenjing.dao.TourlineMapper.selectByPrimaryKey" />
+     -->
+  </resultMap>
+  <select id="selectByCouponseid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from couponseproduct where couponseId =#{couponseId}
+  </select>
+  <select id="selectByProductid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from couponseproduct where productId =#{productid}
+  </select>
+  <sql id="Base_Column_List" >
+    id, productId, couponseId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from couponseproduct
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from couponseproduct
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Couponseproduct" flushCache="true" >
+    insert into couponseproduct (id, productId, couponseId
+      )
+    values (#{id,jdbcType=VARCHAR}, #{productid,jdbcType=VARCHAR}, #{couponseid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Couponseproduct" flushCache="true" >
+    insert into couponseproduct
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      productId,
+      couponseId,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{productid,jdbcType=VARCHAR},
+      #{couponseid,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Couponseproduct" flushCache="true" >
+    update couponseproduct
+    <set >
+      <if test="productid != null" >
+        productId = #{productid,jdbcType=VARCHAR},
+      </if>
+      <if test="couponseid != null" >
+        couponseId = #{couponseid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Couponseproduct" flushCache="true" >
+    update couponseproduct
+    set productId = #{productid,jdbcType=VARCHAR},
+      couponseId = #{couponseid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <delete id="deleteByCouponseid" parameterType="java.lang.String" flushCache="true">
+   delete from couponseproduct where couponseId = #{couponseId}
+  </delete>
+  <!-- 批量插入 -->
+ <insert id="batchAdd" parameterType="com.wenjing.entity.Couponseproduct" flushCache="true" >
+    insert into couponseproduct (id, productId, couponseId)
+    values 
+    <foreach collection="list" item="item" index="index" separator="," >  
+        (#{item.id,jdbcType=VARCHAR}, #{item.productid,jdbcType=VARCHAR}, #{item.couponseid,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+</mapper>

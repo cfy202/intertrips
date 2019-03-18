@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.VideoMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Video" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="infor" property="infor" jdbcType="VARCHAR" />
+    <result column="pic" property="pic" jdbcType="VARCHAR" />
+    <result column="isshow" property="isshow" jdbcType="INTEGER" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+    <collection property="productvideosVideoid" ofType="com.wenjing.entity.Productvideo" column="id" select="com.wenjing.dao.ProductvideoMapper.selectByVideoid" />
+  </resultMap>
+  <resultMap id="findAllWithCostMap" type="com.wenjing.entity.Video" extends="BaseResultMap">
+		<association property="cost" column="costNumber" select="com.wenjing.dao.CostMapper.selectByPrimaryKey" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, title, infor, pic, isshow, url, `type`,costNumber
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from video
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from video
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Video" >
+    insert into video (id, title, infor, 
+      pic, isshow, url, `type`,costNumber
+      )
+    values (#{id,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{infor,jdbcType=VARCHAR}, 
+      #{pic,jdbcType=VARCHAR}, #{isshow,jdbcType=INTEGER}, #{url,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},#{costnumber,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Video" >
+    insert into video
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      title,
+      infor,
+      pic,
+      isshow,
+      url,
+      `type`,
+      costNumber,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{title,jdbcType=VARCHAR},
+      #{infor,jdbcType=VARCHAR},
+      #{pic,jdbcType=VARCHAR},
+      #{isshow,jdbcType=INTEGER},
+      #{url,jdbcType=VARCHAR},
+      #{type,jdbcType=INTEGER},
+      #{costnumber,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Video" >
+    update video
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="infor != null" >
+        infor = #{infor,jdbcType=VARCHAR},
+      </if>
+      <if test="pic != null" >
+        pic = #{pic,jdbcType=VARCHAR},
+      </if>
+      <if test="isshow != null" >
+        isshow = #{isshow,jdbcType=INTEGER},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        `type` = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="costnumber != null" >
+        costNumber = #{costnumber,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Video" >
+    update video
+    set title = #{title,jdbcType=VARCHAR},
+      infor = #{infor,jdbcType=VARCHAR},
+      pic = #{pic,jdbcType=VARCHAR},
+      isshow = #{isshow,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      `type` = #{type,jdbcType=INTEGER},
+      costNumber = #{costnumber,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+   <select id="findAll" resultMap="findAllWithCostMap">
+   select * from video 
+   <if test="type!=null">
+    where type = #{type,jdbcType=INTEGER}
+   </if>
+   <if test="costnumber!=null">
+    or costNumber = #{costnumber,jdbcType=VARCHAR}
+   </if>
+   order by type
+  </select>
+  <!--
+  <select id="findRegionShow" resultMap="BaseResultMap" parameterType="java.lang.String">
+	select name from video where id in(
+		select videoId from productvideo ,
+		(select p.id 
+		from tourline t,product p,region r,showtourline st 
+		where t.id=st.tourlineId 
+		and st.costNumber = #{costnumber,jdbcType=VARCHAR}  
+		and p.costNumberIds like '%${costnumber}%' 
+		and t.productId=p.id 
+		and r.id = t.regionId 
+		and r.isShow = 1 
+		and t.parentIds like '%${regionid}%'  
+		and (select min(sellingPrice) from `tourprice`,tourdate where tourprice.tourDateId=tourdate.id and tourdate.tourLineId=t.id and tourdate.isshow = true and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}  and tourdate.endDate >= #{time,jdbcType=INTEGER}) is not null 
+		) as pt 
+		where producttag.costNumber = #{costnumber,jdbcType=VARCHAR} 
+		and pt.id = productvideo.productId
+	)
+  </select>
+  -->
+  <select id="findByIdCostnumber" resultMap="BaseResultMap" parameterType="java.lang.String">
+	select video.* from video,productvideo pv 
+	where pv.costNumber = #{costnumber,jdbcType=VARCHAR} 
+	and pv.productId = #{productId,jdbcType=VARCHAR}
+	and pv.videoId = video.id
+  </select>
+</mapper>

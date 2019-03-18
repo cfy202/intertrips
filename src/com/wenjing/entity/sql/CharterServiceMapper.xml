@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.CharterServiceMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.CharterService" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="destinationId" property="destinationId" jdbcType="VARCHAR" />
+    <result column="pickUpTime" property="pickUpTime" jdbcType="TIMESTAMP" />
+    <result column="pickUpAddr" property="pickUpAddr" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="serviceInformation" property="serviceInformation" jdbcType="VARCHAR" />
+    <result column="imageUrl" property="imageUrl" jdbcType="VARCHAR" />
+    <result column="busIds" property="busIds" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, destinationId, pickUpTime, pickUpAddr, remark, serviceInformation, imageUrl,busIds
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from busservice
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="findAll" resultMap="BaseResultMap">
+  	select
+  	<include refid="Base_Column_List"/>
+  	from busservice
+  </select>	
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from busservice
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.CharterService" >
+    insert into busservice (id, name, destinationId, 
+      pickUpTime, pickUpAddr, remark, 
+      serviceInformation, imageUrl, busIds
+      )
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{destinationId,jdbcType=VARCHAR}, 
+      #{pickUpTime,jdbcType=TIMESTAMP}, #{pickUpAddr,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{serviceInformation,jdbcType=VARCHAR}, #{imageUrl,jdbcType=VARCHAR}, #{busIds,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.CharterService" >
+    insert into busservice
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="destinationId != null" >
+        destinationId,
+      </if>
+      <if test="pickUpTime != null" >
+        pickUpTime,
+      </if>
+      <if test="pickUpAddr != null" >
+        pickUpAddr,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="serviceInformation != null" >
+        serviceInformation,
+      </if>
+      <if test="imageUrl != null" >
+        imageUrl,
+      </if>
+      <if test="busIds != null" >
+        busIds,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="destinationId != null" >
+        #{destinationId,jdbcType=VARCHAR},
+      </if>
+      <if test="pickUpTime != null" >
+        #{pickUpTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pickUpAddr != null" >
+        #{pickUpAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceInformation != null" >
+        #{serviceInformation,jdbcType=VARCHAR},
+      </if>
+      <if test="imageUrl != null" >
+        #{imageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="busIds != null" >
+        #{busIds,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.CharterService" >
+    update busservice
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="destinationId != null" >
+        destinationId = #{destinationId,jdbcType=VARCHAR},
+      </if>
+      <if test="pickUpTime != null" >
+        pickUpTime = #{pickUpTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pickUpAddr != null" >
+        pickUpAddr = #{pickUpAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceInformation != null" >
+        serviceInformation = #{serviceInformation,jdbcType=VARCHAR},
+      </if>
+      <if test="imageUrl != null" >
+        imageUrl = #{imageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="busIds != null" >
+        busIds = #{busIds,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.wenjing.entity.CharterService" >
+    update busservice
+    set name = #{name,jdbcType=VARCHAR},
+      destinationId = #{destinationId,jdbcType=VARCHAR},
+      pickUpTime = #{pickUpTime,jdbcType=TIMESTAMP},
+      pickUpAddr = #{pickUpAddr,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      serviceInformation = #{serviceInformation,jdbcType=VARCHAR},
+      imageUrl = #{imageUrl,jdbcType=VARCHAR},
+      busIds = #{busIds,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.CharterService" >
+    update busservice
+    set name = #{name,jdbcType=VARCHAR},
+      destinationId = #{destinationId,jdbcType=VARCHAR},
+      pickUpTime = #{pickUpTime,jdbcType=TIMESTAMP},
+      pickUpAddr = #{pickUpAddr,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      serviceInformation = #{serviceInformation,jdbcType=VARCHAR},
+      imageUrl = #{imageUrl,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

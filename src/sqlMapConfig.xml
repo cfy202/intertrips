@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "mybatis-3-config.dtd">
+
+<configuration>
+    <!-- - - - - - - 懒加载和缓存 - - - - - - - - - - -->
+    <settings>
+        <setting name="cacheEnabled" value="false"/>
+        <setting name="lazyLoadingEnabled" value="false"/>
+        <setting name="aggressiveLazyLoading" value="false"/>
+    </settings>
+    <!-- - - - - - - - 物理分页拦截器 - - - - - - - -->
+    <plugins>
+        <plugin interceptor="ibator.dialect.tool.ResultSetInterceptor"/>
+        <plugin interceptor="ibator.dialect.tool.StatementInterceptor">
+            <property name="dialect" value="ibator.dialect.MySQLDialect"/>
+        </plugin>
+    </plugins>
+    <!-- - - - - - - 数据库环境配置- - - - - - - - - 
+    <environments default="environments">
+        <environment id="ct">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://127.0.0.1:3306/wenjing"/>
+                <property name="username" value="root"/>
+                <property name="password" value=""/>
+            </dataSource>
+        </environment>
+    </environments>
+    -->
+    <!-- - - - - - - -映射文件路径- - - - - - -->
+    <mappers>
+        <mapper resource="com/wenjing/entity/sql/RolecostMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/SliderMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/RegionMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/OrderstatusMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/SetoperaterMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/PromotionMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/OrderexpenseMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/AttractionMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/CurrencyMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/TourdateMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/TreeMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/PageMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/RoleMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/ItineraryMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/AttractionimageMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/TourlineMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/MemberinformationMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/TourlineimageMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/PromotionProductMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/AttractiontypeMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/MemberMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/HotelimageMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/OrdercontacterMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/TourlinehotelMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/ImageMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/SelfpayMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/TourlineattractionMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/CostMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/DestinationMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/TourlineselfpayMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/ProductMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/NavigationMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/AdminMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/CostpaymentMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/TourlinedestinationMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/RoletreeMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/SitparamMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/OrdersMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/OrderdetailMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/HotelMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/ItineraryimageMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/PageImageMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/DepartureMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/DepartureDateMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/CoordinateMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/CouponseMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/CouponslevelMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/CouponsactivityMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/VisaMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/VisaoccupationMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/CouponsduijiangMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/CouponseproductMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/ActivateMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/TourpriceMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/TourPassengerMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/ShoppingCartMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/SelfpaycurrencyMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/EmailMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/GetScoreMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/AirportPickUpMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/AirTicketPriceMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/PayDetailMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/HotTourlineMapper.xml"/>
+		<mapper resource="com/wenjing/entity/sql/ShowtourlineMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/IndexshowtourlineMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/QnaAnswerMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/QnaQuestionMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/ReviewMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/ShipCompanyMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/ShipMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/ShipLineMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/TagMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/ProducttagMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/TourlineTourdateMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/PriceMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/AttractionLevelMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/DestinationLevelMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/ProductvideoMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/VideoMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/ActivityrulesMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/ServiceItemMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/ServiceItemProductMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/IndexShowDestinationMapper.xml"/>
+         <mapper resource="com/wenjing/entity/sql/BlogCategoryMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/BlogMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/BlogTagAssociationMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/BlogTagMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/CommentsToBlogMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/BusMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/CharterServiceMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/OfficeContactsMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/ContactUsMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/SellInfoMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/FoodMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/AdmissionticketMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/AdditionalProductMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/IataMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/CancelrecordsMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/AgentCodeMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/PrebookingofagentMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/CreditCardInfoMapper.xml"/>
+        <mapper resource="com/wenjing/entity/sql/OrderAttachmentMapper.xml"/>
+    </mappers>
+</configuration>

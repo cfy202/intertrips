@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.OfficeContactsMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.OfficeContacts" >
+    <result column="id" property="id" jdbcType="VARCHAR" />
+    <result column="officeName" property="officeName" jdbcType="VARCHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="fax" property="fax" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="costnumber" property="costnumber" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap type="com.wenjing.entity.OfficeContacts" id="ResultMapWithCost" extends="BaseResultMap">
+  	<association column="costnumber" property="cost" select="com.wenjing.dao.CostMapper.selectByPrimaryKey"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, officeName, tel, fax, email, address, costnumber
+  </sql>
+  <insert id="insert" parameterType="com.wenjing.entity.OfficeContacts" >
+    insert into officecontacts (id, officeName, tel, 
+      fax, email, address, 
+      costnumber)
+    values (#{id,jdbcType=VARCHAR}, #{officeName,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, 
+      #{fax,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{costnumber,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.OfficeContacts" >
+    insert into officecontacts
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      officeName,
+      tel,
+      fax,
+      email,
+      address,
+      costnumber,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{officeName,jdbcType=VARCHAR},
+      #{tel,jdbcType=VARCHAR},
+      #{fax,jdbcType=VARCHAR},
+      #{email,jdbcType=VARCHAR},
+      #{address,jdbcType=VARCHAR},
+      #{costnumber,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  
+  <select id="selectByConditions" parameterType="com.wenjing.entity.OfficeContacts" resultMap="BaseResultMap">
+  	select
+  	<include refid="Base_Column_List"/>	
+  	from officecontacts
+  	<where>
+  		<if test="id != null">
+  			AND id = #{id,jdbcType=VARCHAR}
+  		</if>
+  		<if test="officeName != null">
+  			AND officeName = #{officeName,jdbcType=VARCHAR}
+  		</if>
+  		<if test="tel != null">
+  			AND tel = #{tel,jdbcType=VARCHAR}
+  		</if>
+  		<if test="fax != null">
+  			AND fax = #{fax,jdbcType=VARCHAR}
+  		</if>
+  		<if test="email != null">
+  			AND email = #{email,jdbcType=VARCHAR}
+  		</if>
+  		<if test="address != null">
+  			AND address = #{address,jdbcType=VARCHAR}
+  		</if>
+  		<if test="costnumber != null">
+			AND costnumber = #{costnumber,jdbcType=VARCHAR}		
+  		</if>
+  	</where>
+  </select>
+  
+  <select id="selectByCostnumber" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select
+  	<include refid="Base_Column_List"/>
+  	from officecontacts
+  	where costnumber = #{costnumber,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List"/>
+  	from officecontacts
+  	where id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectAll" resultMap="ResultMapWithCost">
+  	select 
+  	<include refid="Base_Column_List"/>
+  	from officecontacts
+  </select>
+  
+  <update id="updateSelective" parameterType="com.wenjing.entity.OfficeContacts">
+  	update officecontacts
+  	<set>
+  		<if test="officeName != null">
+  			officeName = #{officeName,jdbcType=VARCHAR},
+  		</if>
+  		<if test="tel != null">
+  			tel = #{tel,jdbcType=VARCHAR},
+  		</if>
+  		<if test="fax != null">
+  			fax = #{fax,jdbcType=VARCHAR},
+  		</if>
+  		<if test="email != null">
+  			email = #{email,jdbcType=VARCHAR},
+  		</if>
+  		<if test="address != null">
+  			address = #{address,jdbcType=VARCHAR},
+  		</if>
+  		<if test="costnumber != null">
+			costnumber = #{costnumber,jdbcType=VARCHAR}		
+  		</if>
+  	</set>
+  	where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+  	delete from officecontacts
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+</mapper>

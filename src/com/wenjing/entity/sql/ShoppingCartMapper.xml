@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.ShoppingCartMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.ShoppingCart" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="productId" property="productId" jdbcType="VARCHAR" />
+    <result column="departureId" property="departureId" jdbcType="VARCHAR" />
+    <result column="productCode" property="productCode" jdbcType="VARCHAR" />
+    <result column="departureDate" property="departureDate" jdbcType="DATE" />
+    <result column="totalNumber" property="totalNumber" jdbcType="INTEGER" /> 
+   	<result column="adultNumber" property="adultNumber" jdbcType="INTEGER" />
+   	<result column="childrenNumber" property="childrenNumber" jdbcType="INTEGER" />
+   	<result column="babyNumber" property="babyNumber" jdbcType="INTEGER" />
+   	<result column="additionalProducts" property="additionalProducts" jdbcType="VARCHAR" />
+   	<result column="airportPickUpId" property="airportPickUpId" jdbcType="VARCHAR" />
+   	<result column="airTicketPriceId" property="airTicketPriceId" jdbcType="VARCHAR" />
+   	<result column="tourDateId" property="tourDateId" jdbcType="VARCHAR"/> 
+   	<result column="userId" property="userId" jdbcType="VARCHAR" /> 
+   	<result column="costNumber" property="costNumber" jdbcType="VARCHAR"/>
+   	<result column="phone" property="phone" jdbcType="VARCHAR" />
+   	<result column="firstName" property="firstName" jdbcType="VARCHAR" />
+   	<result column="lastName" property="lastName" jdbcType="VARCHAR" />
+   	<result column="email" property="email" jdbcType="VARCHAR" /> 
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id,productId,productCode,departureId,departureDate,totalNumber,adultNumber,childrenNumber,babyNumber,additionalProducts,airportPickUpId,airTicketPriceId,tourDateId,userId,costNumber,phone,firstName,lastName,email
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM shoppingcart
+    WHERE id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    DELETE FROM shoppingcart
+    WHERE id = #{id,jdbcType=VARCHAR}
+  </delete>
+  
+  <delete id="deleteByMemberId" parameterType="java.lang.String">			
+	DELETE FROM shoppingcart
+	WHERE userId = #{memberId,jdbcType=VARCHAR}  
+  </delete>
+  
+  <delete id="evictExpired" parameterType="java.lang.String">
+	  DELETE FROM shoppingcart
+	  WHERE createDate <![CDATA[<=]]> #{expiredDate,jdbcType=TIMESTAMP}
+  </delete>
+  
+  <insert id="insert" parameterType="com.wenjing.entity.ShoppingCart" >
+    INSERT INTO shoppingcart 
+    (id,productId,departureId,productCode,departureDate,totalNumber,adultNumber,childrenNumber,babyNumber,additionalProducts,airportPickUpId,airTicketPriceId,tourDateId,userId,costNumber,phone,firstName,lastName,email)
+    values 
+    (#{id,jdbcType=VARCHAR}, #{productId,jdbcType=VARCHAR}, #{departureId,jdbcType=VARCHAR},#{productCode,jdbcType=VARCHAR},#{departureDate,jdbcType=DATE},
+     #{totalNumber,jdbcType=INTEGER},#{adultNumber,jdbcType=INTEGER}, #{childrenNumber,jdbcType=INTEGER},#{babyNumber,jdbcType=INTEGER},
+     #{additionalProducts,jdbcType=VARCHAR},#{airportPickUpId,jdbcType=VARCHAR},#{airTicketPriceId,jdbcType=VARCHAR},#{tourDateId,jdbcType=VARCHAR},#{userId,jdbcType=VARCHAR},#{costNumber,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},#{firstName,jdbcType=VARCHAR},#{lastName,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR})
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.wenjing.entity.ShoppingCart" >
+    INSERT INTO shoppingcart
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+       id,
+       productId,
+       departureId,
+       productCode,
+       departureDate,
+       totalNumber,
+       adultNumber,
+       childrenNumber,
+       babyNumber,
+       additionalProducts,
+       airportPickUpId,
+       airTicketPriceId,
+       tourDateId,
+       userId,
+       costNumber,
+       phone,
+       firstName,
+       lastName,
+       email
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{productId,jdbcType=VARCHAR},
+      #{departureId,jdbcType=VARCHAR},
+      #{productCode,jdbcType=VARCHAR},
+      #{departureDate,jdbcType=DATE},
+      #{totalNumber,jdbcType=INTEGER},
+      #{adultNumber,jdbcType=INTEGER},
+      #{childrenNumber,jdbcType=INTEGER},
+      #{babyNumber,jdbcType=INTEGER},
+      #{additionalProducts,jdbcType=VARCHAR},
+      #{airportPickUpId,jdbcType=VARCHAR},
+      #{airTicketPriceId,jdbcType=VARCHAR},
+      #{tourDateId,jdbcType=VARCHAR},
+      #{userId,jdbcType=VARCHAR},
+      #{costNumber,jdbcType=VARCHAR},
+      #{phone,jdbcType=VARCHAR},
+      #{firstName,jdbcType=VARCHAR},
+      #{lastName,jdbcType=VARCHAR},
+      #{email,jdbcType=VARCHAR}
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.ShoppingCart" >
+    UPDATE shoppingcart
+    <set>
+      <if test="productId != null" >
+        productId = #{productId,jdbcType=VARCHAR},
+      </if>
+      <if test="departureId != null">
+      	departureId = #{departureId,jdbcType=VARCHAR},
+      </if>
+      <if test="productCode != null" >
+        productCode = #{productCode,jdbcType=VARCHAR},
+      </if>
+      <if test="departureDate != null">
+      	departureDate = #{departureDate,jdbcType=DATE},
+      </if>
+      <if test="totalNumber != null">
+      	totalNumber = #{totalNumber,jdbcType=INTEGER},
+      </if>
+      <if test="adultNumber != null">
+      	adultNumber = #{adultNumber,jdbcType=INTEGER},
+      </if>
+      <if test="childrenNumber != null">
+      	childrenNumber = #{childrenNumber,jdbcType=INTEGER},
+      </if>
+      <if test="babyNumber != null">
+      	babyNumber = #{babyNumber,jdbcType=INTEGER},
+      </if>
+      <if test="additionalProducts != null">
+      	additionalProducts = #{additionalProducts,jdbcType=VARCHAR},
+      </if>
+      <if test="airportPickUpId != null">
+      	airportPickUpId = #{airportPickUpId,jdbcType=VARCHAR},
+      </if>
+      <if test="airTicketPriceId != null">
+      	airTicketPriceId = #{airTicketPriceId,jdbcType=VARCHAR},
+      </if>
+      <if test="tourDateId != null">
+      	tourDateId = #{tourDateId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+      	userId = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="costNumber != null">
+      	costNumber = #{costNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+      	phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="firstName != null">
+      	firstName = #{firstName,jdbcType=VARCHAR},
+      </if>
+      <if test="lastName != null">
+      	lastName = #{lastName,jdbcType=VARCHAR},
+      </if>            
+      <if test="email != null">
+      	email = #{email,jdbcType=VARCHAR}
+      </if>
+    </set>
+    WHERE id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.ShoppingCart" >
+    UPDATE shoppingcart
+    SET productId = #{productId,jdbcType=VARCHAR},
+      departureId = #{departureId,jdbcType=VARCHAR},
+      productCode = #{productCode,jdbcType=VARCHAR},
+      departureDate = #{departureDate,jdbcType=DATE},
+      totalNumber = #{totalNumber,jdbcType=INTEGER},
+      adultNumber = #{adultNumber,jdbcType=INTEGER},
+      childrenNumber = #{childrenNumber,jdbcType=INTEGER},
+      babyNumber = #{babyNumber,jdbcType=INTEGER},
+      additionalProducts = #{additionalProducts,jdbcType=VARCHAR},
+      airportPickUpId = #{airportPickUpId,jdbcType=VARCHAR},
+      airTicketPriceId = #{airTicketPriceId,jdbcType=VARCHAR},
+      tourDateId = #{tourDateId,jdbcType=VARCHAR},
+      userId = #{userId,jdbcType=VARCHAR},
+      costNumber = #{costNubmer,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      firstName = #{firstName,jdbcType=VARCHAR},
+      lastName = #{lastName,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR}
+    WHERE id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateShoppingCartMemberId" > 
+  	UPDATE shoppingCart
+  	SET
+  		userId = #{memberId,jdbcType=VARCHAR}
+  	WHERE
+  		id = #{shoppingCartId,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="findAll" resultMap="BaseResultMap">
+   SELECT <include refid="Base_Column_List" /> FROM shoppingcart
+  </select>
+  
+  <select id="findByUserIdAndCostNumber" resultMap="BaseResultMap">
+  	SELECT <include refid="Base_Column_List" /> FROM shoppingcart
+  	WHERE userId = #{userId,jdbcType=VARCHAR}	
+  	AND costNumber = #{costNumber,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="countNumberByUserId" resultType="java.lang.Integer">
+  	SELECT count(*)
+  	FROM shoppingcart
+  	WHERE userId = #{userId,jdbcType=VARCHAR}
+  	AND costNumber = #{costNumber,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByMemberId" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	SELECT 
+  	<include refid="Base_Column_List" />
+  	FROM shoppingCart
+  	WHERE userId = #{memberId,jdbcType=VARCHAR}
+    AND costNumber = #{costNumber,jdbcType=VARCHAR}
+  </select>
+</mapper>

@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.PageMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Page" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="filePath" property="filepath" jdbcType="VARCHAR" />
+    <result column="metaTitle" property="metatitle" jdbcType="VARCHAR" />
+    <result column="metaKeywords" property="metakeywords" jdbcType="VARCHAR" />
+    <result column="metaDescription" property="metadescription" jdbcType="VARCHAR" />
+    <result column="template_url" property="templateUrl" jdbcType="VARCHAR" />
+    <result column="imageUrl" property="imageurl" jdbcType="LONGVARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.wenjing.entity.Page" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id,  filePath, metaTitle, metaKeywords, metaDescription, template_url, imageUrl, title, costNumber,type,tel
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from page
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from page
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Page" >
+    insert into page (id, filePath, metaTitle, 
+      metaKeywords, metaDescription, template_url, 
+      content,imageUrl,title,costNumber,type,tel)
+    values (#{id,jdbcType=VARCHAR}, #{filepath,jdbcType=VARCHAR}, #{metatitle,jdbcType=VARCHAR}, 
+      #{metakeywords,jdbcType=VARCHAR}, #{metadescription,jdbcType=VARCHAR}, #{templateUrl,jdbcType=VARCHAR}, 
+      #{content,jdbcType=LONGVARCHAR},#{imageurl,jdbcType=LONGVARCHAR},#{title,jdbcType=VARCHAR},#{costnumber,jdbcType=VARCHAR},#{type,jdbcType=INTEGER},#{tel,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Page" >
+    insert into page
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      filePath,
+      metaTitle,
+      metaKeywords,
+      metaDescription,
+      template_url,
+      content,
+      imageUrl,
+      title,
+      costNumber,
+      type,
+      tel,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{filepath,jdbcType=VARCHAR},
+      #{metatitle,jdbcType=VARCHAR},
+      #{metakeywords,jdbcType=VARCHAR},
+      #{metadescription,jdbcType=VARCHAR},
+      #{templateUrl,jdbcType=VARCHAR},
+      #{content,jdbcType=LONGVARCHAR},
+      #{imageurl,jdbcType=LONGVARCHAR},
+      #{title,jdbcType=VARCHAR},
+      #{costnumber,jdbcType=VARCHAR},
+      #{type,jdbcType=INTEGER},
+      #{tel,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Page" >
+    update page
+    <set >
+      <if test="filepath != null" >
+        filePath = #{filepath,jdbcType=VARCHAR},
+      </if>
+      <if test="metatitle != null" >
+        metaTitle = #{metatitle,jdbcType=VARCHAR},
+      </if>
+      <if test="metakeywords != null" >
+        metaKeywords = #{metakeywords,jdbcType=VARCHAR},
+      </if>
+      <if test="metadescription != null" >
+        metaDescription = #{metadescription,jdbcType=VARCHAR},
+      </if>
+      <if test="templateUrl != null" >
+        template_url = #{templateUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="imageurl != null" >
+        imageUrl = #{imageurl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="costnumber != null" >
+        costNumber = #{costnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+       <if test="tel != null" >
+        tel = #{tel,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.wenjing.entity.Page" >
+    update page
+    set filePath = #{filepath,jdbcType=VARCHAR},
+      metaTitle = #{metatitle,jdbcType=VARCHAR},
+      metaKeywords = #{metakeywords,jdbcType=VARCHAR},
+      metaDescription = #{metadescription,jdbcType=VARCHAR},
+      template_url = #{templateUrl,jdbcType=VARCHAR},
+      content = #{content,jdbcType=LONGVARCHAR},
+      imageUrl = #{imageurl,jdbcType=LONGVARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      costNumber = #{costnumber,jdbcType=VARCHAR},
+      tel = #{tel,jdbcType=VARCHAR}
+      <if test="type != null" >
+        ,type = #{type,jdbcType=INTEGER}
+      </if>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Page" >
+    update page
+    set filePath = #{filepath,jdbcType=VARCHAR},
+      metaTitle = #{metatitle,jdbcType=VARCHAR},
+      metaKeywords = #{metakeywords,jdbcType=VARCHAR},
+      metaDescription = #{metadescription,jdbcType=VARCHAR},
+      template_url = #{templateUrl,jdbcType=VARCHAR}
+      imageUrl = #{imageurl,jdbcType=LONGVARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      costNumber = #{costnumber,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      tel = #{tel,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="findAll" resultMap="ResultMapWithBLOBs">
+   select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from page where type = #{type} and costNumber in
+		<foreach collection="list" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+  </select>
+  <select id="findByCostnumber" resultMap="BaseResultMap" parameterType="java.lang.String">
+   select * from page where type = 0 and costNumber = #{costnumber,jdbcType=VARCHAR} 
+  </select>
+  <select id="findByFilePath" resultType="java.lang.Integer" parameterType="java.lang.String">
+  	SELECT
+  		COUNT(*)
+  	FROM
+  		page
+  	WHERE
+  		type = 7
+  	AND
+  		filePath = #{filePath,jdbcType=VARCHAR}		
+  </select>
+  
+  <select id="findByFilePathExceptPage" resultType="java.lang.Integer">
+  	SELECT
+  		COUNT(*)
+  	FROM
+  		page
+  	WHERE
+  		type = 7
+  	AND
+  		filePath = #{filePath,jdbcType=VARCHAR}	
+  	AND
+  		id != #{exceptPageId,jdbcType=VARCHAR}		
+  </select> 
+  
+  <select id="findAllContactUs" resultMap="ResultMapWithBLOBs">
+	   select 
+	   <include refid="Base_Column_List" />
+	   ,
+	   <include refid="Blob_Column_List" />
+	   from page where type = 8 and costNumber in
+		<foreach collection="list" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+  </select>
+  <select id="findAllBlog" resultMap="ResultMapWithBLOBs">
+  	SELECT
+  	<include refid="Base_Column_List"/>
+  	,
+  	<include refid="Blob_Column_List"/>
+  	FROM 
+  		page
+  	WHERE
+		id NOT IN(
+		SELECT
+			pageId
+		FROM
+			blog
+			UNION ALL
+		SELECT
+			pageId
+		FROM
+			blogtag
+			UNION ALL
+		SELECT
+			pageId
+		FROM
+			blogcategory
+	)
+	AND  	
+  		type = 7
+  	AND
+  		costNumber IN
+  	<foreach collection="list" item="item" open="(" separator="," close=")">
+  		#{item}
+  	</foreach>		
+  </select>
+  <!-- 设置页面生成状态 -->
+  <update id="updateIsCreate">
+      update page set type = #{type,jdbcType=INTEGER} where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="findNotByCostnumber" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from page where type = 0
+  </select>
+  
+  <select id="findFilePathByProductId" resultType="java.lang.String">
+	SELECT
+		pg.filePath
+	FROM
+		page pg,
+		product p
+	WHERE
+		p.id = #{productId}
+	AND
+		p.pageId = pg.id
+  </select>
+  <select id="findBlogNavigationPage" resultMap="BaseResultMap">
+	SELECT
+	    <include refid="Base_Column_List" />
+	    ,
+	    <include refid="Blob_Column_List" />
+	FROM	
+		page
+	WHERE
+		type = 7
+	AND
+		id NOT IN(
+		SELECT
+			pageId
+		FROM
+			blog
+			UNION ALL
+		SELECT
+			pageId
+		FROM
+			blogcategory
+			UNION ALL
+		SELECT
+			pageId
+		FROM
+			blogtag
+	)
+  </select>
+</mapper>

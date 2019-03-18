@@ -1,0 +1,601 @@
+
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>FAQ</title>
+<link rel="stylesheet" type="text/css" href="/uswenjing/assets-web/css/public.css" />
+<link rel="stylesheet" type="text/css" href="/uswenjing/assets-web/css/style.css" />
+<script type="text/javascript" src="/uswenjing/assets-web/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="/uswenjing/assets-web/js/script.js"></script>
+<script type="text/javascript" src="/uswenjing/assets-web/js/lrscroll.js"></script>
+<script type="text/javascript" src="/uswenjing/assets-web/js/common.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-67304615-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</head>
+<body>
+<div class="header_top width100 left">
+        <div class="widthCenter">
+            <div class="header_top_left left">
+                <span id="hello">您好，文景假期欢迎您！</span>
+                <div class="right">
+                    <span id="showLogin">
+                       <a id="headerLogin" class="theme-login" href="javascript:;">登录</a>
+                       <a id="headerRegister" class="theme-register" href="javascript:;">注册</a>
+                    </span>
+                    <span id="headerUsername"></span>
+                    <a id="headerLogout" href="/uswenjing/logout.do" class="a1">退出</a>
+                </div>
+            </div>
+            <div class="header_top_right right">
+                <div class="header_top_sel left">
+                    <div class="header_title">
+                        <span class="left"><a href="/uswenjing/member/profile/index.do" class="a1">我的文景</a></span>
+                        <div class="header_title_bg left"></div>
+                    </div>
+                </div>
+                <div class="header_top_sel left">
+                    <div class="header_title">
+                        <div class="header_title_bg1 left"></div>
+                        <span id="shoppingCartButton" class="left">购物车(<font id="shoppingCartNum" class="colorOrange">0</font>)</span>
+
+                    </div>
+                </div>
+                <!--
+                <div class="header_top_sel left">
+                    <div class="header_title">
+                        <span class="left">语言</span>
+                        <div class="header_title_bg left"></div>
+                    </div>
+                </div>
+                <div class="header_top_sel left">
+                    <div class="header_title">
+                        <span class="left">人民币</span>
+                        <div class="header_title_bg left"></div>
+                    </div>
+                </div>
+                -->
+            </div>
+        </div>
+    </div>
+    <div class="logoAndseek width100 left">
+        <div class="widthCenter">
+            <div class="logo left">
+                <a href="#"><img src="/uswenjing/assets-web/logo/logo.png" width="147" height="74" />
+                </a>
+            </div>
+            <div class="seek left">
+            	<form action="/uswenjing/front/index/search.do" method="get">
+	                <img class="left" src="/uswenjing/assets-web/images/seek.png" />
+	                <input class="seek_text left" type="text" name="keyword" placeholder="可输入目的地名称 景点名称 团号"/>
+	                <input type="hidden" name="costnumber" value="33e25a5f67274fab94b84e21adb95ef0"/>
+	                <input class="seek_sub left" type="submit" value="搜索" />
+                </form>
+            </div>
+            <div class="right">
+                <div class="tell left">
+                    <p>服务热线</p>
+                    <p class="colorOrange tell_number">400-071-0197</p>
+                </div>
+                <div class="weixin left">
+                    <img class="left" src="/uswenjing/assets-web/images/weixin.png" />
+                    <div class="weixin_p colorGray left">
+                        <p>扫一扫</p>
+                        <p>更多服务</p>
+                        <p>更多优惠</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="nav width100 left">
+        <div class="widthCenter">
+            <div class="nav_left left">
+                <div class="nav_left_center">
+                    <span class="left">热门旅游产品</span>
+                    <div class="nav_left_icon right"></div>
+                </div>
+                <ul class="nav_left_pos">
+	<!--当前一级分类index-->
+	                        <li>
+		                        <div class="nav_left_top left">
+		                            <div class="icon_bg icon_bg_1"></div>
+		                            <a href="/uswenjing/cn-north-america-tour.htm">北美旅游</a>
+		                            <div class="icon_bg_td right"></div>
+		                        </div>
+		                        <div class="nav_left_down right">
+		                            <a href="/uswenjing/cn-east-tour.htm">美东游</a>
+		                            <a href="/uswenjing/cn-west-tour.htm">美西旅游</a>
+		                            <a href="/uswenjing">国际租车</a>
+		                            <a href="/uswenjing">黄石团</a>
+	                        	</div>
+	             <!--           		   -->
+	                        	<div class="nav_left_more">
+	                              <a href="/uswenjing/cn-east-tour/newyork.htm">纽约出发</a>
+	                              <a href="/uswenjing/cn-east-tour/newyork-pickup.htm">纽约接机</a>
+	                              <a href="/uswenjing/cn-east-tour/washington-pickup.htm">华盛顿出发</a>
+	                              <a href="/uswenjing/cn-east-tour/washington.htm">华盛顿接机</a>
+	                              <a href="/uswenjing/cn-boston-tour.htm">波士顿出发</a>
+	                              <a href="/uswenjing/cn-philadelphia-tour.htm">费城出发</a>
+	                              <a href="/uswenjing/cn-chicago-tour.htm">芝加哥出发</a>
+	                              <a href="/uswenjing">美东+加拿大游</a>
+	                              <a href="/uswenjing">美东+哥斯达黎加游</a>
+	                              <a href="/uswenjing/cn-miami-tour.htm">迈阿密出发</a>
+	                              <a href="/uswenjing">亚特兰大出发</a>
+	                              <a href="/uswenjing">美加东</a>
+	                              <a href="/uswenjing/cn-san-francisco-tour.htm">旧金山出发</a>
+	                              <a href="/uswenjing/cn-los-angeles-tour.htm">洛杉矶出发</a>
+	                              <a href="/uswenjing/cn-las-vegas-tour.htm">拉斯维加斯出发</a>
+	                              <a href="/uswenjing">美西一日游</a>
+	                              <a href="/uswenjing">夏威夷</a>
+	                              <a href="/uswenjing">洛杉矶接机</a>
+	                              <a href="/uswenjing">旧金山接机</a>
+	                              <a href="/uswenjing">洛杉矶周边线</a>
+	                              <a href="/uswenjing">美西奢华深度游</a>
+	                              <a href="/uswenjing">美西奢华深度游</a>
+	                              <a href="/uswenjing">黄石羚羊峡谷</a>
+	                              <a href="/uswenjing">黄石公园&总统巨石</a>
+	                              <a href="/uswenjing">黄石公园&包伟湖</a>
+	                        	</div>
+                    		</li>
+	                        <li>
+		                        <div class="nav_left_top left">
+		                            <div class="icon_bg icon_bg_2"></div>
+		                            <a href="/uswenjing/cn-europe-tour.htm">欧洲旅游</a>
+		                            <div class="icon_bg_td right"></div>
+		                        </div>
+		                        <div class="nav_left_down right">
+		                            <a href="/uswenjing">欧洲环线游</a>
+		                            <a href="/uswenjing">欧洲城市游</a>
+	                        	</div>
+	             <!--           		   -->
+	                        	<div class="nav_left_more">
+	                              <a href="/uswenjing">紫线：英国、苏格兰</a>
+	                              <a href="/uswenjing">黄线：西班牙、葡萄牙</a>
+	                              <a href="/uswenjing">红线：荷兰、比利时、法国、卢森堡、德国</a>
+	                              <a href="/uswenjing">绿线：意大利、梵谛冈、摩纳哥、法国</a>
+	                              <a href="/uswenjing">蓝线：捷克、斯洛伐克、匈牙利、奥地利、瑞士</a>
+	                              <a href="/uswenjing/cn-austria-tour.htm">奥地利出发</a>
+	                              <a href="/uswenjing/cn-belgium-tour.htm">比利时出发</a>
+	                              <a href="/uswenjing/cn-germany-tour.htm">德国出发</a>
+	                              <a href="/uswenjing/cn-czech-republic-tour.htm">捷克出发</a>
+	                              <a href="/uswenjing">卢森堡出发</a>
+	                              <a href="/uswenjing/cn-hungary-tour.htm">匈牙利出发</a>
+	                              <a href="/uswenjing/cn-italy-tour.htm">意大利出发</a>
+	                        	</div>
+                    		</li>
+	                        <li>
+		                        <div class="nav_left_top left">
+		                            <div class="icon_bg icon_bg_3"></div>
+		                            <a href="/uswenjing/cn-asia-tour.htm">亚洲旅游</a>
+		                            <div class="icon_bg_td right"></div>
+		                        </div>
+		                        <div class="nav_left_down right">
+		                            <a href="/uswenjing">东亚</a>
+		                            <a href="/uswenjing">东南亚</a>
+		                            <a href="/uswenjing">南亚</a>
+		                            <a href="/uswenjing/cn-china-tour.htm">中国</a>
+                        		</div>
+                        		<div class="nav_left_more">
+		                              <a href="/uswenjing/cn-china-tour/no-shopping.htm">中国纯玩品质团</a>
+		                              <a href="/uswenjing/cn-china-tour/high-value.htm">中国美超值团</a>
+                        		</div>
+                    		</li>
+                </ul>
+            </div>
+            <ul class="nav_ul left">
+	                <li>
+	                    <a href="/uswenjing/">首页</a>
+	                </li>
+	                <li>
+	                    <a href="/uswenjing/cn-north-america-tour.htm">北美旅游</a>
+	                </li>
+	                <li>
+	                    <a href="/uswenjing/cn-europe-tour.htm">欧洲旅游</a>
+	                </li>
+	                <li>
+	                    <a href="/uswenjing/cn-australia-newzealand-tour.htm">澳新旅游</a>
+	                </li>
+	                <li>
+	                    <a href="/uswenjing/cn-aisa-tour.htm">亚洲旅游</a>
+	                </li>
+	                <li>
+	                    <a href="/uswenjing/cn-visa.htm">签证</a>
+	                </li>
+            </ul>
+        </div>
+    </div><div class="clear"></div>
+<div class="widthCenter place">当前位置：<a href="/uswenjing/" class="a1">首页</a> &gt; 加入我们</div>
+<div class="widthCenter line_filter">
+  <div class="us_aside  shadow">
+    <ul class="box_list">
+      <li class="about_us"> <em class="aside_icon ico_us"></em> <a href="/uswenjing/about-us.htm" class="aside_btn">关于我们</a> </li>
+      <li class="praise"> <em class="aside_icon ico_brand"></em> <a href="/uswenjing/praise.htm " class="aside_btn">品牌口碑</a> </li>
+      <li class="team"> <em class="aside_icon ico_team"></em> <a href="/uswenjing/team.htm " class="aside_btn">专业团队</a> </li>
+      <li class="contact"> <em class="aside_icon ico_contact"></em> <a href="/uswenjing/contact-us.htm " class="aside_btn">联系我们</a> </li>
+      <li class="join current"> <em class="aside_icon ico_contact"></em> <a href="/uswenjing/join-us.htm " class="aside_btn">加入我们</a> </li>
+    </ul>
+  </div>
+  <div class="us_content shadow">
+    <!--<div class="us_banner"> <img src="/uswenjing/assets-web/images/us_banner.jpg" width="870" height="215"> </div>-->
+    <div class="us_main">
+      <div class="us_main_box">
+        <h4>加入我们</h4>
+        <p>关于我们的团队</p>
+        <p><strong>1：团队Team-&nbsp;Together.&nbsp;Everyone.&nbsp;Achieve.&nbsp;More</strong> </p>
+        <p>一个人走的快的旅行，是既孤独又心累的。而我们的旅行，是想要一起，走的更久，去更远的地方，看更美的风景。 </p>
+        <p><strong>2：做自己喜欢的事</strong> </p>
+        <p>知之者不如好之者，好之者不如乐之者。而我们，都是对旅游深深喜爱又乐此不疲的人。因为热爱，所以坚持。因为坚持，所以更好。 </p>
+        <p><strong>3：信任与公平</strong> </p>
+        <p>我们相信彼此做的对的决定和诚实的意见。我们崇尚解决问题而不是推卸责任。我们尊重彼此关心彼此。我们懂的聆听，知晓理解的力量和支持的价值。 </p>
+        <p><strong>4：对办公室政治说No</strong> </p>
+        <p>对办公室政治说No，对办公室政治说No，对办公室政治说No。重要的事要说三遍 </p>
+        <p><strong>5：多元文化</strong> </p>
+        <p>每一个人都是独立的个体。因为尊重差异，因为寻求共同点，所以在这里，我们成为了一个整体。 </p>
+        <p><strong>6：从你到我们</strong> </p>
+        <p>人生的每个时刻都在选择。而在今天，就让我们成为你更好的选择。 </p>
+        <p>&nbsp;</p>
+        <p>关于我们企业薪酬福利 </p>
+        <p><strong>1)提供薪酬及福利包括：</strong> </p>
+        <ol>
+          <li>固定底薪+业绩提成 </li>
+          <li>医疗保险 </li>
+          <li>带薪休假根据工作年数可达8天/年，13天/年，及18天/年 </li>
+          <li>每年6天的法定带薪节假日休假 </li>
+        </ol>
+        <p>关于才能找寻 </p>
+        <p><strong>1)联系方式</strong> </p>
+        <p>请发简历至邮箱：&nbsp;hr@wenjing.com </p>
+        <p>邮件请注明您理想的职位与您的手机联络号码 </p>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <p>热招才能 </p>
+        <p><strong>1)旅游顾问</strong> </p>
+        <p>工作地点：喜乐城，加州 </p>
+        <p>主要工作内容： </p>
+        <ol>
+          <li>联系与发掘潜在客户并介绍及推销公司旅游产品 </li>
+          <li>根据客户需要，推荐适合的旅游产品 </li>
+          <li>&nbsp;解答客户对产品，产品价格，及相关问题与疑问 </li>
+          <li>在服务与旅游活动后，进行客服跟进 </li>
+          <li>及其他重要职责 </li>
+        </ol>
+        <p>&nbsp;</p>
+        <p>工作要求： </p>
+        <ol>
+          <li>具备销售经验者优先 </li>
+          <li>对旅游产品及公司文化有一定的认识和了解 </li>
+          <li>具备独&#8203;&#8203;立分析思维能力和良好的自我管理能力。能够准确地分析复杂的状况并能够以有效的方式处理动态变化 </li>
+          <li>具备优秀的双语书面及口头沟通能力与技巧，以便收集信息，处理报告以及与多元化的市场客户互动。 </li>
+          <li>具备良好的心理素质与抗压能力，以面对旺季时的忙碌与压力 </li>
+        </ol>
+        <p>&nbsp;</p>
+        <p><strong>2)旅游顾问</strong> </p>
+        <p>工作地点：芝加哥，伊利诺伊州 </p>
+        <p>主要工作内容： </p>
+        <ol>
+          <li>联系与发掘潜在客户并介绍及推销公司旅游产品 </li>
+          <li>根据客户需要，推荐适合的旅游产品 </li>
+          <li>&nbsp;解答客户对产品，产品价格，及相关问题与疑问 </li>
+          <li>在服务与旅游活动后，进行客服跟进 </li>
+          <li>及其他重要职责 </li>
+        </ol>
+        <p>&nbsp;</p>
+        <p>工作要求： </p>
+        <ol>
+          <li>具备销售经验者优先 </li>
+          <li>对旅游产品及公司文化有一定的认识和了解 </li>
+          <li>具备独&#8203;&#8203;立分析思维能力和良好的自我管理能力。能够准确地分析复杂的状况并能够以有效的方式处理动态变化 </li>
+          <li>具备优秀的双语书面及口头沟通能力与技巧，以便收集信息，处理报告以及与多元化的市场客户互动。 </li>
+          <li>具备良好的心理素质与抗压能力，以面对旺季时的忙碌与压力 </li>
+        </ol>
+        <p>&nbsp;</p>
+        <p><strong>3)机票票务员</strong> </p>
+        <p>工作地点：钻石吧，加州 </p>
+        <p>主要工作内容： </p>
+        <ol>
+          <li>与各大航空公司协商机票价格以及签订相应合同，以便更好地支持旅游产品的开发与销售 </li>
+          <li>保留所有相关的商业交易的记录和文件档案 </li>
+          <li>&nbsp;收集及派发行程所需文件，如机票，飞行保险，行程等 </li>
+          <li>根据客户要求及航空公司的规定处理机票与分配座位号等相关程序 </li>
+          <li>及其他重要职责 </li>
+        </ol>
+        <p>工作要求： </p>
+        <ol>
+          <li>具备相关工作经验者优先 </li>
+          <li>具备人际交往能力和沟通技巧以便能够清楚地表达信息和洽谈合同 </li>
+          <li>具备独&#8203;&#8203;立分析思维能力和良好的自我管理能力。能够准确地分析复杂的状况并能够以有效的方式处理动态变化 </li>
+          <li>具备良好的心理素质与抗压能力，以面对旺季时的忙碌与压力 </li>
+          <li>优秀的团队协作精神 </li>
+          <li>中英双语优先 </li>
+        </ol>
+        <p>&nbsp;</p>
+        <p><strong>4)产品开发部经理</strong> </p>
+        <p>工作地点：钻石吧，加州 </p>
+        <p>主要工作内容： </p>
+        <ol>
+          <li>分析市场数据并研究产品的试验计划与开发 </li>
+          <li>根据客户群体以及市场的需求建立和设计相应旅游产品，包括产品线路，价格，特色等 </li>
+          <li>&nbsp;准备及监督产品开发的过程 </li>
+          <li>与团队里其他部门沟通交流开发产品的理念，设计，销售等主要内容 </li>
+          <li>及其他重要职责 </li>
+        </ol>
+        <p>工作要求： </p>
+        <ol>
+          <li>具备至少3年或以上相关工作经验者优先 </li>
+          <li>具备独立分析思维能力和良好的自我管理能力。能够准确地分析复杂的状况并且能够以有效的方式处理动态变化 </li>
+          <li>具备创新精神与工作热情 </li>
+          <li>优秀的团队协作精神 </li>
+          <li>中英双语优先 </li>
+        </ol>
+        <h4>&nbsp;</h4>
+      </div>
+      <div class="us_photo">
+        <h4>企业人文环境</h4>
+        <div class="botton_scroll">
+          <ul class="featureul">
+            <li class="featurebox"> <img src="/uswenjing/assets-web/images/about_us/1.jpg" width="233" height="167"> </li>
+            <li class="featurebox"> <img src="/uswenjing/assets-web/images/about_us/2.jpg" width="233" height="167"> </li>
+            <li class="featurebox"> <img src="/uswenjing/assets-web/images/about_us/3.jpg" width="233" height="167"> </li>
+            <li class="featurebox"> <img src="/uswenjing/assets-web/images/about_us/4.jpg" width="233" height="167"> </li>
+            <li class="featurebox"> <img src="/uswenjing/assets-web/images/about_us/5.jpg" width="233" height="167"> </li>
+            <li class="featurebox"> <img src="/uswenjing/assets-web/images/about_us/6.jpg" width="233" height="167"> </li>
+          </ul>
+        </div>
+        <div class="switch"> <a class="switch_prev" href="javascript:void();"></a> <a class="switch_next" href="javascript:void();"></a> </div>
+      </div>
+    </div>
+  </div>
+  <div class="clear"></div>
+</div>
+<footer class="width100">
+    	<div class="foot">
+    		            <dl>
+                <dt>关于我们</dt>
+                
+                    <dd><a href="/uswenjing/about-us.htm" class="a3">关于我们</a></dd>
+                    <dd><a href="/uswenjing/praise.htm" class="a3">品牌口碑</a></dd>
+                    <dd><a href="/uswenjing/team.htm" class="a3">专业团队</a></dd>
+                    <dd><a href="/uswenjing/contact-us.htm" class="a3">联系我们</a></dd>
+                    <dd><a href="/uswenjing/join-us.htm" class="a3">加入我们</a></dd>
+            </dl>
+            <dl>
+                <dt>帮助中心</dt>
+                
+                    <dd><a href="/uswenjing/faq.htm" class="a3">常见问题</a></dd>
+                    <dd><a href="/uswenjing/book-pressor.htm" class="a3">订购流程</a></dd>
+                    <dd><a href="/uswenjing/score.htm" class="a3">积分奖励</a></dd>
+                    <dd><a href="/uswenjing/member-rule.htm" class="a3">会员制度</a></dd>
+                    <dd><a href="/uswenjing/insurance.htm" class="a3">旅游保险</a></dd>
+            </dl>
+            <dl>
+                <dt>服务条款</dt>
+                
+                    <dd><a href="/uswenjing#" class="a3">客服协议</a></dd>
+                    <dd><a href="/uswenjing#" class="a3">更改取消</a></dd>
+                    <dd><a href="/uswenjing#" class="a3">使用条款</a></dd>
+                    <dd><a href="/uswenjing#" class="a3">隐私条款</a></dd>
+            </dl>
+            <dl class="dl_last">
+                <dt>邮件订阅</dt>
+                <dd>
+	                	<p>为您提供最新的折扣与优惠信息</p>
+	                    <input type="text" id="EMAIL" class="foot_email" name="email" placeholder="请输入您的邮箱地址">
+	                    <input type="hidden" name="costNumber" value="33e25a5f67274fab94b84e21adb95ef0" id="COST">
+	                    <input type="button" class="foot_btn"  value="订阅" onclick="saveEmail()">
+                </dd>
+            </dl>
+            <div class="clear"></div>
+    	</div>
+</footer>
+    <div class="certificate widthCenter">
+    	<img src="/uswenjing/assets-web/images/footer_icon.png" width="501" height="41">
+        <p>Copyright &copy; 2013-2014 All Rights Reserved - California Seller of Travel #208037040   西安淘游网络科技有限责任公司 </p>
+    </div>
+<link rel="stylesheet" href="/uswenjing/assets-web/css/login.css" media="all">
+<script src="/uswenjing/assets/js/jquery-validate/jquery.validate.min.js"></script> 
+<!-- 密钥 -->
+<script type="text/javascript" src="/uswenjing/assets/js/key/rsa.js"></script>
+<script type="text/javascript" src="/uswenjing/assets/js/key/base64.js"></script> 
+<script type="text/javascript" src="/uswenjing/assets/js/key/jsbn.js"></script> 
+<script type="text/javascript" src="/uswenjing/assets/js/key/prng4.js"></script> 
+<script type="text/javascript" src="/uswenjing/assets/js/key/rng.js"></script> 
+<!--登录弹出框-->
+<div class="theme-popover">
+	 <a href="javascript:;" title="关闭" class="theme-close">×</a>
+     <div class="theme-poptit">
+     	<img src="/uswenjing/assets-web/logo/logo.png" width="147" height="74" />
+     </div>
+     <div class="theme-popbod">
+           <form method="post" id="loginForm" action="/uswenjing/login/submit.do">
+                <ol>
+                     <li>
+                        <label>邮&nbsp;&nbsp;&nbsp;箱</label>
+                        <input type="text" name="account" id="account" class="ipt" size="20" autocomplete="off"/>
+                     </li>
+                     <li>
+                        <label>密&nbsp;&nbsp;&nbsp;码</label>
+                        <input type="password" class="ipt" name="password" id="password" size="20" autocomplete="off"/>
+                         <div class="theme-tips" id = "theme-login-error"></div>
+                     </li>
+                     <li>
+                        <label>验证码</label>
+                        <input type="text" class="captcha" name="captcha" id="captcha" autocomplete="off"/>
+                        <img src="/uswenjing/captcha.do?d='+new Date().getTime()" title="" onclick="this.src='/uswenjing/captcha.do?d='+new Date().getTime()" class="yzm-img" />
+                     </li>
+
+                     <li><input class="btn" type="submit" name="submit" id="sub-login" value=" 登 录 " /></li>
+                </ol>
+           </form>
+           <div class="theme-rm">
+                <div class="left"><a class="theme-password" id="theme-password" href="javascript:;">忘记密码？</a></div>
+                <div class="right"><a class="theme-register" id="theme-register" href="javascript:;">注册</a></div>
+                <div class="clear"></div>
+           </div>
+           
+                
+           <div class="clear"></div>
+     </div>
+</div>
+
+
+<!--注册弹出框-->
+<div class="theme-popover-register">
+     <a href="javascript:;" title="关闭" class="theme-close">×</a>
+     <div class="theme-poptit">
+     	<img src="/uswenjing/assets-web/logo/logo.png" width="147" height="74" />
+     </div>
+     <div class="theme-popbod">
+           <form method="post" id="registerForm" action="/uswenjing/register/submit.do">
+                <ol>
+                     <li>
+                        <label>邮&nbsp;&nbsp;&nbsp;箱</label>
+                        <input type="text" name="account_register" id="account_register" class="ipt" size="20" autocomplete="off" placeholder="邮箱注册"/>
+                     </li>
+                     <li>
+                        <label>密&nbsp;&nbsp;&nbsp;码</label>
+                        <input type="password" class="ipt" name="password_register" id="password_register" size="20" autocomplete="off"/>
+                     </li>
+                     <li>
+                        <label>确认密码</label>
+                        <input type="password" class="ipt" name="confirm_password_register" id="confirm_password_register" size="20" autocomplete="off"/>
+                     </li>
+                     <li>
+                        <label>验证码</label>
+                        <input type="text" class="captcha" name="captcha_register" id="captcha_register" autocomplete="off"/>
+                        <img src="/uswenjing/captcha.do?d='+new Date().getTime()" title="" onclick="this.src='/uswenjing/captcha.do?d='+new Date().getTime()" class="yzm-img" />
+                     </li>
+                     <li><input class="btn" type="submit" id="sub-register" name="submit" value=" 注 册 " /></li>
+                </ol>
+           </form>
+           <div class="theme-rm">
+                <div class="right  theme-login"><a class="theme-login" id="theme-register" href="javascript:;">已有账号登陆</a></div>
+                <div class="clear"></div>
+           </div>
+           <div class="clear"></div>
+     </div>
+</div>
+
+
+<!--密码修改-->
+<div class="theme-popover-password">
+     <a href="javascript:;" title="关闭" class="theme-close">×</a>
+     <div class="theme-poptit">
+     	<img src="/uswenjing/assets-web/logo/logo.png" width="147" height="74" />
+     </div>
+     <div class="theme-popbod">
+           <form method="post" id="resetForm" action="/uswenjing/password/send_resetemail.do">
+                <ol>
+                     <li>
+                        <label>邮&nbsp;&nbsp;&nbsp;箱</label>
+                        <input type="text" name="account_reset" id="account_reset" class="ipt" size="20" autocomplete="off" placeholder="请输入注册邮箱"/>
+                     </li>
+                     <li><input class="btn" type="submit" name="submit" id="sub-reset-password" value=" 密码找回 " /></li>
+                </ol>
+           </form>
+           <div class="theme-rm">
+                <div class="left"><a class="theme-login" id="theme-password" href="javascript:;">返回登录</a></div>
+                <div class="clear"></div>
+           </div>
+           <div class="clear"></div>
+     </div>
+</div>
+
+<!--注册成功返回页面-->
+<div class="theme-popover-success">
+     <a href="javascript:;" title="关闭" class="theme-close">×</a>
+     <div class="theme-poptit">
+     	<img src="/uswenjing/assets-web/logo/logo.png" width="147" height="74" />
+     </div>
+     <div class="theme-popbod">
+        <div class="ver-email">
+            <div class="hd">
+                <p>
+                邮件已发送到您的邮箱<br>
+                <span id="email-success-account"></span><br>
+                请点击邮箱中的验证链接完成验证
+                </p>
+            </div>
+            <div class="email-tips">
+                <p class="email-title">------------没有收到邮件？------------</p>
+                <p>试试重新<a class="theme-register">申请发送</a>验证链接</p>
+            </div>
+        </div>       
+        <div class="clear"></div>
+     </div>
+</div>
+
+<div id="loading_hint" class="loading_hint" >
+   <img src="/uswenjing/assets-web/background/loading.gif" style="width:32px; height:32px; margin-left:25px;"/>
+   <span id="hint">正在登陆...</span>
+</div>
+
+<div class="theme-popover-mask"></div><script type="text/javascript">
+//邮箱订阅
+function saveEmail(){
+	var email = $("#EMAIL").val();
+	var costNumber = $("#COST").val();
+	var re = /^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$/i;
+	if(re.test(email) == false){
+		alert("您填写的邮箱格式不正确");
+	}else{
+		$.ajax({
+			type: "POST",
+			url: "/uswenjing/front/index/email.do",
+			data: {email:email,costNumber:costNumber},
+			success: function(data) {
+				if(data == false){
+					$("#EMAIL").val("");
+					alert("此邮箱已经有邮件订阅了");
+				}else{
+					$("#EMAIL").val("");
+					alert("邮件订阅成功");
+					$.ajax({
+						type: "POST",
+						url: "/uswenjing/front/index/send.do",
+						data: {email:email},
+						success: function(data) {
+						},
+						error: function(e) {
+						},
+					});
+				}
+			},
+			error: function(e) {
+				alert("邮件订阅失败，请重新填写");
+			},
+		});
+	}
+}
+</script></body>
+</html>
+<script type="text/javascript">
+$(function(){
+
+	$(this).find(".nav_left_pos").hide();	
+	
+    //nav下拉
+    $(".nav_left").mouseenter(function () {
+        $(this).find(".nav_left_pos").stop(false, false).slideDown(300);
+    });
+    $(".nav_left").mouseleave(function () {
+        $(this).find(".nav_left_pos").stop(false, false).slideUp(300);
+    });
+    //nav更多下拉
+    $(".nav_left_pos li").mouseenter(function () {
+        $(this).find(".nav_left_more").stop(false, false).fadeIn(300);
+    });
+    $(".nav_left_pos li").mouseleave(function () {
+        $(this).find(".nav_left_more").stop(false, false).fadeOut(300);
+    });
+    
+});    
+</script>

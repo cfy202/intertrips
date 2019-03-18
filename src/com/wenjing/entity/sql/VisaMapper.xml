@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.VisaMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Visa" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="visaType" property="visatype" jdbcType="VARCHAR" />
+    <result column="handleLength" property="handlelength" jdbcType="VARCHAR" />
+    <result column="numberEntries" property="numberentries" jdbcType="VARCHAR" />
+    <result column="stayingDays" property="stayingdays" jdbcType="VARCHAR" />
+    <result column="visaValid" property="visavalid" jdbcType="VARCHAR" />
+    <result column="acceptanceRange" property="acceptancerange" jdbcType="VARCHAR" />
+    <result column="bookingPolicy" property="bookingPolicy" jdbcType="VARCHAR" />
+    <result column="bookingProcess" property="bookingProcess" jdbcType="VARCHAR" />
+    <result column="productId" property="productid" jdbcType="VARCHAR" />
+    <result column="regionId" property="regionid" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+    <result column="costNumberIds" property="costnumberids" jdbcType="VARCHAR" />
+    <association property="productProductid" column="productid" select="com.wenjing.dao.ProductMapper.selectByPrimaryKey" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, visaType, handleLength, numberEntries, stayingDays, visaValid, acceptanceRange, 
+    bookingPolicy,bookingProcess, productId,regionId,sort,costNumber,costNumberIds
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from visa
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByProductId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    visa.*
+    from visa
+    where productId = (select product.id from product,page where product.pageId = page.id and page.filePath= #{productid,jdbcType=VARCHAR})
+  </select>
+  <select id="selectByRegionId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select visa.*
+    from visa,region
+    where visa.regionId= region.id and region.url = #{regionid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from visa
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Visa" >
+    insert into visa (id, visaType, handleLength, 
+      numberEntries, stayingDays, visaValid, 
+      acceptanceRange, bookingPolicy,bookingProcess, productId,regionId,sort,costNumber,costNumberIds
+      )
+    values (#{id,jdbcType=VARCHAR}, #{visatype,jdbcType=VARCHAR}, #{handlelength,jdbcType=VARCHAR}, 
+      #{numberentries,jdbcType=VARCHAR}, #{stayingdays,jdbcType=VARCHAR}, #{visavalid,jdbcType=VARCHAR}, 
+      #{acceptancerange,jdbcType=VARCHAR}, #{bookingPolicy,jdbcType=VARCHAR},#{bookingProcess,jdbcType=VARCHAR},#{productid,jdbcType=VARCHAR}
+      ,#{regionid,jdbcType=VARCHAR},#{sort,jdbcType=INTEGER},#{costnumber,jdbcType=VARCHAR},#{costnumberids,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Visa" >
+    insert into visa
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      visaType,
+      handleLength,
+      numberEntries,
+      stayingDays,
+      visaValid,
+      acceptanceRange,
+      bookingPolicy,
+      bookingProcess,
+      productId,
+      regionId,
+      sort,
+      costNumber,
+      costNumberIds,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{visatype,jdbcType=VARCHAR},
+      #{handlelength,jdbcType=VARCHAR},
+      #{numberentries,jdbcType=VARCHAR},
+      #{stayingdays,jdbcType=VARCHAR},
+      #{visavalid,jdbcType=VARCHAR},
+      #{acceptancerange,jdbcType=VARCHAR},
+      #{bookingPolicy,jdbcType=VARCHAR},
+      #{bookingProcess,jdbcType=VARCHAR},
+      #{productid,jdbcType=VARCHAR},
+      #{regionid,jdbcType=VARCHAR},
+      #{sort,jdbcType=INTEGER},
+      #{costnumber,jdbcType=VARCHAR},
+      #{costnumberids,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Visa" >
+    update visa
+    <set >
+      <if test="visatype != null" >
+        visaType = #{visatype,jdbcType=VARCHAR},
+      </if>
+      <if test="handlelength != null" >
+        handleLength = #{handlelength,jdbcType=VARCHAR},
+      </if>
+      <if test="numberentries != null" >
+        numberEntries = #{numberentries,jdbcType=VARCHAR},
+      </if>
+      <if test="stayingdays != null" >
+        stayingDays = #{stayingdays,jdbcType=VARCHAR},
+      </if>
+      <if test="visavalid != null" >
+        visaValid = #{visavalid,jdbcType=VARCHAR},
+      </if>
+      <if test="acceptancerange != null" >
+        acceptanceRange = #{acceptancerange,jdbcType=VARCHAR},
+      </if>
+      <if test="bookingPolicy != null" >
+        bookingPolicy = #{bookingPolicy,jdbcType=VARCHAR},
+      </if>
+      <if test="bookingProcess != null" >
+        bookingProcess = #{bookingProcess,jdbcType=VARCHAR},
+      </if>
+      <if test="productid != null" >
+        productId = #{productid,jdbcType=VARCHAR},
+      </if>
+      <if test="regionid != null" >
+        regionId = #{regionid,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="costnumber != null" >
+        costNumber = #{costnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="costnumberids != null" >
+        costNumberIds = #{costnumberids,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Visa" >
+    update visa
+    set visaType = #{visatype,jdbcType=VARCHAR},
+      handleLength = #{handlelength,jdbcType=VARCHAR},
+      numberEntries = #{numberentries,jdbcType=VARCHAR},
+      stayingDays = #{stayingdays,jdbcType=VARCHAR},
+      visaValid = #{visavalid,jdbcType=VARCHAR},
+      acceptanceRange = #{acceptancerange,jdbcType=VARCHAR},
+      bookingPolicy = #{bookingPolicy,jdbcType=VARCHAR},
+      bookingProcess = #{bookingProcess,jdbcType=VARCHAR},
+      productId = #{productid,jdbcType=VARCHAR},
+      regionId = #{regionid,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER},
+      costNumber = #{costnumber,jdbcType=VARCHAR},
+      costNumberIds = #{costnumberids,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="findAllByCostNumber" resultMap="BaseResultMap">
+     select visa.*,cost.name costname from visa,cost where visa.costNumber=cost.id and visa.costNumber in
+     <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+       #{item}
+     </foreach>
+      order by visa.costNumber,sort
+  </select>
+  <!-- 查询总记录数 -->	
+ <select id="getMaxSort" resultType="java.lang.Integer">
+     select ifnull(max(sort),0) from visa 
+  </select> 
+  <!-- 获取签证总记录条数 -->
+	<select id="getVisaCount" resultType="java.lang.Integer">
+		select count(*) from visa,cost,product,region where visa.productId=product.id and 
+		visa.costNumber=cost.id and visa.regionId= region.id
+		<!--  and tourline.costNumber in
+		<foreach collection="costnumber" item="item" index="index"
+			separator="," close=")" open="(">
+			#{item}
+		</foreach>
+		-->
+		<if test="costnumberTD!=null">
+		  and visa.costNumberIds like '%${costnumberTD}%'
+		</if>
+		
+		<if test="search != null" >
+	       and  CONCAT(`stayingDays`,product.`name`,product.`code`,region.`name`) like '%${search}%'
+	    </if>
+	    <if test="indexShow != null and indexShow==1" >
+	      and visa.id in (select tourlineId from indexshowtourline where costNumber=#{costnumberTD})
+	    </if>
+	    <if test="isShow != null and isShow==1" >
+	        and visa.id in (select tourlineId from showtourline where costNumber=#{costnumberTD})
+	    </if>
+	    <if test="isHot != null and isHot==1" >
+	        and visa.id in (select tourlineId from hottourline where costNumber=#{costnumberTD})
+	    </if>
+	</select>
+  <!-- 分页查询签证 -->
+	<select id="selectAllByPage" resultMap="BaseResultMap">
+		select
+		    visa.*,
+		    cost.name costname,
+		    (SELECT addtime from showtourline where tourlineid = visa.id
+		     <if test="costnumberTD!=null">
+	  		  and  costNumber=#{costnumberTD}
+			</if>
+		     limit 1) as showsort 
+		  from visa,
+		       cost,
+		       product,
+		       region
+		  where visa.productId=product.id 
+		        and visa.costNumber=cost.id 
+		        and visa.regionId= region.id
+				<!--  and tourline.costNumber in
+				<foreach collection="costnumber" item="item" index="index"
+					separator="," close=")" open="(">
+					#{item}
+				</foreach>
+				 -->
+				<if test="costnumberTD!=null">
+				  and visa.costNumberIds like '%${costnumberTD}%'
+				</if>
+				<if test="search != null" >
+			       and  CONCAT(`stayingDays`,product.`name`,product.`code`,region.`name`) like '%${search}%'
+			    </if> 
+			    <if test="indexShow != null and indexShow==1" >
+			      and visa.id in (select tourlineId from indexshowtourline where costNumber=#{costnumberTD})
+			    </if>
+			    <if test="isShow != null and isShow==1" >
+			        and visa.id in (select tourlineId from showtourline where costNumber=#{costnumberTD})
+			    </if>
+			    <if test="isHot != null and isHot==1" >
+			        and visa.id in (select tourlineId from hottourline where costNumber=#{costnumberTD})
+			    </if>
+				order by showsort desc, sort desc limit #{startPos},#{pageSize}
+	</select>
+	<!-- 修改costNoIds-->
+  <update id="updateCostNumIds" flushCache="true">
+     update visa set costNumberIds = #{costNumIds,jdbcType=VARCHAR} where productId = #{productid}
+  </update> 
+</mapper>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.RoleMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Role" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="editName" property="editname" jdbcType="VARCHAR" />
+    <result column="operaterStr" property="operaterstr" jdbcType="VARCHAR" />
+    <collection property="adminsRoleid" ofType="com.wenjing.entity.Admin" column="id" select="com.wenjing.dao.AdminMapper.selectByRoleid" />
+    <collection property="rolecostsRoleid" ofType="com.wenjing.entity.Rolecost" column="id" select="com.wenjing.dao.RolecostMapper.selectByRoleid" />
+    <collection property="roletreesRoleid" ofType="com.wenjing.entity.Roletree" column="id" select="com.wenjing.dao.RoletreeMapper.selectByRoleid" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, `name`, title, editName, operaterStr
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from `role`
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from `role`
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Role" flushCache="true" >
+    insert into `role` (id, `name`, title, 
+      editName, operaterStr)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{editname,jdbcType=VARCHAR}, #{operaterstr,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Role" flushCache="true" >
+    insert into `role`
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      `name`,
+      title,
+      editName,
+      operaterStr,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR},
+      #{title,jdbcType=VARCHAR},
+      #{editname,jdbcType=VARCHAR},
+      #{operaterstr,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Role" flushCache="true" >
+    update `role`
+    <set >
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="editname != null" >
+        editName = #{editname,jdbcType=VARCHAR},
+      </if>
+      <if test="operaterstr != null" >
+        operaterStr = #{operaterstr,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Role" flushCache="true" >
+    update `role`
+    set `name` = #{name,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      editName = #{editname,jdbcType=VARCHAR},
+      operaterStr = #{operaterstr,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <!-- 查询所有 -->
+  <select id="findAll" resultMap="BaseResultMap">
+   select * from `role`
+  </select>
+  <!-- 查询总记录数 -->	
+ <select id="getMaxSort" resultType="java.lang.Integer">
+     select ifnull(max(sort),0) from `role` 
+  </select> 
+  
+</mapper>

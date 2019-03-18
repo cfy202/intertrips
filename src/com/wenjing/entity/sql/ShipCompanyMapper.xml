@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.ShipCompanyMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.ShipCompany" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="orderid" property="orderid" jdbcType="INTEGER" />
+    <result column="logoUrl" property="logourl" jdbcType="VARCHAR" />
+    <result column="Description" property="description" jdbcType="VARCHAR" />
+    <collection property="shipsCompanyid" ofType="com.wenjing.entity.Ship" column="id" select="com.wenjing.dao.ShipMapper.selectByCompanyid" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, `name`, orderid, logoUrl, Description
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ship_company
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ship_company
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.ShipCompany" useGeneratedKeys="true" keyProperty="id" >
+    insert into ship_company (id,`name`, orderid, logoUrl, 
+      Description)
+    values (#{id,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR}, #{orderid,jdbcType=INTEGER}, #{logourl,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.ShipCompany" useGeneratedKeys="true" keyProperty="id" >
+    insert into ship_company
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      `name`,
+      orderid,
+      logoUrl,
+      Description,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR},
+      #{orderid,jdbcType=INTEGER},
+      #{logourl,jdbcType=VARCHAR},
+      #{description,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.ShipCompany" >
+    update ship_company
+    <set >
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="orderid != null" >
+        orderid = #{orderid,jdbcType=INTEGER},
+      </if>
+      <if test="logourl != null" >
+        logoUrl = #{logourl,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        Description = #{description,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.ShipCompany" >
+    update ship_company
+    set `name` = #{name,jdbcType=VARCHAR},
+      orderid = #{orderid,jdbcType=INTEGER},
+      logoUrl = #{logourl,jdbcType=VARCHAR},
+      Description = #{description,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="findAll" resultMap="BaseResultMap">
+    select * from ship_company
+  </select>
+  <select id="getMaxSort" resultType="java.lang.Integer">
+   select count(*) from ship_company
+  </select>
+  
+  
+</mapper>

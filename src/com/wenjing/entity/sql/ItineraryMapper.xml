@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.ItineraryMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Itinerary" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="day" property="day" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="hotelId" property="hotelId" jdbcType="VARCHAR" />
+    <result column="hotelRemark" property="hotelRemark" jdbcType="VARCHAR" />
+    <result column="updateTime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="editor" property="editor" jdbcType="VARCHAR" />
+    <result column="traffic" property="traffic" jdbcType="VARCHAR" />
+    <result column="tourLineId" property="tourlineid" jdbcType="VARCHAR" />
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+    <result column="reminder" property="reminder" jdbcType="VARCHAR" />
+    <result column="meal" property="meal" jdbcType="VARCHAR" />
+    <result column="itintaryDids" property="itintaryDids" jdbcType="VARCHAR" />
+    <result column="itintaryCids" property="itintaryCids" jdbcType="VARCHAR" />
+    <result column="itintarySids" property="itintarySids" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap id="GeneralResultMap" type="com.wenjing.entity.Itinerary" extends="BaseResultMap">
+    <association property="tourlineTourlineid" column="tourlineid" select="com.wenjing.dao.TourlineMapper.selectByPrimaryKey" />
+    <collection property="itineraryimagesItinid" ofType="com.wenjing.entity.Itineraryimage" column="id" select="com.wenjing.dao.ItineraryimageMapper.selectByItinid" />
+  </resultMap>
+ 
+  <resultMap id="BaseResultMapWithBLOBs" type="com.wenjing.entity.Itinerary" extends="BaseResultMap">
+  	<result column="imageUrl" property="imageurl" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  
+  <resultMap id="ResultMapWithBLOBs" type="com.wenjing.entity.Itinerary" extends="GeneralResultMap" >
+    <result column="imageUrl" property="imageurl" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  
+  <resultMap id="BaseResultMapWithHotel" type="com.wenjing.entity.Itinerary" extends="BaseResultMapWithBLOBs">
+  	<association property="hotel" column="hotelId" select="com.wenjing.dao.HotelMapper.selectByPrimaryKey"></association>
+  </resultMap>
+  
+  <select id="selectByTourlineid" resultMap="BaseResultMapWithBLOBs">
+    select <include refid="Base_Column_List" /> from itinerary where tourLineId =#{tourLineId}
+  </select>
+  
+  <select id="selectWithHotelByTourlineid" resultMap="BaseResultMapWithHotel">
+  	SELECT
+  		<include refid="Base_Column_List"/>
+  	FROM
+  		itinerary
+  	WHERE
+  		tourLineId = #{tourLineId}
+  </select>
+
+  <sql id="Base_Column_List" >
+    id, `day`, title, content, hotelId,hotelRemark,updateTime, editor, traffic, tourLineId, 
+    costNumber,reminder,meal,itintaryDids,itintaryCids,itintarySids
+  </sql>
+  
+  <sql id="Blob_Column_List" >
+    imageUrl
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from itinerary
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from itinerary
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Itinerary" flushCache="true" >
+    insert into itinerary (id, `day`, title, 
+      content, hotelId,hotelRemark,
+      updateTime, editor, traffic, 
+      tourLineId, costNumber, imageUrl,reminder,meal,itintaryDids,itintaryCids,itintarySids
+      )
+    values (#{id,jdbcType=VARCHAR}, #{day,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, 
+      #{content,jdbcType=VARCHAR}, #{hotelId,jdbcType=VARCHAR},#{hotelRemark,jdbcType=VARCHAR},
+      #{updatetime,jdbcType=TIMESTAMP}, #{editor,jdbcType=VARCHAR}, #{traffic,jdbcType=VARCHAR}, 
+      #{tourlineid,jdbcType=VARCHAR}, #{costnumber,jdbcType=VARCHAR}, #{imageurl,jdbcType=LONGVARCHAR},
+      #{reminder,jdbcType=VARCHAR},#{meal,jdbcType=VARCHAR},#{itintaryDids,jdbcType=VARCHAR},
+      #{itintaryCids,jdbcType=VARCHAR},#{itintarySids,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Itinerary" flushCache="true" >
+    insert into itinerary
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      `day`,
+      title,
+      content,
+      hotelId,
+      hotelRemark,
+      updateTime,
+      editor,
+      traffic,
+      tourLineId,
+      costNumber,
+      imageUrl,
+      reminder,
+      meal,
+      itintaryDids,
+      itintaryCids,
+      itintarySids,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{day,jdbcType=INTEGER},
+      #{title,jdbcType=VARCHAR},
+      #{content,jdbcType=VARCHAR},
+      #{hotelId,jdbcType=VARCHAR},
+       #{hotelRemark,jdbcType=VARCHAR},
+      #{updatetime,jdbcType=TIMESTAMP},
+      #{editor,jdbcType=VARCHAR},
+      #{traffic,jdbcType=VARCHAR},
+      #{tourlineid,jdbcType=VARCHAR},
+      #{costnumber,jdbcType=VARCHAR},
+      #{imageurl,jdbcType=LONGVARCHAR},
+      #{reminder,jdbcType=VARCHAR},
+      #{meal,jdbcType=VARCHAR},
+      #{itintaryDids,jdbcType=VARCHAR},
+      #{itintaryCids,jdbcType=VARCHAR},
+      #{itintarySids,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Itinerary" flushCache="true" >
+    update itinerary
+    <set >
+      <if test="day != null" >
+        `day` = #{day,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelId != null" >
+        hotelId = #{hotelId,jdbcType=VARCHAR},
+      </if>
+       <if test="hotelRemark != null" >
+        hotelRemark = #{hotelRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="updatetime != null" >
+        updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="editor != null" >
+        editor = #{editor,jdbcType=VARCHAR},
+      </if>
+      <if test="traffic != null" >
+        traffic = #{traffic,jdbcType=VARCHAR},
+      </if>
+      <if test="tourlineid != null" >
+        tourLineId = #{tourlineid,jdbcType=VARCHAR},
+      </if>
+      <if test="costnumber != null" >
+        costNumber = #{costnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="imageurl != null" >
+        imageUrl = #{imageurl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="reminder != null" >
+        reminder = #{reminder,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="meal != null" >
+        meal = #{meal,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="itintaryDids != null" >
+        itintaryDids = #{itintaryDids,jdbcType=VARCHAR},
+      </if>
+      <if test="itintaryCids != null" >
+        itintaryCids = #{itintaryCids,jdbcType=VARCHAR},
+      </if>
+      <if test="itintarySids != null" >
+        itintarySids = #{itintarySids,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.wenjing.entity.Itinerary" flushCache="true" >
+    update itinerary
+    set `day` = #{day,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      hotelId = #{hotelId,jdbcType=VARCHAR},
+      hotelRemark = #{hotelRemark,jdbcType=VARCHAR},
+      updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      editor = #{editor,jdbcType=VARCHAR},
+      traffic = #{traffic,jdbcType=VARCHAR},
+      tourLineId = #{tourlineid,jdbcType=VARCHAR},
+      costNumber = #{costnumber,jdbcType=VARCHAR},
+      imageUrl = #{imageurl,jdbcType=LONGVARCHAR},
+      reminder = #{reminder,jdbcType=LONGVARCHAR},
+      meal = #{meal,jdbcType=LONGVARCHAR},
+      itintaryDids = #{itintaryDids,jdbcType=VARCHAR},
+      itintaryCids = #{itintaryCids,jdbcType=VARCHAR},
+      itintarySids = #{itintarySids,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Itinerary" flushCache="true" >
+    update itinerary
+    set `day` = #{day,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      hotelId = #{hotelId,jdbcType=VARCHAR},
+      hotelRemark = #{hotelRemark,jdbcType=VARCHAR},
+      updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      editor = #{editor,jdbcType=VARCHAR},
+      traffic = #{traffic,jdbcType=VARCHAR},
+      tourLineId = #{tourlineid,jdbcType=VARCHAR},
+      costNumber = #{costnumber,jdbcType=VARCHAR},
+      itintaryDids = #{itintaryDids,jdbcType=VARCHAR},
+      itintaryCids = #{itintaryCids,jdbcType=VARCHAR},
+      itintarySids = #{itintarySids,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="findByTourlineId" resultMap="GeneralResultMap" parameterType="java.lang.String">
+  	select * from itinerary where tourLineId = #{tourlineid,jdbcType=VARCHAR} order by day
+  </select>
+  
+  <select id="findBaseByTourlineId" resultMap="BaseResultMapWithBLOBs" parameterType="java.lang.String">
+	select * from itinerary where tourlineId = #{tourlineId} order by day
+  </select>
+  
+  <select id="getMaxDay" resultType="java.lang.Integer" parameterType="java.lang.String">
+     select ifnull(max(day),0) from itinerary where tourLineId=#{tourlineid,jdbcType=VARCHAR}
+  </select>
+  <!-- 根据线路Id删除行程 -->
+  <delete id="deleteWithTourlineId">
+   delete from itinerary where tourlineId = #{tourlineId};
+  </delete>
+</mapper>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.TourPassengerMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.TourPassenger" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="lastName" property="lastName" jdbcType="VARCHAR" />
+    <result column="firstName" property="firstName" jdbcType="VARCHAR" />
+    <result column="middleName" property="middleName" jdbcType="VARCHAR" />
+    <result column="gender" property="gender" jdbcType="TINYINT" />
+    <result column="birthday" property="birthday" jdbcType="DATE" />
+    <result column="nationality" property="nationality" jdbcType="VARCHAR" />
+    <result column="passportNo" property="passportNo" jdbcType="VARCHAR" />
+    <result column="passportNoExpiryDate" property="passportNoExpiryDate" jdbcType="DATE" />
+    <result column="mobileNumber" property="mobileNumber" jdbcType="VARCHAR" />
+    <result column="identity" property="identity" jdbcType="VARCHAR"/>
+    <result column="ordersId" property="ordersId" jdbcType="VARCHAR" />
+    <result column="roomType" property="roomType" jdbcType="VARCHAR"/>
+    <result column="roomNumber" property="roomNumber" jdbcType="INTEGER"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, lastName, firstName, middleName, gender, birthday, nationality, passportNo, passportNoExpiryDate, mobileNumber,roomType,roomNumber,identity,ordersId
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM tourpassengers
+    WHERE id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    DELETE FROM tourpassengers
+    WHERE id = #{id,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insertSelective" parameterType="com.wenjing.entity.TourPassenger" >
+    INSERT INTO tourpassengers
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      lastName,
+   	  firstName, 
+   	  middleName,
+      gender,
+      birthday,
+      nationality,
+      passportNo,
+      passportNoExpiryDate,
+      mobileNumber,
+      roomType,
+      roomNumber,
+      identity,
+      ordersId
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{lastName,jdbcType=VARCHAR},
+      #{firstName,jdbcType=VARCHAR},
+      #{middleName,jdbcType=VARCHAR},
+      #{gender,jdbcType=TINYINT},
+      #{birthday,jdbcType=DATE},
+      #{nationality,jdbcType=VARCHAR},
+      #{passportNo,jdbcType=VARCHAR},
+      #{passportNoExpiryDate,jdbcType=DATE},
+      #{mobileNumber,jdbcType=VARCHAR}, 
+      #{roomType,jdbcType=VARCHAR},
+      #{roomNumber,jdbcType=INTEGER},
+      #{identity,jdbcTypy=VARCHAR},
+      #{ordersId,jdbcType=VARCHAR}
+    </trim>
+  </insert>
+  
+  <insert id="insertBatch" parameterType="java.util.List">
+  	INSERT INTO tourpassengers
+  	(id, lastName, firstName, middleName, gender, birthday, nationality, passportNo, passportNoExpiryDate, mobileNumber,roomType,identity,roomNumber,ordersId)
+  	VALUES
+  	<foreach collection="tourPassengerList" item="item" separator=",">
+  		(#{item.id},#{item.lastName},#{item.firstName},#{item.middleName},#{item.gender},#{item.birthday},#{item.nationality},#{item.passportNo},#{item.passportNoExpiryDate},#{item.mobileNumber},#{item.roomType},#{item.identity},#{item.roomNumber},#{item.ordersId})
+  	</foreach>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.TourPassenger" >
+    UPDATE tourpassengers
+    <set>
+      <if test="lastName != null" >
+        lastName = #{lastName,jdbcType=VARCHAR},
+      </if>
+      <if test="firstName != null" >
+        firstName = #{firstName,jdbcType=VARCHAR},
+      </if>
+      <if test="middleName != null" >
+        middleName = #{middleName,jdbcType=VARCHAR},
+      </if>    
+      <if test="gender != null">
+      	gender = #{gender,jdbcType=TINYINT},
+      </if>
+      <if test="birthday != null">
+      	birthday = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="nationality != null">
+      	nationality = #{nationality,jdbcType=VARCHAR},
+      </if>
+	  <if test="passportNo != null">
+	  	passportNo = #{passportNo,jdbcType=VARCHAR},
+	  </if>
+	  <if test="passportNoExpiryDate != null">
+		passportNoExpiryDate = #{passportNoExpiryDate,jdbcType=DATE},	  	
+	  </if>
+	  <if test="mobileNumber != null">
+	  	mobileNumber = #{mobileNumber,jdbcType=VARCHAR},
+	  </if>
+	  <if test="roomType != null">
+	  	roomType = #{roomType,jdbcType=VARCHAR},
+	  </if>
+	  <if test="identity != null">
+	  	identity = #{identity,jdbcType=VARCHAR},
+	  </if>
+	  <if test="roomNumber != null">
+	  	roomNumber = #{roomNumber,jdbcType=INTEGER},
+	  </if>
+	  <if test="ordersId != null">
+	  	ordersId = #{ordersId,jdbcType=VARCHAR}
+	  </if>
+    </set>
+    WHERE id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="findByOrdersId" resultMap="BaseResultMap" parameterType="java.lang.String">
+   SELECT  
+       <include refid="Base_Column_List" /> 
+   FROM 
+       tourpassengers
+   WHERE
+       ordersId = #{ordersId,jdbcType=VARCHAR}
+   ORDER BY
+	   roomNumber   
+  </select>
+</mapper>

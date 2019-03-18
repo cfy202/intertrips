@@ -1,0 +1,409 @@
+@charset "utf-8";
+/* CSS Document */
+
+* {
+    margin: 0px;
+    padding: 0px;
+    list-style-type: none;
+    font-style: normal;
+}
+
+body {
+    height: auto;
+    background: #f4f4f4;
+}
+
+body,
+td,
+th {
+    font: 12px/1.5em "微软雅黑", Arial, Helvetica, sans-serif;
+    padding: 0;
+    margin: 0;
+}
+
+input {
+    font-family: "微软雅黑", Arial, Helvetica, sans-serif;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a:active {
+    text-decoration: none;
+}
+
+h2{
+	font-size:16px;
+	}
+img {
+    border-top-width: 0px;
+    border-right-width: 0px;
+    border-bottom-width: 0px;
+    border-left-width: 0px;
+    border-top-style: none;
+    border-right-style: none;
+    border-bottom-style: none;
+    border-left-style: none;
+}
+
+.none {
+    display: none;
+}
+
+.img_big {
+    overflow: hidden;
+}
+
+.a1 {
+    color: #868383;
+    text-decoration: none;
+}
+
+.a1:hover {
+    color: #0084cd;
+    text-decoration: underline;
+}
+
+.a2 {
+    color: #393939;
+    text-decoration: none;
+}
+
+.a2:hover {
+    color: #0084cd;
+    text-decoration: underline;
+}
+
+.a3{
+	color:#c2c2c2;
+	text-decoration: none;
+	}
+	
+.a3:hover{
+	color: #ffffff;
+    text-decoration: underline;
+	}
+
+.clear {
+    clear: both;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.width100 {
+    width: 100%;
+}
+
+.widthCenter {
+    width: 1100px;
+    margin: 0 auto;
+}
+
+.colorOrange {
+    color: #ff6c00;
+}
+
+.colorGray {
+    color: #6c6c6c;
+}
+
+.current_tit {
+    background: #ff872f;
+    color: #ffffff;
+}
+
+.header_top {
+    background: #f4f4f4;
+    height: 40px;
+    color: #868383;
+    line-height: 40px;
+}
+
+.header_top_left {
+    width: 220px;
+}
+
+.header_top_left a {
+    color: #868383;
+    margin-left: 10px;
+}
+
+.header_top_sel {
+    position: relative;
+    margin-left: 30px;
+}
+
+.header_title {
+    cursor: pointer;
+}
+
+.header_title_bg {
+    width: 7px;
+    height: 4px;
+    background: url(../background/icon_bg.png) no-repeat;
+    background-position: -62px -81px;
+    margin: 18px 0 0 5px;
+}
+
+.header_title_bg1 {
+    width: 14px;
+    height: 11px;
+    background: url(../background/icon_bg.png) no-repeat;
+    background-position: -57px -61px;
+    margin: 13px 5px 0 0;
+}
+
+.logoAndseek {
+    background: #FFF;
+    height: 90px;
+}
+
+.logo {
+    width: 147px;
+    height: 74px;
+    margin: 7px 0 0 0;
+}
+
+.seek {
+    margin: 25px 0 0 70px;
+}
+
+.seek_text {
+    width: 360px;
+    height: 36px;
+    border: 0px;
+    border-top: 2px solid #3e99dc;
+    border-bottom: 2px solid #3e99dc;
+    color: #868383;
+    line-height: 36px;
+    outline: none;
+}
+
+.seek_sub {
+    width: 84px;
+    height: 40px;
+    background: #3e99dc;
+    border-radius: 0 5px 5px 0;
+    border: 0px;
+    color: #FFF;
+}
+
+.tell {
+    width: 150px;
+    height: 40px;
+    line-height: 20px;
+    margin: 25px 0 0 0;
+}
+
+.tell_number {
+    font-size: 20px;
+}
+
+.weixin {
+    margin: 20px 0 0 40px;
+}
+
+.weixin_p {
+    line-height: 17px;
+    margin-left: 10px;
+}
+
+.nav {
+    height: 45px;
+    line-height: 45px;
+    background: #3e99dc;
+    color: #FFF;
+    font-size: 16px;
+}
+
+.nav_left {
+    width: 220px;
+    background: #0178ba;
+    position: relative;
+}
+
+.nav_left_center {
+    width: 120px;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+.nav_left_icon {
+    width: 13px;
+    height: 6px;
+    background: url(../background/icon_bg.png) no-repeat;
+    background-position: -84px -82px;
+    margin: 20px 0 0 0;
+}
+
+.nav_ul li {
+    float: left;
+}
+
+.nav_ul li a {
+    color: #FFF;
+    display: block;
+    line-height: 45px;
+    padding: 0 20px;
+    position: relative;
+    text-decoration: none;
+}
+
+.nav_left_pos {
+    position: absolute;
+    width: 100%;
+    float: left;
+    left: 0px;
+    top: 45px;
+    box-shadow: 0 1px 2px #dddddd;
+    z-index: 2;
+    display: none;
+}
+
+.nav_left_pos li {
+    width: 100%;
+    float: left;
+    height: 73px;
+    border-bottom: 1px solid #dddddd;
+    position: relative;
+    background: #FFF;
+}
+
+.nav_left_top {
+    width: 100%;
+    line-height: 30px;
+    margin-top: 10px;
+}
+
+.nav_left_top a {
+    color: #393939;
+    font-size: 16px;
+}
+
+.nav_left_top .icon_bg {
+    width: 19px;
+    height: 19px;
+    float: left;
+    margin: 5px 5px 0 15px;
+}
+
+.icon_bg_1 {
+    background: url(../background/icon_bg.png) no-repeat;
+    background-position: 0 0;
+}
+
+.icon_bg_2 {
+    background: url(../background/icon_bg.png) no-repeat;
+    background-position: -23px 0px;
+}
+
+.icon_bg_3 {
+    background: url(../background/icon_bg.png) no-repeat;
+    background-position: -46px 0px;
+}
+
+.icon_bg_4 {
+    background: url(../background/icon_bg.png) no-repeat;
+    background-position: -69px 0px;
+}
+
+.nav_left_top .icon_bg_td {
+    width: 6px;
+    height: 11px;
+    background: url(../background/icon_bg.png) no-repeat;
+    background-position: -64px -95px;
+    margin: 10px 5px 0 10px;
+}
+
+.nav_left_down {
+    width: 183px;
+    line-height: 25px;
+}
+
+.nav_left_down a {
+    color: #868383;
+    margin-right: 5px;
+    font-size: 12px;
+}
+
+.nav_left_more {
+    display: none;
+    position: absolute;
+    right: -300px;
+    width: 300px;
+    height: 150px;
+    top: 0px;
+    border: 1px solid #666;
+    background: #FFF;
+    margin-left: 10px;
+}
+/*底部*/
+footer{
+	background:#494848;
+	margin:30px 0;
+	}
+.foot{
+	width:1090px;
+	margin:0 auto;
+	padding:25px 5px 30px 5px;
+	}
+
+.foot dl{
+	float:left;
+	width:205px;
+	}
+.foot .dl_last{
+	width:260px !important;
+	}
+.foot dl dt{
+	font-size:14px;
+	color:#c2c2c2;
+	font-weight:600;
+	margin-bottom:15px;
+	}
+.foot dl dd a{
+	display:block;
+	line-height:22px;
+	}
+.foot dl dd p{
+	margin-bottom:10px;
+	color:#c2c2c2;
+	}
+.foot_email{
+	padding:3px 5px;
+	color: #707070;
+	font-size: 14px;
+	width: 175px;
+	font-family: "微软雅黑",Arial, Helvetica, sans-serif;
+	}
+.foot_btn{
+	width: 67px;
+	height: 30px;
+	color: #fff;
+	font-size: 14px;
+	font-family: "微软雅黑",Arial, Helvetica, sans-serif;
+	cursor: pointer;
+	background-color: #fe611d;
+	border-radius: 4px;
+	border: 0;
+	}
+.certificate{
+	text-align:center;
+	}
+.certificate img{
+	margin-bottom:10px;}

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.OrderAttachmentMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.OrderAttachment" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIME" />
+    <result column="orders_id" property="ordersId" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id,`name`,url,create_time,orders_id,remark
+  </sql>
+
+  <select id="insert">
+     insert into order_attachment values (#{id},#{name},#{url},#{createTime},#{ordersId},#{remark}); 
+  </select>
+  
+  <select id="findByOrdersId" resultMap="BaseResultMap" parameterType="java.lang.String">
+	select 
+	<include refid="Base_Column_List"/>
+	from order_attachment
+	where orders_id = #{ordersId} 
+  </select>
+</mapper>

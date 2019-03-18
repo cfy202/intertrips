@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.DepartureDateMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.DepartureDate" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="departureid" property="departureid" jdbcType="VARCHAR" />
+    <result column="tourdateid" property="tourdateid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, departureid, tourdateid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from departuredate
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from departuredate
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.DepartureDate" flushCache="true" >
+    insert into departuredate (id, departureid, tourdateid)
+    values (#{id,jdbcType=VARCHAR}, #{departureid,jdbcType=VARCHAR}, #{tourdateid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.DepartureDate" flushCache="true" >
+    insert into departuredate
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+     id, departureid, tourdateid,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+    #{id,jdbcType=VARCHAR}, #{departureid,jdbcType=VARCHAR}, #{tourdateid,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.DepartureDate" flushCache="true" >
+    update departuredate
+    <set >
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="departureid != null" >
+        departureid = #{departureid,jdbcType=VARCHAR},
+      </if>
+      <if test="tourlineid != null" >
+        tourdateid = #{tourdateid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.DepartureDate" flushCache="true" >
+    update departuredate
+    set departureid = #{departureid,jdbcType=VARCHAR},
+      tourdateid = #{tourdateid,jdbcType=VARCHAR},
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="findByTourDateId" parameterType="java.lang.String" resultMap="BaseResultMap">
+      select 
+    <include refid="Base_Column_List" />
+    from departuredate
+    where tourdateid = #{tourdateid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deletebytourdateid" parameterType="java.lang.String">
+    delete from departuredate
+    where tourdateid = #{tourdateid,jdbcType=VARCHAR}
+  </delete>
+   <!-- 批量插入 -->
+  <insert id="batchAdd" parameterType="java.util.List" flushCache="true" >
+    insert into departuredate (id, departureid, tourdateid)
+    values 
+     <foreach collection="list" item="item" index="index" separator="," >  
+         (#{item.id,jdbcType=VARCHAR}, #{item.departureid,jdbcType=VARCHAR}, #{item.tourdateid,jdbcType=VARCHAR})
+    </foreach> 
+  </insert>
+  <!-- 根据线路Id删除出发地和出发日期的关联关系 -->
+  <delete id="deleteWithProductid" parameterType="java.lang.String" flushCache="true">
+    delete from departuredate where tourdateid in(select id from tourdate where productId = #{productId});
+  </delete>
+  
+  <!-- 根据departureId查询关联信息 -->
+  <select id="findByDepartureId" parameterType="java.lang.String" resultType="java.lang.Integer">
+     select count(*) from departuredate where departureid=#{id};
+  </select>
+  
+  <update id="replaceDeparture" flushCache="true" >
+    update departuredate
+    set departureid = #{replaceId,jdbcType=VARCHAR}
+    where departureid = #{departureId,jdbcType=VARCHAR}
+  </update>
+</mapper>

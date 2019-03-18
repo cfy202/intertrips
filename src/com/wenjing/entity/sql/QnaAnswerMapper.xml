@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.QnaAnswerMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.QnaAnswer">
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+    <result column="createDate" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="questionId" property="questionId" jdbcType="VARCHAR" />
+    <result column="memberId" property="memberId" jdbcType="VARCHAR" />
+    <result column="isshow" property="isshow" jdbcType="BIT" />
+    <result column="costNumber" property="costNumber" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="BIT" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    id, name, email, content, createDate, ip, questionId, memberId, isshow, costNumber, status
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM qnaanswer
+    WHERE id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    DELETE FROM qnaanswer
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.wenjing.entity.QnaAnswer" flushCache="true" >
+    insert into qnaanswer (id, name, email, content, createDate, ip, questionId, memberId, isshow, costNumber, status)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{content,jdbcType=LONGVARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{ip,jdbcType=VARCHAR}, 
+      #{questionId,jdbcType=VARCHAR}, #{memberId,jdbcType=VARCHAR}, #{isshow,jdbcType=BIT}, #{costNumber,jdbcType=VARCHAR}, #{status,jdbcType=BIT})
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.wenjing.entity.QnaAnswer" flushCache="true" >
+    insert into qnaanswer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id, 
+      name, 
+      email, 
+      content, 
+      createDate, 
+      ip, 
+      questionId, 
+      memberId, 
+      isshow,
+      costNumber,
+      status
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+     #{id,jdbcType=VARCHAR}, 
+     #{name,jdbcType=VARCHAR}, 
+     #{email,jdbcType=VARCHAR}, 
+     #{content,jdbcType=LONGVARCHAR}, 
+     #{createDate,jdbcType=TIMESTAMP}, 
+     #{ip,jdbcType=VARCHAR}, 
+     #{questionId,jdbcType=VARCHAR}, 
+     #{memberId,jdbcType=VARCHAR}, 
+     #{isshow,jdbcType=BIT},
+     #{costNumber,jdbcType=VARCHAR},
+     #{status,jdbcType=BIT}
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.QnaAnswer" flushCache="true" >
+    update qnaanswer
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="createDate != null" >
+        createDate = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ip != null" >
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="questionId != null" >
+        questionId = #{questionId,jdbcType=VARCHAR},
+      </if>
+      <if test="memberId != null" >
+        memberId = #{memberId,jdbcType=VARCHAR},
+      </if>
+      <if test="isshow != null" >
+        isshow = #{isshow,jdbcType=BIT},
+      </if>
+      <if test="costNumber != null" >
+        costNumber = #{costNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.QnaAnswer" flushCache="true" >
+	update qnaanswer
+	set name = #{name,jdbcType=VARCHAR},
+	email = #{email,jdbcType=VARCHAR},
+	content = #{content,jdbcType=LONGVARCHAR},
+	createDate = #{createDate,jdbcType=TIMESTAMP},
+	ip = #{ip,jdbcType=VARCHAR},
+	questionId = #{questionId,jdbcType=VARCHAR},
+	memberId = #{memberId,jdbcType=VARCHAR},
+	isshow = #{isshow,jdbcType=BIT},
+	costNumber = #{costNumber,jdbcType=VARCHAR},
+	status = #{status,jdbcType=BIT}
+	where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 根据questionId查询总回复条数 -->
+  <select id="getCountByQuestionId" parameterType="java.lang.String" resultType="java.lang.Integer">
+     select ifnull(count(*),0) from qnaanswer where questionId=#{questionId}
+  </select>
+  
+   <!-- 根据questionId查询可显示和已处理的条数 -->
+  <select id="getShowCountByQuestionId" parameterType="java.lang.String" resultType="java.lang.Integer">
+     select ifnull(count(*),0) from qnaanswer where isshow=1 and status=1 and questionId=#{questionId} 
+  </select>
+  
+   <!-- 根据questionId查询回复中未处理的条数 -->
+  <select id="getUntreatedByQuestionId" parameterType="java.lang.String" resultType="java.lang.Integer">
+      select ifnull(count(*),0) from qnaanswer where questionId=#{questionId} and status = 0
+  </select>
+  
+  <!-- 根据questionid查询回复记录 -->
+  <resultMap type="com.wenjing.entity.QnaAnswer" id="adminAnswerDetailsMap" extends="BaseResultMap">
+      <association property="member" column="memberId" select="com.wenjing.dao.MemberMapper.selectByPrimaryKey"/>
+  </resultMap>
+  <select id="getAnswerByQid" parameterType="java.lang.String" resultMap="adminAnswerDetailsMap">
+     select * from qnaanswer where questionId=#{questionId} order by createDate desc
+  </select>
+  
+  <!-- 查询QA显示和已处理 -->
+   <select id="getShowAnswerByQid" parameterType="java.lang.String" resultMap="adminAnswerDetailsMap">
+     select * 
+         from qnaanswer 
+         where isshow=1
+               and status=1
+               and questionId=#{questionId} 
+         order by createDate desc
+  </select>
+  
+  <!-- 修改显示状态 -->
+  <update id="updateAnswerIsshow" flushCache="true" >
+     update qnaanswer 
+         set isshow = #{isshow,jdbcType=BIT},
+            status = #{status,jdbcType=BIT}
+         where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+   <!-- 编辑是否显示 -->
+  <update id="editIsshow" parameterType="com.wenjing.entity.QnaQuestion" flushCache="true">
+    update qnaanswer
+      set isshow = #{isshow,jdbcType=BIT},
+          status = #{status,jdbcType=BIT}
+      where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 修改处理状态 -->
+  <update id="updateAStatus"  flushCache="true">
+      update qnaanswer
+      set status = #{status,jdbcType=BIT}
+      where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 根据answerId查询详情 -->
+  <select id="getAnswerByAnswerId" resultMap="adminAnswerDetailsMap">
+     select * from qnaanswer where id = #{id}
+  </select>
+  
+  <delete id="deleteAByQid" parameterType="java.lang.String" flushCache="true" >
+    DELETE FROM qnaanswer
+    where questionId = #{questionId,jdbcType=VARCHAR}
+  </delete>
+</mapper>

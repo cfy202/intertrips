@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.BusMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Bus" >
+    <result column="id" property="id" jdbcType="VARCHAR" />
+    <result column="busType" property="busType" jdbcType="VARCHAR" />
+    <result column="passengerNumber" property="passengerNumber" jdbcType="INTEGER" />
+    <result column="luggageNumber" property="luggageNumber" jdbcType="INTEGER" />
+    <result column="priceId" property="basicFee" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="overTimeFeeId" property="overTimeFeeId" jdbcType="VARCHAR" />
+    <result column="introduce" property="introduce" jdbcType="LONGVARCHAR" />
+    <result column="imageUrl" property="imageUrl" jdbcType="VARCHAR" /> 
+    <association property="basicFee" column="priceId" select="com.wenjing.entity.Price.selectByPrimaryKey"/>
+    <association property="overTimeFee" column="overTimeFeeId" select="com.wenjing.entity.Price.selectByPrimaryKey"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id,busType,passengerNumber,luggageNumber,priceId,remark,overTimeFeeId,introduce,imageUrl
+  </sql>
+  <insert id="insert" parameterType="com.wenjing.entity.Bus" >
+    insert into bus (id, busType, passengerNumber, 
+      luggageNumber, priceId, remark, 
+      overTimeFeeId, introduce,imageUrl)
+    values (#{id,jdbcType=VARCHAR}, #{busType,jdbcType=VARCHAR}, #{passengerNumber,jdbcType=INTEGER}, 
+      #{luggageNumber,jdbcType=INTEGER}, #{priceId,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{overTimeFeeId,jdbcType=VARCHAR}, #{introduce,jdbcType=LONGVARCHAR},#{imageUrl,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Bus" >
+    insert into bus
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="busType != null" >
+        busType,
+      </if>
+      <if test="passengerNumber != null" >
+        passengerNumber,
+      </if>
+      <if test="luggageNumber != null" >
+        luggageNumber,
+      </if>
+      <if test="priceId != null" >
+        priceId,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="overTimeFeeId != null" >
+        overTimeFeeId,
+      </if>
+      <if test="introduce != null" >
+        introduce,
+      </if>
+      <if test="imageUrl != null" >
+      	imageUrl
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="busType != null" >
+        #{busType,jdbcType=VARCHAR},
+      </if>
+      <if test="passengerNumber != null" >
+        #{passengerNumber,jdbcType=INTEGER},
+      </if>
+      <if test="luggageNumber != null" >
+        #{luggageNumber,jdbcType=INTEGER},
+      </if>
+      <if test="priceId != null" >
+        #{priceId,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="overTimeFeeId != null" >
+        #{overTimeFeeId,jdbcType=VARCHAR},
+      </if>
+      <if test="introduce != null" >
+        #{introduce,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="imageUrl != null">
+      	#{imageUrl,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String">
+	select 
+	<include refid="Base_Column_List"/>
+	from bus
+	where id = #{id}  
+  </select>
+  
+  <select id="findAll" resultMap="BaseResultMap">
+	select 
+	<include refid="Base_Column_List"/>
+	from bus 
+  </select>
+  
+  <update id="update" parameterType="com.wenjing.entity.Bus" flushCache="true">
+    update bus
+    <set>
+      <if test="busType != null" >
+        busType = #{busType},
+      </if>
+      <if test="passengerNumber != null" >
+        passengerNumber = #{passengerNumber},
+      </if>
+      <if test="luggageNumber != null" >
+        luggageNumber = #{luggageNumber},
+      </if>
+      <if test="priceId != null" >
+        priceId = #{priceId},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark},
+      </if>
+      <if test="overTimeFeeId != null" >
+        overTimeFeeId = #{overTimeFeeId},
+      </if>
+      <if test="introduce != null" >
+        introduce = #{introduce},
+      </if>
+      <if test="imageUrl != null" >
+      	imageUrl = #{imageUrl},
+      </if>
+    </set>
+    where Id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <delete id="deleteById" parameterType="java.lang.String">
+  	delete from bus where id = #{id}
+  </delete>
+</mapper>

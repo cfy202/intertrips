@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.RoletreeMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Roletree" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="roleId" property="roleid" jdbcType="VARCHAR" />
+    <result column="treeId" property="treeid" jdbcType="VARCHAR" />
+    <result column="opationIds" property="opationIds" jdbcType="VARCHAR" />   
+    <association property="roleRoleid" column="roleid" select="com.wenjing.dao.RoleMapper.selectByPrimaryKey" />
+    <association property="treeTreeid" column="treeid" select="com.wenjing.dao.TreeMapper.selectByPrimaryKey" />
+  </resultMap>
+  <select id="selectByRoleid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from roletree where roleId =#{roleId}
+  </select>
+  <select id="selectByTreeId" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from roletree where treeId =#{treeId}
+  </select>
+  <sql id="Base_Column_List" >
+    id, roleId, treeId,opationIds
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from roletree
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from roletree
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Roletree" flushCache="true" >
+    insert into roletree (id, roleId, treeId,opationIds
+      )
+    values (#{id,jdbcType=VARCHAR}, #{roleid,jdbcType=VARCHAR}, #{treeid,jdbcType=VARCHAR},#{opationIds,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Roletree" flushCache="true" >
+    insert into roletree
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      roleId,
+      treeId,
+      opationIds,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{roleid,jdbcType=VARCHAR},
+      #{treeid,jdbcType=VARCHAR},
+      #{opationIds,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Roletree" flushCache="true" >
+    update roletree
+    <set >
+      <if test="roleid != null" >
+        roleId = #{roleid,jdbcType=VARCHAR},
+      </if>
+      <if test="treeId != null" >
+        treeId = #{treeid,jdbcType=VARCHAR},
+      </if>
+      <if test="opationIds != null" >
+        opationIds = #{opationIds,jdbcType=VARCHAR},
+      </if>
+      
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Roletree" flushCache="true" >
+    update roletree
+    set roleId = #{roleid,jdbcType=VARCHAR},
+      treeId = #{treeid,jdbcType=VARCHAR},opationIds = #{opationIds,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <!-- 根据角色ID删除 -->
+  <delete id="deleteByroleId" parameterType="java.lang.String" flushCache="true">
+   delete from roletree
+    where roleId = #{roleId,jdbcType=VARCHAR}
+  </delete>
+  
+   <!-- 批量插入 -->
+  <insert id="batchAddRoleTree" parameterType="java.util.List" flushCache="true" >
+    insert into roletree (id, roleId, treeId,opationIds)
+     values
+    <foreach collection="list" item="item" index="index" separator="," >  
+        (#{item.id,jdbcType=VARCHAR}, #{item.roleid,jdbcType=VARCHAR}, #{item.treeid,jdbcType=VARCHAR},#{item.opationIds,jdbcType=VARCHAR}
+        )
+    </foreach>  
+  </insert>
+</mapper>

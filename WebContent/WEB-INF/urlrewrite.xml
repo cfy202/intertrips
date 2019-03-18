@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 4.0//EN" 
+"http://www.tuckey.org/res/dtds/urlrewrite4.0.dtd">
+<urlrewrite>
+	
+	<rule>
+		<from>^/index\.htm$</from>
+		<to>/front/index/list.do</to>
+	</rule>
+	<rule>
+		<from>^/visa\.htm$</from>
+		<to>/front/visaindex/index.do</to>
+	</rule>
+	<rule>
+		<from>^/about-us\.htm$</from>
+		<to>/front/about/us.do</to>
+	</rule>
+	<rule>
+		<from>^/contact-us\.htm$</from>
+		<to>/front/about/contact.do</to>
+	</rule>
+	<rule>
+		<from>^/praise\.htm$</from>
+		<to>/front/about/praise.do</to>
+	</rule>
+	<rule>
+		<from>^/team\.htm$</from>
+		<to>/front/about/team.do</to>
+	</rule>
+	<rule>
+		<from>^/join-us\.htm$</from>
+		<to>/front/about/join.do</to>
+	</rule>
+	
+	<!-- 客户协议 -->
+	<rule>
+		<from>^/agreement\.htm$</from>
+		<to>/front/help/agreement.do</to>
+	</rule>
+	
+	<!-- 隐私条款 -->
+	<rule>
+		<from>^/privacy\.htm$</from>
+		<to>/front/help/privacy.do</to>
+	</rule>
+	
+	<!-- 常见问题 -->
+	<rule>
+		<from>^/faq\.htm$</from>
+		<to>/front/help/faq.do</to>
+	</rule>
+	
+	<!-- 非注册用户订单查询  -->
+	<rule>
+		<from>^/login/non_Members_order.htm$</from>
+		<to>/login/non_Members_order.do</to>
+	</rule>
+	
+	<!-- 登录 -->
+	<rule>
+		<from>^/login.htm$</from>
+		<to>/login.do</to>
+	</rule>
+	
+	<!-- 注册 -->
+	<rule>
+		<from>^/register.htm$</from>
+		<to>/register.do</to>
+	</rule>
+	<rule>
+		<from>^/register/([a-z,_]+)\.htm$</from>
+		<to>/register/$1.do</to>
+	</rule>
+	
+	<!-- 退出 -->
+	<rule>
+		<from>^/logout.htm$</from>
+		<to>/logout.do</to>
+	</rule>
+   <!-- 搜索 -->
+   <rule>
+		<from>^/search.htm$</from>
+		<to>/front/tourlinelist/list.do</to>
+	</rule>
+   <!-- 查看更多 -->
+   <rule>
+		<from>^/findMore.htm$</from>
+		<to>/front/tourlinelist/list.do</to>
+	</rule>
+   
+   <!-- privateTour首页 -->
+	<rule>
+		<from>^/private-tour.htm$</from>
+		<to>/front/private/index.do</to>
+	</rule>	
+	<!-- 旧金山包车 -->
+	<rule>
+		<from>^/private-tour/sanfrancisco-bus.htm$</from>
+		<to>/front/private/sanfrancisco.do</to>
+	</rule>	
+	<!-- 洛杉矶包车-->
+	<rule>
+		<from>^/private-tour/losangeles-bus.htm$</from>
+		<to>/front/private/losangeles.do</to>
+	</rule>	
+	<!-- 纽约包车 -->
+	<rule>
+		<from>^/private-tour/newyork-bus.htm$</from>
+		<to>/front/private/newyork.do</to>
+	</rule>	
+	<!-- 西雅图包车 -->
+	<rule>
+		<from>^/private-tour/seattle-bus.htm$</from>
+		<to>/front/private/seattle.do</to>
+	</rule>	
+	<!-- 文静车队 -->
+	<rule>
+		<from>^/private-tour/wenjing-bus.htm$</from>
+		<to>/front/private/team.do</to>
+	</rule>	
+	
+	<!-- 精品推荐首页 -->
+	<rule>
+		<from>^/private-tour/special.htm$</from>
+		<to>/front/private/commendation.do</to>
+	</rule>	
+	<!-- 热气球1-->
+	<rule>
+		<from>^/private-tour/special/tour1.htm$</from>
+		<to>/front/private/Temecula_1.do</to>
+	</rule>	
+	<!-- 热气球2 -->
+	<rule>
+		<from>^/private-tour/special/tour2.htm$</from>
+		<to>/front/private/Temecula_2.do</to>
+	</rule>	
+	<!-- 攀岩 -->
+	<rule>
+		<from>^/private-tour/special/tour3.htm$</from>
+		<to>/front/private/climbing.do</to>
+	</rule>	
+	<!-- 海鲜-->
+	<rule>
+		<from>^/private-tour/special/tour4.htm$</from>
+		<to>/front/private/seafood.do</to>
+	</rule>	
+	<!-- 女神-->
+	<rule>
+		<from>^/private-tour/special/tour5.htm$</from>
+		<to>/front/private/luxury_yacht.do</to>
+	</rule>	
+	<!-- F1赛车-->
+	<rule>
+		<from>^/private-tour/special/tour6.htm$</from>
+		<to>/front/private/F1.do</to>
+	</rule>	
+	<!-- 乘坐火车游览美国7大州-->
+	<rule>
+		<from>^/private-tour/special/tour7.htm$</from>
+		<to>/front/private/train.do</to>
+	</rule>	
+	<!-- 医疗 & 体检套餐-->
+	<rule>
+		<from>^/private-tour/special/tour8.htm$</from>
+		<to>/front/private/Medical.do</to>
+	</rule>	
+	<!-- 猛鬼游轮酒店（QUEEN MARY 游轮）-->
+	<rule>
+		<from>^/private-tour/special/tour9.htm$</from>
+		<to>/front/private/QUEENMARY.do</to>
+	</rule>	
+	<!-- 圣地亚哥滑翔伞体验-->
+	<rule>
+		<from>^/private-tour/special/tour10.htm$</from>
+		<to>/front/private/Parasail.do</to>
+	</rule>	
+	
+	<!-- 拉斯维加斯赌城婚礼1-->
+	<rule>
+		<from>^/private-tour/special/tour11.htm$</from>
+		<to>/front/private/Wedding1.do</to>
+	</rule>	
+	<!-- 拉斯维加斯赌城婚礼2-->
+	<rule>
+		<from>^/private-tour/special/tour12.htm$</from>
+		<to>/front/private/Wedding2.do</to>
+	</rule>	
+	<!-- 真枪实弹体验野外打靶-->
+	<rule>
+		<from>^/private-tour/special/tour13.htm$</from>
+		<to>/front/private/Firegun.do</to>
+	</rule>	
+	
+	<!-- 密码修改 -->
+	<rule>
+		<from>^/password/([a-z,_]+)\.htm$</from>
+		<to>/password/$1.do</to>
+	</rule>
+	
+	<!-- 进入用户中心 -->
+	<rule>
+		<from>^/member/profile/([a-z,_]+)\.htm$</from>
+		<to>/member/profile/$1.do</to>
+	</rule>
+	
+	<rule>
+		<from>^/china-depart-tour\.htm$</from>
+		<to>/front/tourlinelist/list.do?url=china-depart-tour</to>
+	</rule>
+    <rule>
+        <from>^/visa-([a-z]+)\.htm$</from>
+        <to>/front/visaindex/visaByRegin.do?url=$1</to>
+    </rule> 
+     <rule>
+       <from>^/visa-([a-z]+\d{2,8})\.htm$</from>
+        <to>/front/visaindex/visaById.do?url=$1$2</to>
+    </rule> 
+    <!-- 目的地导航 
+	<rule>
+        <from>^/destinations/([a-z,-]+)\.htm$</from>
+        <to>/front/tourlinelist/list.do?url=$1</to>
+    </rule>
+    -->
+   
+   <!-- 
+    <rule>
+        <from>^/([a-z,-]+\d{2,8})\.htm$</from>
+        <to>/front/tourlineDetails/tourline.do?url=$1$2</to>
+    </rule>
+     -->
+   
+    <!-- 
+    <rule>
+        <from>^/([a-z,-]+)/([a-z,-]+)(\d{2,8})\.htm$</from>
+        <to>/front/tourlineDetails/tourline.do?url=$1/$2$3</to>
+    </rule> 
+     -->   
+    <rule>
+    	<from>^/shopping\_cart\.htm$</from>
+    	<to>/front/orders/shoppingCart.do</to>
+    </rule> 
+    <rule>
+    	<from>^/submit\_order\.htm$</from>
+    	<to>/front/orders/submitOrderInfo.do</to>
+    </rule>
+    <rule>
+    	<from>^/order\_notice\.htm$</from>
+    	<to>/front/orders/finishChequeOrder.do</to>
+    </rule>
+    <rule>
+    	<from>^/book\_tour\.htm$</from>
+    	<to>/front/orders/bookTour.do</to>
+    </rule>
+    <rule>
+    	<from>^/confirm\_order\.htm$</from>
+    	<to>/front/orders/confirmOrder.do</to>
+    </rule>
+    <rule>
+    	<from>^/card\_pay.htm$</from>
+    	<to>/authorizeChargeCreditCard/run.do</to>
+    </rule>
+     <rule>
+    	<from>^/book\_pay.htm$</from>
+    	<to>/authorizeChargeCreditCard/bookrun.do</to>
+    </rule>
+    <rule>
+    	<from>^/payment.htm$</from>
+    	<to>/front/orders/pay.do</to>
+    </rule>
+    <rule>
+    	<from>^/pay\_success.htm$</from>
+    	<to>/authorizeChargeCreditCard/paysuccess.do</to>
+    </rule>
+    <rule>
+    	<from>^/agent\_booking.htm$</from>
+    	<to>/front/orders/agentBooking.do</to>
+    </rule>
+    <rule>
+    	<from>^/book\_complete.htm$</from>
+    	<to>/front/orders/booksuccess.do</to>
+    </rule>    
+    <rule>
+    	<from>^/agentPay.htm$</from>
+    	<to>/front/orders/agentPay.do</to>
+    </rule>      
+</urlrewrite> 

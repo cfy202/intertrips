@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.CommentsToBlogMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.CommentsToBlog" >
+    <result column="id" property="id" jdbcType="VARCHAR" />
+    <result column="parentId" property="parentId" jdbcType="VARCHAR" />
+    <result column="blogId" property="blogId" jdbcType="VARCHAR" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="isShow" property="isShow" jdbcType="INTEGER"/>
+    <result column="level" property="level" jdbcType="INTEGER"/>
+    <result column="commentMemberId" property="commentMemberId" jdbcType="VARCHAR" />
+    <result column="parentAdminName" property="parentAdminName" jdbcType="VARCHAR"/>
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.wenjing.entity.CommentsToBlog" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <resultMap type="com.wenjing.entity.CommentsToBlog" id="ResultMapWithAll" extends="ResultMapWithBLOBs">
+  	<association property="parent" column="parentId" select="com.wenjing.dao.CommentsToBlogMapper.selectById"/>
+  	<association property="blog" column="blogId" select="com.wenjing.dao.BlogMapper.selectByPrimaryKey"/>
+  	<association property="member" column="commentMemberId" select="com.wenjing.dao.MemberMapper.selectWithInfoById"/>
+  </resultMap>
+  
+  
+  <resultMap type="com.wenjing.entity.CommentsToBlog" id="ReviewResultMap" extends="ResultMapWithBLOBs">
+  	<association property="member" column="commentMemberId" select="com.wenjing.dao.MemberMapper.selectWithInfoById"/>
+   	<collection property="commentsToBlogList" column="id" ofType="com.wenjing.entity.CommentsToBlog" select="findByParentId"/>
+  </resultMap>	
+	  
+  <sql id="Blob_Column_List" >
+    id, parentId,blogId,createTime,commentMemberId,status,isShow,content,level,parentAdminName
+  </sql>
+  <insert id="insert" parameterType="com.wenjing.entity.CommentsToBlog" >
+    insert into commentstoblog (id, parentId, blogId, 
+      createTime, commentMemberId, status,isShow,content,level,parentAdminName
+      )
+    values (#{id,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, #{blogId,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{commentMemberId,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER},#{isShow,jdbcType=INTEGER},#{content,jdbcType=LONGVARCHAR},#{level,jdbcType=INTEGER},#{parentAdminName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.CommentsToBlog" >
+    insert into commentstoblog
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="parentId != null" >
+        parentId,
+      </if>
+      <if test="blogId != null" >
+        blogId,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="commentMemberId != null" >
+        commentMemberId,
+      </if>
+      <if test="status != null">
+      	status,
+      </if>
+      <if test="isShow != null">
+      	isShow,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="level != null">
+      	level,
+      </if>
+      <if test="parentAdminName != null">
+      	parentAdminName
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="blogId != null" >
+        #{blogId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="commentMemberId != null" >
+        #{commentMemberId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+     	#{status,jdbcType=INTEGER}, 
+      </if>
+      <if test="isShow != null">
+      	#{isShow,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="level != null">
+      	#{level,jdbcType=INTEGER},
+      </if>
+      <if test="parentAdminName != null">
+      	#{parentAdminName,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </insert>
+  <select id="selectById" resultMap="ResultMapWithBLOBs">
+	SELECT
+		<include refid="Blob_Column_List"/>
+	FROM	
+		commentstoblog
+	WHERE
+		id = #{id,jdbcType=VARCHAR}	
+  </select>
+  
+  <select id="findAllInformationById" resultMap="ResultMapWithAll">
+  	SELECT
+		<include refid="Blob_Column_List"/>
+	FROM	
+		commentstoblog
+	WHERE
+		id = #{id,jdbcType=VARCHAR}	
+  </select>
+  
+  <select id="findLevel" resultType="java.lang.Integer">
+  	SELECT
+  		level
+  	FROM
+  		commentstoblog
+  	WHERE
+  		id = #{id,jdbcType=VARCHAR}	
+  </select>
+  
+  <select id="countAllByCondition" resultType="java.lang.Integer">
+	SELECT
+		COUNT(ctb.id)
+	FROM
+		commentstoblog ctb,
+		blog b
+	WHERE
+		ctb.blogId = b.id
+	<if test="blogName != null">
+ 	AND
+	   b.tittle LIKE '%${blogName}%'
+	</if>	
+	<if test="status != null">
+	AND
+		ctb.`status` = #{status}
+	</if>   
+  </select>
+  
+  <select id="countAllByBlogId" resultType="java.lang.Integer">
+	  SELECT
+	  	COUNT(*)
+	  FROM
+	  	commentstoblog
+	  WHERE
+	  	`status` = 1	
+	  AND
+	  	isShow = 1
+	  AND
+	  	blogId = #{blogId}
+  </select>
+  
+  <select id="countChildrenCommentsNumber" resultType="java.lang.Integer">
+	SELECT
+		COUNT(*)
+	FROM
+		commentstoblog
+	WHERE
+		`status` = 1	
+	AND
+		isShow = 1
+	AND
+	  	parentId = ''		
+	AND
+		blogId = #{blogId}			  
+  </select>
+  
+  <select id="findPages" resultMap="ReviewResultMap">
+	SELECT
+		<include refid="Blob_Column_List"/>	
+	FROM
+		commentstoblog
+	WHERE
+	  	`status` = 1	
+	AND
+	  	isShow = 1
+	AND
+	  	blogId = #{blogId}
+	AND
+		parentId = ''  	
+	ORDER BY
+		createTime DESC  		
+  	LIMIT #{start},#{size}			
+  </select>
+  
+  <select id="findByParentId" resultMap="ReviewResultMap">
+  	SELECT
+		<include refid="Blob_Column_List"/>	
+	FROM	
+		commentstoblog
+	WHERE
+		`status` = 1	
+	AND
+		isShow = 1
+	AND
+		parentId = #{id}
+	ORDER BY
+		createTime;
+  </select>
+  
+  <select id="findByPage" resultMap="ResultMapWithAll">
+	SELECT
+		ctb.id AS id, parentId,blogId,ctb.createTime AS createTime,commentMemberId,ctb.`status` AS `status`,isShow,ctb.content AS content
+	FROM
+		commentstoblog ctb,
+		blog b
+	WHERE
+		ctb.blogId = b.id
+	<if test="blogName != null">
+ 	AND
+	   b.tittle LIKE '%${blogName}%'
+	</if>	
+	<if test="status != null">
+	AND
+		ctb.`status` = #{status}
+	</if>	
+  	LIMIT #{start},#{size}		
+  </select>
+  
+  <update id="updateIsShowAndStatus">
+  	UPDATE
+  		commentstoblog
+  	SET
+  		isShow = #{isShow},
+  		status = #{status}
+  	WHERE
+		id = #{id}  
+  </update>
+  
+  <update id="changeIsShow">
+  	UPDATE	
+  		commentstoblog
+  	SET
+  		isShow = #{isShow,jdbcType=INTEGER}
+  	WHERE
+  		id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="findChildrenId" resultType="java.lang.String">
+  	SELECT 
+  		id
+  	FROM
+  		commentstoblog
+  	WHERE
+  		parentId = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteById">
+  	DELETE FROM commentstoblog
+  	WHERE id = #{id,jdbcType=VARCHAR}
+  </delete>
+</mapper>

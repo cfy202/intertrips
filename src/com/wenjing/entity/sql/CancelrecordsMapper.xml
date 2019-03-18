@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.CancelrecordsMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Cancelrecords" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="cancelDate" property="canceldate" jdbcType="TIMESTAMP" />
+    <result column="ordersId" property="ordersid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, remarks, `operator`, cancelDate, ordersId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from cancelrecords
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByOrdersId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+     select 
+    <include refid="Base_Column_List" />
+    from cancelrecords
+    where ordersId = #{ordersId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from cancelrecords
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Cancelrecords" >
+    insert into cancelrecords (id, remarks, `operator`, 
+      cancelDate, ordersId)
+    values (#{id,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, #{operator,jdbcType=VARCHAR}, 
+      #{canceldate,jdbcType=TIMESTAMP}, #{ordersid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Cancelrecords" >
+    insert into cancelrecords
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      remarks,
+      `operator`,
+      cancelDate,
+      ordersId,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{remarks,jdbcType=VARCHAR},
+      #{operator,jdbcType=VARCHAR},
+      #{canceldate,jdbcType=TIMESTAMP},
+      #{ordersid,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Cancelrecords" >
+    update cancelrecords
+    <set >
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        `operator` = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="canceldate != null" >
+        cancelDate = #{canceldate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ordersid != null" >
+        ordersId = #{ordersid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Cancelrecords" >
+    update cancelrecords
+    set remarks = #{remarks,jdbcType=VARCHAR},
+      `operator` = #{operator,jdbcType=VARCHAR},
+      cancelDate = #{canceldate,jdbcType=TIMESTAMP},
+      ordersId = #{ordersid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

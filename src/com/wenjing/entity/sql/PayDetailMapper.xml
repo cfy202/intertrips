@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.PayDetailMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.PayDetail" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="orderNo" property="orderNo" jdbcType="VARCHAR" />
+    <result column="payPrice" property="payPrice" jdbcType="DECIMAL" />
+    <result column="payTime" property="payTime" jdbcType="VARCHAR" />
+    <result column="payWay"  property="payWay" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, `orderNo`, payPrice, payTime,payWay
+  </sql>
+  <insert id="insert" parameterType="com.wenjing.entity.PayDetail" flushCache="true" >
+    insert into paydetail (id, `orderNo`, payPrice,payTime,payWay)
+    values (#{id,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR}, 
+    #{payPrice,jdbcType=DECIMAL}, #{payTime,jdbcType=VARCHAR},#{payWay,jdbcType=INTEGER})
+  </insert>
+</mapper>

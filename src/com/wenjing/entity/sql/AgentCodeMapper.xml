@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.AgentCodeMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.AgentCode" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="agentCode" property="agentCode" jdbcType="VARCHAR" />
+   <result column="agentName" property="agentName" jdbcType="VARCHAR"/>
+    <result column="agentId" property="agentId" jdbcType="VARCHAR"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, agentCode,agentName,agentId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" flushCache="true">
+    select 
+    <include refid="Base_Column_List" />
+    from agentcode
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByLowerCode" resultMap="BaseResultMap" parameterType="java.lang.String" flushCache="true">
+    select 
+    <include refid="Base_Column_List" />
+    from agentcode
+    where lower(agentCode) = #{agentCode,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByCode" resultMap="BaseResultMap" parameterType="java.lang.String" flushCache="true">
+    select 
+    <include refid="Base_Column_List" />
+    from agentcode
+    where agentCode = #{agentCode,jdbcType=VARCHAR}
+  </select>
+</mapper>

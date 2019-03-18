@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.ImageMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Image" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="createTime" property="createtime" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="opUser" property="opuser" jdbcType="VARCHAR" />
+    <result column="useType" property="usetype" jdbcType="VARCHAR" />
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+
+  <!--
+
+    <collection property="attractionimagesImageid" ofType="com.wenjing.entity.Attractionimage" column="id" select="com.wenjing.dao.AttractionimageMapper.selectByImageid" />
+    <collection property="hotelimagesImageid" ofType="com.wenjing.entity.Hotelimage" column="id" select="com.wenjing.dao.HotelimageMapper.selectByImageid" />
+    <collection property="itineraryimagesImageid" ofType="com.wenjing.entity.Itineraryimage" column="id" select="com.wenjing.dao.ItineraryimageMapper.selectByImageid" />
+    <collection property="tourlineimagesImageid" ofType="com.wenjing.entity.Tourlineimage" column="id" select="com.wenjing.dao.TourlineimageMapper.selectByImageid" />
+
+   -->
+
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, `name`, title, createTime, url, opUser, useType, costNumber
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from image
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from image
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Image" flushCache="true" >
+    insert into image (id, `name`, title, 
+      createTime, url, opUser, 
+      useType, costNumber)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{opuser,jdbcType=VARCHAR}, 
+      #{usetype,jdbcType=VARCHAR}, #{costnumber,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Image" flushCache="true" >
+    insert into image
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      `name`,
+      title,
+      createTime,
+      url,
+      opUser,
+      useType,
+      costNumber,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR},
+      #{title,jdbcType=VARCHAR},
+      #{createtime,jdbcType=VARCHAR},
+      #{url,jdbcType=VARCHAR},
+      #{opuser,jdbcType=VARCHAR},
+      #{usetype,jdbcType=VARCHAR},
+      #{costnumber,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Image" flushCache="true" >
+    update image
+    <set >
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="opuser != null" >
+        opUser = #{opuser,jdbcType=VARCHAR},
+      </if>
+      <if test="usetype != null" >
+        useType = #{usetype,jdbcType=VARCHAR},
+      </if>
+      <if test="costnumber != null" >
+        costNumber = #{costnumber,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Image" flushCache="true" >
+    update image
+    set `name` = #{name,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      createTime = #{createtime,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      opUser = #{opuser,jdbcType=VARCHAR},
+      useType = #{usetype,jdbcType=VARCHAR},
+      costNumber = #{costnumber,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="findAllByCostNumber" resultMap="BaseResultMap">
+     select * from `image`
+  </select> 
+  <!-- 线路修改时获取关联图片记录数 -->
+  <select id="getImageCountWithTourline" resultType="java.lang.Integer">
+      select count(*) from image where id in
+      (select attractionimage.imageId from tourlineattraction ,attractionimage 
+      where tourlineattraction.attractionId = attractionimage.attractionId 
+      and tourlineattraction.tourLineId = #{tourlineid})
+  </select>
+  
+  <!-- 线路修改是获取相关联的图片 -->
+   <select id="selectImageByPageWithTourline" resultMap="BaseResultMap">
+    select * from image where id in
+      (select attractionimage.imageId from tourlineattraction ,attractionimage 
+      where tourlineattraction.attractionId = attractionimage.attractionId 
+      and tourlineattraction.tourLineId = #{tourlineid})
+   </select>
+  <!-- 获取图库总记录条数 -->
+  <select id="getImageCount" resultType="java.lang.Integer">
+     select count(*) from image
+     <if test="search != null" >
+	       where   title like '%${search}%'
+	 </if>
+     
+  </select>
+  <!-- 分页查询图库图片 -->
+  <select id="selectImageByPage" resultMap="BaseResultMap">
+     select * from image  
+     
+     <if test="search != null" >
+	     where  CONCAT(`title`,useType) like '%${search}%'
+	 </if>
+    
+     
+      limit #{startPos},#{pageSize} 
+  </select>
+  <select id="selectByUrl" resultMap="BaseResultMap" parameterType="java.lang.String">
+     select * from image where url=#{url,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAllByPage" resultMap="BaseResultMap">
+     select * from image   
+     <if test="usetype != 'all'">
+     	where useType = #{usetype,jdbcType=VARCHAR}
+     </if>
+     order by costNumber ,createtime desc limit #{startPos},#{pageSize}
+  </select>
+   <select id="getImageCountBycondition" resultType="java.lang.Integer">
+     select count(*) from image  
+     <if test="usetype != 'all'">
+     	where useType = #{usetype,jdbcType=VARCHAR}
+     </if>
+  </select>
+  <select id="SelectImageUseCount" resultType="java.lang.Integer" parameterType="java.lang.String">
+	select (select count(*) from tourlineimage where imageId = #{imageId}) + 
+		(select count(*) from attractionimage where imageId = #{imageId}) +
+		(select count(*) from hotelimage where imageId = #{imageId}) +
+		(select count(*) from itineraryimage where imageId = #{imageId}) +
+		(select count(*) from pageimage where imageId = #{imageId})
+		as imageUseCount
+  </select>
+</mapper>

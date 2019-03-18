@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.CreditCardInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.CreditCardInfo" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="cardType" property="cardtype" jdbcType="INTEGER" />
+    <result column="cardNumber" property="cardnumber" jdbcType="CHAR" />
+    <result column="expireDate" property="expiredate" jdbcType="CHAR" />
+    <result column="cardCode" property="cardcode" jdbcType="CHAR" />
+    <result column="nationality" property="nationality" jdbcType="CHAR" />
+    <result column="lastName" property="lastname" jdbcType="VARCHAR" />
+    <result column="firstName" property="firstname" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="CHAR" />
+    <result column="zipCode" property="zipcode" jdbcType="CHAR" />
+    <result column="tel" property="tel" jdbcType="CHAR" />
+    <result column="mail" property="mail" jdbcType="VARCHAR" />
+    <result column="ordersId" property="ordersid" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, cardType, cardNumber, expireDate, cardCode, nationality, lastName, firstName, 
+    address, city, `state`, zipCode, tel, mail, ordersId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from creditcardinfo
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from creditcardinfo
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.CreditCardInfo" >
+    insert into creditcardinfo (id, cardType, cardNumber, 
+      expireDate, cardCode, nationality, 
+      lastName, firstName, address, 
+      city, `state`, zipCode, tel, 
+      mail, ordersId)
+    values (#{id,jdbcType=VARCHAR}, #{cardtype,jdbcType=INTEGER}, #{cardnumber,jdbcType=CHAR}, 
+      #{expiredate,jdbcType=CHAR}, #{cardcode,jdbcType=CHAR}, #{nationality,jdbcType=CHAR}, 
+      #{lastname,jdbcType=VARCHAR}, #{firstname,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{state,jdbcType=CHAR}, #{zipcode,jdbcType=CHAR}, #{tel,jdbcType=CHAR}, 
+      #{mail,jdbcType=VARCHAR}, #{ordersid,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.CreditCardInfo" >
+    insert into creditcardinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      cardType,
+      cardNumber,
+      expireDate,
+      cardCode,
+      nationality,
+      lastName,
+      firstName,
+      address,
+      city,
+      `state`,
+      zipCode,
+      tel,
+      mail,
+      ordersId,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{cardtype,jdbcType=INTEGER},
+      #{cardnumber,jdbcType=CHAR},
+      #{expiredate,jdbcType=CHAR},
+      #{cardcode,jdbcType=CHAR},
+      #{nationality,jdbcType=CHAR},
+      #{lastname,jdbcType=VARCHAR},
+      #{firstname,jdbcType=VARCHAR},
+      #{address,jdbcType=VARCHAR},
+      #{city,jdbcType=VARCHAR},
+      #{state,jdbcType=CHAR},
+      #{zipcode,jdbcType=CHAR},
+      #{tel,jdbcType=CHAR},
+      #{mail,jdbcType=VARCHAR},
+      #{ordersid,jdbcType=CHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.CreditCardInfo" >
+    update creditcardinfo
+    <set >
+      <if test="cardtype != null" >
+        cardType = #{cardtype,jdbcType=INTEGER},
+      </if>
+      <if test="cardnumber != null" >
+        cardNumber = #{cardnumber,jdbcType=CHAR},
+      </if>
+      <if test="expiredate != null" >
+        expireDate = #{expiredate,jdbcType=CHAR},
+      </if>
+      <if test="cardcode != null" >
+        cardCode = #{cardcode,jdbcType=CHAR},
+      </if>
+      <if test="nationality != null" >
+        nationality = #{nationality,jdbcType=CHAR},
+      </if>
+      <if test="lastname != null" >
+        lastName = #{lastname,jdbcType=VARCHAR},
+      </if>
+      <if test="firstname != null" >
+        firstName = #{firstname,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        `state` = #{state,jdbcType=CHAR},
+      </if>
+      <if test="zipcode != null" >
+        zipCode = #{zipcode,jdbcType=CHAR},
+      </if>
+      <if test="tel != null" >
+        tel = #{tel,jdbcType=CHAR},
+      </if>
+      <if test="mail != null" >
+        mail = #{mail,jdbcType=VARCHAR},
+      </if>
+      <if test="ordersid != null" >
+        ordersId = #{ordersid,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.CreditCardInfo" >
+    update creditcardinfo
+    set cardType = #{cardtype,jdbcType=INTEGER},
+      cardNumber = #{cardnumber,jdbcType=CHAR},
+      expireDate = #{expiredate,jdbcType=CHAR},
+      cardCode = #{cardcode,jdbcType=CHAR},
+      nationality = #{nationality,jdbcType=CHAR},
+      lastName = #{lastname,jdbcType=VARCHAR},
+      firstName = #{firstname,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      `state` = #{state,jdbcType=CHAR},
+      zipCode = #{zipcode,jdbcType=CHAR},
+      tel = #{tel,jdbcType=CHAR},
+      mail = #{mail,jdbcType=VARCHAR},
+      ordersId = #{ordersid,jdbcType=CHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByOrdersId" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	select
+		<include refid="Base_Column_List"/> 		
+  	from
+  		creditcardinfo
+  	where
+  		ordersId = #{id}	
+  </select>
+</mapper>

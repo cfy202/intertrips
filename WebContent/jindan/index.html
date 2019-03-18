@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Jquery+Flash砸金蛋抽奖效果示例源码</title>
+<style type="text/css">
+body { margin:0; padding:0; font-family:"微软雅黑"; }
+a { text-decoration: none; color:#0f3f94;}
+a:hover { color:#F30; text-decoration:underline;}
+h1 { background:#ccc; margin:0; padding:20px; }
+h2 { margin:0; padding:20px 0; }
+.intro{padding:20px;  line-height:24px;}
+iframe { border:0;display:block; width:650px; height:412px; }
+.p50 { padding-left:50px;}
+pre {line-height:22px; }
+pre span { color:#999; }
+.demo { padding:20px; border-bottom:#ccc solid 1px;}
+#footer{margin:15px auto; line-height:24px; text-align:center;color:#999; font-size:12px;padding:12px;}
+
+.box{width:600px;background:#F9EDBC;border:5px solid #A6324A;padding:5px;position:relative;color:#333;overflow:hidden;display:none;}
+ .box .close{color:#B7AC7F;display:inline-block;font-size:28px;height:30px;width:30px;line-height:30px;outline:none;overflow:hidden;position:absolute;right:15px;top:10px;text-align:center;text-decoration:none;}
+ .box .close:hover{text-decoration:none;color:#666;}
+ .box .pic{margin:12px;float:left;}
+ .box .title{float:left;font-size:22px;font-weight:bold;margin:38px 0 28px 12px;width:340px;}
+ .box .description{float:left;margin:0 0 0 12px;width:340px;line-height:26px;}
+</style>
+<script type="text/javascript" src="/jindan/jquery.js"></script>
+<script type="text/javascript" src="/jingdan/lottery.js"></script>
+<script type="text/javascript" src="/jindan/jfun.js"></script>
+</head>
+
+<body>
+<h1><center>give me</center></h1>
+
+<div class="demo">
+  <h2>效果演示1：</h2>
+    <object width="880" height="480" align="middle" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="lottery">
+    <param value="always" name="allowScriptAccess">
+    <param value="egg.swf" name="movie">
+    <param value="high" name="quality">
+    <param value="transparent" name="wmode">
+    <param value="false" name="menu">
+    <embed width="880" height="480" align="middle" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" allowscriptaccess="always" wmode="transparent" name="lottery" menu="false" quality="high" src="/jindan/egg.swf">
+    </object>
+</div>
+
+
+
+<div class="box" id="award_1">
+    <a class="close" hidefocus="true" href="javascript:;" onclick="effect.zoomOut('award_1',1);"> × </a>
+    <div class="pic"><img src="jindan/award/1.jpg" width="200" height="193" /></div>
+    <div class="title">恭喜您抽中的是神仙姐姐</div>
+    <div class="description">揉揉我的眼睛，咬咬我的手指，请问这是真的吗？没错！别怀疑了！你要相信奇迹！</div>
+</div>
+
+<div class="box" id="award_2">
+    <a class="close" hidefocus="true" href="javascript:;" onclick="effect.zoomOut('award_2',1);"> × </a>
+    <div class="pic"><img src="award/2.jpg" width="200" height="160" /></div>
+    <div class="title">恭喜您抽中的是如花</div>
+    <div class="description">你说是你手贱呢？还是我邪恶了？怎么可以这么重口味呢?</div>
+</div>
+
+<div class="box" id="award_3">
+    <a class="close" hidefocus="true" href="javascript:;" onclick="effect.zoomOut('award_3',1);"> × </a>
+    <div class="pic"><img src="award/3.jpg" width="200" height="215" /></div>
+    <div class="title">恭喜您抽中的是芙蓉姐姐</div>
+    <div class="description">你性福了！自从芙蓉姐姐减肥成功而成为女神以后，不知有多少宅男为她消耗了多少纸巾！</div>
+</div>
+
+<div class="box" id="award_4">
+    <a class="close" hidefocus="true" href="javascript:;" onclick="effect.zoomOut('award_4',1);"> × </a>
+    <div class="pic"><img src="award/4.jpg" width="180" height="230" /></div>
+    <div class="title">恭喜您抽中的是凤姐</div>
+    <div class="description">不会吧？这么低的中奖概率你都能抽中，看来你跟凤姐确实是有缘分！你就收了她，好吗？不过，人家凤姐不一定看得上你，你是清华北大的高材生吗？</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.SellInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.SellInfo" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="date" property="date" jdbcType="VARCHAR" />
+    <result column="tourlineId" property="tourlineId" jdbcType="VARCHAR" />
+    <result column="sellNum" property="sellNum" jdbcType="INTEGER" />
+    <result column="totalNum" property="totalNum" jdbcType="INTEGER" />
+    <result column="costNumber" property="costNumber" jdbcType="VARCHAR" />
+    <result column="tourdateId" property="tourdateId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, date, tourlineId, sellNum, totalNum, costNumber, tourdateId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" flushCache="true">
+    select 
+    <include refid="Base_Column_List" />
+    from sellinfo
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true">
+    delete from sellinfo
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.SellInfo" flushCache="true">
+    insert into sellinfo (id, date, tourlineId, sellNum, totalNum, costNumber, tourdateId)
+    values (#{id,jdbcType=VARCHAR}, #{date,jdbcType=VARCHAR}, #{tourlineId,jdbcType=VARCHAR}, 
+            #{sellNum,jdbcType=INTEGER}, #{totalNum,jdbcType=INTEGER}, #{costNumber,jdbcType=VARCHAR},
+            #{tourdateId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.SellInfo" flushCache="true">
+    insert into sellinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id, date, tourlineId, sellNum, totalNum, costNumber, tourdateId,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+     #{id,jdbcType=VARCHAR}, #{date,jdbcType=VARCHAR}, #{tourlineId,jdbcType=VARCHAR}, 
+     #{sellNum,jdbcType=INTEGER}, #{totalNum,jdbcType=INTEGER}, #{costNumber,jdbcType=VARCHAR},
+     #{tourdateId,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.SellInfo" flushCache="true">
+    update sellinfo
+    set date = #{date,jdbcType=VARCHAR}, tourlineId = #{tourlineId,jdbcType=VARCHAR}, 
+        sellNum = #{sellNum,jdbcType=INTEGER}, totalNum = #{totalNum,jdbcType=INTEGER}, 
+        costNumber = #{costNumber,jdbcType=VARCHAR},
+        tourdateId = #{tourdateId,jdbcType=VARCHAR} 
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="findSellInfo" parameterType="com.wenjing.entity.SellInfo" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+       from sellinfo
+       <where>
+          <trim suffixOverrides="AND">
+             <if test="tourlineId != null and !''.equals(tourlineId)">
+                 tourlineId = #{tourlineId,jdbcType=VARCHAR} AND
+             </if>
+             <if test="date != null and !''.equals(date)">
+                date = #{date,jdbcType=VARCHAR} AND
+             </if>
+             <if test="costNumber != null and !''.equals(costNumber)">
+                costNumber = #{costNumber,jdbcType=VARCHAR} AND
+             </if>
+             <if test="tourdateId != null and !''.equals(tourdateId)">
+                tourdateId = #{tourdateId,jdbcType=VARCHAR} AND
+             </if>
+          </trim>
+       </where>
+  </select>
+  
+  <update id="updateSellNumById" parameterType="java.lang.String" flushCache="true">
+    update sellinfo
+    set sellNum = sellNum+1
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

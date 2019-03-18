@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.IndexShowDestinationMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.IndexShowDestination" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="costNumber" property="costNumber" jdbcType="VARCHAR" />
+    <result column="destinationId" property="destinationId" jdbcType="VARCHAR" />
+    <result column="addTime" property="addTime" jdbcType="INTEGER" />
+    <result column="showType" property="showType" jdbcType="INTEGER" />
+    <result column="fileUrl" property="fileUrl" jdbcType="VARCHAR" />
+    <result column="pageId" property="pageId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, costNumber, destinationId, addTime,showType,fileUrl,pageId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from indexshowdestination
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from indexshowdestination
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.IndexShowDestination" >
+    insert into indexshowdestination (id, costNumber, destinationId, 
+      addTime,showType,fileUrl,pageId)
+    values (#{id,jdbcType=VARCHAR}, #{costNumber,jdbcType=VARCHAR}, #{destinationId,jdbcType=VARCHAR}, 
+      #{addTime,jdbcType=INTEGER},#{showType,jdbcType=INTEGER}, #{fileUrl,jdbcType=VARCHAR}, #{pageId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.IndexShowDestination" >
+    insert into indexshowdestination
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      costNumber,
+      destinationId,
+      addTime,
+      showType,
+      fileUrl,
+      pageId,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{costNumber,jdbcType=VARCHAR},
+      #{destinationId,jdbcType=VARCHAR},
+      #{addTime,jdbcType=INTEGER},
+      #{showType,jdbcType=INTEGER},
+      #{fileUrl,jdbcType=VARCHAR},
+      #{pageId,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.IndexShowDestination" >
+    update indexshowdestination
+    <set >
+      <if test="costNumber != null" >
+        costNumber = #{costNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="destinationId != null" >
+        destinationId = #{destinationId,jdbcType=VARCHAR},
+      </if>
+      <if test="addTime != null" >
+        addTime = #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="showType != null" >
+        showType = #{showType,jdbcType=INTEGER},
+      </if>
+      <if test="fileUrl != null" >
+        fileUrl = #{fileUrl,jdbcType=VARCHAR},
+      </if>
+     <if test="pageId != null" >
+        pageId = #{pageId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.IndexShowDestination" >
+    update indexshowdestination
+    set costNumber = #{costNumber,jdbcType=VARCHAR},
+      destinationId = #{destinationId,jdbcType=VARCHAR},
+      addTime = #{addTime,jdbcType=INTEGER},
+      showType = #{showType,jdbcType=INTEGER},
+      fileUrl = #{fileUrl,jdbcType=VARCHAR},
+      pageId = #{pageId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <!--  
+  <delete id="deleteBycostNumberAnaTourlineId">
+     delete 
+        from indexshowdestination 
+        where destinationId = #{destinationId,jdbcType=VARCHAR} 
+		      <if test="costNumber != null" >
+		         and `costNumber` = #{costNumber,jdbcType=VARCHAR} 
+		      </if>
+  </delete>
+  <select id="findByCostnumber" resultMap="BaseResultMap" parameterType="java.lang.String">
+   select * from indexshowdestination where `costNumber` = #{costNumber,jdbcType=VARCHAR}
+  </select>
+  -->
+    <select id="getDestinationIdString" resultType="java.lang.String" parameterType="java.lang.String" >
+    select GROUP_CONCAT(destinationId) from indexshowdestination 
+    where costNumber=#{costNumber,jdbcType=VARCHAR}
+    and showType = #{showType,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByCondition" >
+    delete from indexshowdestination
+    where showType = #{showType,jdbcType=INTEGER}
+    and destinationId = #{destinationId,jdbcType=VARCHAR}
+    and costNumber = #{costNumber,jdbcType=VARCHAR}
+  </delete>
+  <update id="updateFileUrl" parameterType="java.lang.String" >
+	update indexshowdestination set 
+	fileUrl = #{fileUrl},
+	pageId = #{pageId}
+	where destinationId= #{destinationId}
+	and costNumber = #{costnumber}
+  </update>
+  <select id="getFileUrl" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  	select DISTINCT fileUrl,pageId from indexshowdestination 
+	where destinationId= #{destinationId}
+	and costNumber = #{costnumber}
+  </select>
+</mapper>

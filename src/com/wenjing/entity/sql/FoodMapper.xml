@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.FoodMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Food" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="foodName" property="foodname" jdbcType="VARCHAR" />
+    <result column="foodCN" property="foodcn" jdbcType="VARCHAR" />
+    <result column="foodStar" property="foodstar" jdbcType="TINYINT" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="Telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="destinationId" property="destinationid" jdbcType="VARCHAR" />
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+    <result column="productId" property="productid" jdbcType="VARCHAR" />
+    <result column="costNumberIds" property="costnumberids" jdbcType="VARCHAR" />
+    <result column="regionId" property="regionid" jdbcType="VARCHAR" />
+    <result column="imageUrl" property="imageurl" jdbcType="LONGVARCHAR" />
+    <result column="foodDescription" property="fooddescription" jdbcType="LONGVARCHAR" />
+    <result column="foodLocation" property="foodlocation" jdbcType="LONGVARCHAR" />
+    <result column="foodAmenities" property="foodamenities" jdbcType="LONGVARCHAR" />
+    <association property="destinationDestinationid" column="destinationid" select="com.wenjing.dao.DestinationMapper.selectByPrimaryKey" />
+    <association property="productProductid" column="productid" select="com.wenjing.dao.ProductMapper.selectByPrimaryKey" />
+  </resultMap>
+  
+  <resultMap type="com.wenjing.entity.Food" id="ResultMapWithPrice">
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="foodName" property="foodname" jdbcType="VARCHAR" />
+    <result column="foodCN" property="foodcn" jdbcType="VARCHAR" />
+    <result column="foodStar" property="foodstar" jdbcType="TINYINT" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="Telephone" property="telephone" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="destinationId" property="destinationid" jdbcType="VARCHAR" />
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+    <result column="productId" property="productid" jdbcType="VARCHAR" />
+    <result column="costNumberIds" property="costnumberids" jdbcType="VARCHAR" />
+    <result column="regionId" property="regionid" jdbcType="VARCHAR" />
+    <result column="imageUrl" property="imageurl" jdbcType="LONGVARCHAR" />
+    <result column="foodDescription" property="fooddescription" jdbcType="LONGVARCHAR" />
+    <result column="foodLocation" property="foodlocation" jdbcType="LONGVARCHAR" />
+    <result column="foodAmenities" property="foodamenities" jdbcType="LONGVARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL"/>
+    <result column="productId" property="productId" jdbcType="VARCHAR"/>
+  </resultMap>
+  
+  <select id="selectByDestinationid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from food where destinationId =#{destinationId}
+  </select>
+  <select id="selectByProductid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from food where productId =#{productId}
+  </select>
+  
+  <sql id="Base_Column_List" >
+    id, foodName, foodCN, foodStar, address, Telephone, city, sort, destinationId, costNumber, 
+    productId, costNumberIds, regionId,imageUrl, foodDescription, foodLocation, foodAmenities
+  </sql>
+ 
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from food
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectWithPriceByDestinationId" parameterType="java.util.Map"  resultMap="ResultMapWithPrice">
+	SELECT
+		f.id AS id, foodName, foodCN, foodStar, address, Telephone, city, sort, destinationId, f.costNumber AS costNumber, 
+	    productId, f.costNumberIds AS costNumberIds, regionId, f.imageUrl, foodDescription, foodLocation, foodAmenities, p.minPrice AS price, p.id As productId
+	FROM
+	   food f,
+	   product p
+	WHERE
+	   f.destinationId = #{destinationId}	
+	AND
+	   f.costNumber = #{costnumber}
+	AND
+	   f.productId = p.id       
+  </select>
+  
+  <select id="selectWithPriceByProductId" resultMap="ResultMapWithPrice">
+	SELECT
+		f.id AS id, foodName, foodCN, foodStar, address, Telephone, city, sort, destinationId, f.costNumber AS costNumber, 
+	    productId, f.costNumberIds AS costNumberIds, regionId, f.imageUrl, foodDescription, foodLocation, foodAmenities, p.minPrice AS price, p.id As productId
+	FROM
+	   food f,
+	   product p
+	WHERE
+	   f.productId = #{productId}
+	AND
+	   f.productId = p.id       
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from food
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Food" flushCache="true" >
+    insert into food (id, foodName, foodCN, 
+      foodStar, address, Telephone, 
+      city, sort, destinationId, 
+      costNumber, productId, costNumberIds, 
+      regionId, imageUrl, foodDescription, 
+      foodLocation, foodAmenities,imageUrl, foodDescription, foodLocation, foodAmenities)
+    values (#{id,jdbcType=VARCHAR}, #{foodname,jdbcType=VARCHAR}, #{foodcn,jdbcType=VARCHAR}, 
+      #{foodstar,jdbcType=TINYINT}, #{address,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{destinationid,jdbcType=VARCHAR}, 
+      #{costnumber,jdbcType=VARCHAR}, #{productid,jdbcType=VARCHAR}, #{costnumberids,jdbcType=VARCHAR}, 
+      #{regionid,jdbcType=VARCHAR}, #{imageurl,jdbcType=LONGVARCHAR}, #{fooddescription,jdbcType=LONGVARCHAR}, 
+      #{foodlocation,jdbcType=LONGVARCHAR}, #{foodamenities,jdbcType=LONGVARCHAR},#{imageurl,jdbcType=LONGVARCHAR},
+      #{fooddescription,jdbcType=LONGVARCHAR},#{foodlocation,jdbcType=LONGVARCHAR},#{foodamenities,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Food" flushCache="true" >
+    insert into food
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      foodName,
+      foodCN,
+      foodStar,
+      address,
+      Telephone,
+      city,
+      sort,
+      destinationId,
+      costNumber,
+      productId,
+      costNumberIds,
+      regionId,
+      imageUrl,
+      foodDescription,
+      foodLocation,
+      foodAmenities,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{foodname,jdbcType=VARCHAR},
+      #{foodcn,jdbcType=VARCHAR},
+      #{foodstar,jdbcType=TINYINT},
+      #{address,jdbcType=VARCHAR},
+      #{telephone,jdbcType=VARCHAR},
+      #{city,jdbcType=VARCHAR},
+      #{sort,jdbcType=INTEGER},
+      #{destinationid,jdbcType=VARCHAR},
+      #{costnumber,jdbcType=VARCHAR},
+      #{productid,jdbcType=VARCHAR},
+      #{costnumberids,jdbcType=VARCHAR},
+      #{regionid,jdbcType=VARCHAR},
+      #{imageurl,jdbcType=LONGVARCHAR},
+      #{fooddescription,jdbcType=LONGVARCHAR},
+      #{foodlocation,jdbcType=LONGVARCHAR},
+      #{foodamenities,jdbcType=LONGVARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Food" flushCache="true" >
+    update food
+    <set >
+      <if test="foodname != null" >
+        foodName = #{foodname,jdbcType=VARCHAR},
+      </if>
+      <if test="foodcn != null" >
+        foodCN = #{foodcn,jdbcType=VARCHAR},
+      </if>
+      <if test="foodstar != null" >
+        foodStar = #{foodstar,jdbcType=TINYINT},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null" >
+        Telephone = #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="destinationid != null" >
+        destinationId = #{destinationid,jdbcType=VARCHAR},
+      </if>
+      <if test="costnumber != null" >
+        costNumber = #{costnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="productid != null" >
+        productId = #{productid,jdbcType=VARCHAR},
+      </if>
+      <if test="costnumberids != null" >
+        costNumberIds = #{costnumberids,jdbcType=VARCHAR},
+      </if>
+      <if test="regionid != null" >
+        regionId = #{regionid,jdbcType=VARCHAR},
+      </if>
+      <if test="imageurl != null" >
+        imageUrl = #{imageurl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="fooddescription != null" >
+        foodDescription = #{fooddescription,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="foodlocation != null" >
+        foodLocation = #{foodlocation,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="foodamenities != null" >
+        foodAmenities = #{foodamenities,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Food" flushCache="true" >
+    update food
+    set foodName = #{foodname,jdbcType=VARCHAR},
+      foodCN = #{foodcn,jdbcType=VARCHAR},
+      foodStar = #{foodstar,jdbcType=TINYINT},
+      address = #{address,jdbcType=VARCHAR},
+      Telephone = #{telephone,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER},
+      destinationId = #{destinationid,jdbcType=VARCHAR},
+      costNumber = #{costnumber,jdbcType=VARCHAR},
+      productId = #{productid,jdbcType=VARCHAR},
+      costNumberIds = #{costnumberids,jdbcType=VARCHAR},
+      regionId = #{regionid,jdbcType=VARCHAR},
+      #{imageurl,jdbcType=LONGVARCHAR},
+      #{fooddescription,jdbcType=LONGVARCHAR},
+      #{foodlocation,jdbcType=LONGVARCHAR},
+      #{foodamenities,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+   <!-- 查询总记录数 -->	
+ <select id="getMaxSort" resultType="java.lang.Integer">
+     select ifnull(max(sort),0) from `food` 
+  </select> 
+  <!-- 获取酒店总记录条数 -->
+	<select id="getFoodCount" resultType="java.lang.Integer">
+		select count(*) from `food`,cost,product,region where `food`.productId=product.id and 
+		`food`.costNumber=cost.id and `food`.regionId= region.id
+		<!--  and tourline.costNumber in
+		<foreach collection="costnumber" item="item" index="index"
+			separator="," close=")" open="(">
+			#{item}
+		</foreach>
+		-->
+		<if test="costnumberTD!=null">
+		  and `food`.costNumberIds like '%${costnumberTD}%'
+		</if>
+		
+		<if test="search != null" >
+	       and  CONCAT(food.`foodName`,product.`code`,hotel.city) like '%${search}%'
+	    </if>
+	    <if test="indexShow != null and indexShow==1" >
+	      and `food`.id in (select tourlineId from indexshowtourline where costNumber=#{costnumberTD})
+	    </if>
+	    <if test="isShow != null and isShow==1" >
+	        and `food`.id in (select tourlineId from showtourline where costNumber=#{costnumberTD})
+	    </if>
+	    <if test="isHot != null and isHot==1" >
+	        and `food`.id in (select tourlineId from hottourline where costNumber=#{costnumberTD})
+	    </if>
+	</select>
+  <!-- 分页查询签证 -->
+	<select id="selectAllByPage" resultMap="BaseResultMap">
+		select
+		    `food`.*,
+		    cost.name costname,
+		    (SELECT addtime from showtourline where tourlineid = `food`.id
+		     <if test="costnumberTD!=null">
+	  		  and  costNumber=#{costnumberTD}
+			</if>
+		     limit 1) as showsort 
+		  from `food`,
+		       cost,
+		       product,
+		       region
+		  where `food`.productId=product.id 
+		        and `food`.costNumber=cost.id 
+		        and `food`.regionId= region.id
+				<!--  and tourline.costNumber in
+				<foreach collection="costnumber" item="item" index="index"
+					separator="," close=")" open="(">
+					#{item}
+				</foreach>
+				 -->
+				<if test="costnumberTD!=null">
+				  and `food`.costNumberIds like '%${costnumberTD}%'
+				</if>
+				<if test="search != null" >
+			      and  CONCAT(`food`.foodName,product.`code`,`food`.city) like '%${search}%'
+			    </if> 
+			    <if test="indexShow != null and indexShow==1" >
+			      and `food`.id in (select tourlineId from indexshowtourline where costNumber=#{costnumberTD})
+			    </if>
+			    <if test="isShow != null and isShow==1" >
+			        and `food`.id in (select tourlineId from showtourline where costNumber=#{costnumberTD})
+			    </if>
+			    <if test="isHot != null and isHot==1" >
+			        and `food`.id in (select tourlineId from hottourline where costNumber=#{costnumberTD})
+			    </if>
+				order by showsort desc, sort desc limit #{startPos},#{pageSize}
+	</select>
+	<!-- 修改costNoIds-->
+  <update id="updateCostNumIds" flushCache="true">
+     update `food` set costNumberIds = #{costNumIds,jdbcType=VARCHAR} where productId = #{productid}
+  </update> 
+   <!-- 查询关联目的地信息 -->
+  <select id="selectByids" resultMap="BaseResultMap">
+   select * from `food` where id in 
+   <foreach collection="list" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+	</foreach>
+	</select>
+  
+</mapper>

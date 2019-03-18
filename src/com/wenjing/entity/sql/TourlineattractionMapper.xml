@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.TourlineattractionMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Tourlineattraction" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="tourLineId" property="tourlineid" jdbcType="VARCHAR" />
+    <result column="attractionId" property="attractionid" jdbcType="VARCHAR" />
+    <!-- 
+    <association property="attractionAttractionid" column="attractionid" select="com.wenjing.dao.AttractionMapper.selectByPrimaryKey" />
+    <association property="tourlineTourlineid" column="tourlineid" select="com.wenjing.dao.TourlineMapper.selectByPrimaryKey" />
+     -->
+  </resultMap>
+  <select id="selectByAttractionid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from tourlineattraction where attractionId =#{attractionId}
+  </select>
+  <select id="selectByTourlineid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from tourlineattraction where tourLineId =#{tourLineId}
+  </select>
+  <sql id="Base_Column_List" >
+    id, tourLineId, attractionId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tourlineattraction
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from tourlineattraction
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Tourlineattraction" flushCache="true" >
+    insert into tourlineattraction (id, tourLineId, attractionId
+      )
+    values (#{id,jdbcType=VARCHAR}, #{tourlineid,jdbcType=VARCHAR}, #{attractionid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Tourlineattraction" flushCache="true" >
+    insert into tourlineattraction
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      tourLineId,
+      attractionId,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{tourlineid,jdbcType=VARCHAR},
+      #{attractionid,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Tourlineattraction" flushCache="true" >
+    update tourlineattraction
+    <set >
+      <if test="tourlineid != null" >
+        tourLineId = #{tourlineid,jdbcType=VARCHAR},
+      </if>
+      <if test="attractionid != null" >
+        attractionId = #{attractionid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Tourlineattraction" flushCache="true" >
+    update tourlineattraction
+    set tourLineId = #{tourlineid,jdbcType=VARCHAR},
+      attractionId = #{attractionid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <delete id="deleteByTourlineId" parameterType="java.lang.String" flushCache="true">
+   delete from tourlineattraction where tourLineId = #{tourlineId}
+  </delete>
+  <delete id="deleteByAttractionId" parameterType="java.lang.String" flushCache="true" >
+    delete from tourlineattraction
+    where attractionId = #{attractionId,jdbcType=VARCHAR}
+  </delete>
+  <update id="replaceByAttractionId" parameterType="java.lang.String" flushCache="true">
+  	update tourlineattraction set attractionId=#{replaceId} where attractionId=#{attractionId}
+  </update>
+</mapper>

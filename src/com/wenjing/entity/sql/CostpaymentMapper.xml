@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.CostpaymentMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Costpayment" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="paymentAccount" property="paymentaccount" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="partner" property="partner" jdbcType="VARCHAR" />
+    <result column="key" property="key" jdbcType="VARCHAR" />
+    <association property="costCostnumber" column="costNumber" select="com.wenjing.dao.CostMapper.selectByPrimaryKey" />
+  </resultMap>
+  <select id="selectByCostnumber" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from costpayment where costNumber =#{costNumber}
+  </select>
+  <sql id="Base_Column_List" >
+    id, `name`, paymentAccount, url, costNumber,password,partner,`key`
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from costpayment
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from costpayment
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Costpayment" flushCache="true" >
+    insert into costpayment (id, `name`, paymentAccount, 
+      url, costNumber,password,partner,`key`)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{paymentaccount,jdbcType=VARCHAR}, 
+      #{url,jdbcType=VARCHAR}, #{costnumber,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{partner,jdbcType=VARCHAR}, #{key,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Costpayment" flushCache="true" >
+    insert into costpayment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      `name`,
+      paymentAccount,
+      url,
+      costNumber,
+      password,
+      partner,
+      `key`,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR},
+      #{paymentaccount,jdbcType=VARCHAR},
+      #{url,jdbcType=VARCHAR},
+      #{costnumber,jdbcType=VARCHAR},
+      #{password,jdbcType=VARCHAR}, 
+      #{partner,jdbcType=VARCHAR}, 
+      #{key,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Costpayment" flushCache="true" >
+    update costpayment
+    <set >
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentaccount != null" >
+        paymentAccount = #{paymentaccount,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="costnumber != null" >
+        costNumber = #{costnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="partner != null" >
+        partner = #{partner,jdbcType=VARCHAR},
+      </if>
+      <if test="key != null" >
+        `key` = #{key,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Costpayment" flushCache="true" >
+    update costpayment
+    set `name` = #{name,jdbcType=VARCHAR},
+      paymentAccount = #{paymentaccount,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      costNumber = #{costnumber,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      partner = #{partner,jdbcType=VARCHAR},
+      `key` = #{key,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="findByCostnumber" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from costpayment where costNumber=#{costnumber}
+ </select>
+</mapper>

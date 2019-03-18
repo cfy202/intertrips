@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.HotelMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Hotel" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="hotelName" property="hotelname" jdbcType="VARCHAR" />
+    <result column="hotelWeb" property="hotelweb" jdbcType="VARCHAR" />
+    <result column="hotelCN" property="hotelcn" jdbcType="VARCHAR" />
+    <result column="hotelStar" property="hotelstar" jdbcType="DECIMAL" />
+    <result column="hotelAddress" property="hoteladdress" jdbcType="VARCHAR" />
+    <result column="hotelWebsite" property="hotelwebsite" jdbcType="VARCHAR" />
+    <result column="hotelTelephone" property="hoteltelephone" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="destinationId" property="destinationid" jdbcType="VARCHAR" />
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+    <result column="imageUrl" property="imageurl" jdbcType="LONGVARCHAR" />
+    <result column="hotelDescription" property="hoteldescription" jdbcType="LONGVARCHAR" />
+    <result column="hotelLocation" property="hotellocation" jdbcType="LONGVARCHAR" />
+    <result column="hotelAmenities" property="hotelamenities" jdbcType="LONGVARCHAR" />
+    <result column="hotelFacilities" property="hotelfacilities" jdbcType="LONGVARCHAR" />
+    <result column="productId" property="productid" jdbcType="VARCHAR" />
+    <result column="costNumberIds" property="costNumberids" jdbcType="VARCHAR" />
+    <result column="regionId" property="regionid" jdbcType="VARCHAR" />
+    
+    <association property="productProductid" column="productid" select="com.wenjing.dao.ProductMapper.selectByPrimaryKey" />
+    <!--
+    <association property="destinationDestinationid" column="destinationid" select="com.wenjing.dao.DestinationMapper.selectByPrimaryKey" />
+    <collection property="hotelimagesHotelid" ofType="com.wenjing.entity.Hotelimage" column="id" select="com.wenjing.dao.HotelimageMapper.selectByHotelid" />
+    <collection property="tourlinehotelsHotelid" ofType="com.wenjing.entity.Tourlinehotel" column="id" select="com.wenjing.dao.TourlinehotelMapper.selectByHotelid" />
+     --> 
+  </resultMap>
+  <select id="selectByDestinationid" parameterType="java.lang.String" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from hotel where destinationId =#{destinationId}
+  </select>
+  <sql id="Base_Column_List" >
+    id, hotelName, hotelWeb, hotelCN, hotelStar, hotelAddress, hotelWebsite, hotelTelephone, 
+    city, sort, destinationId, costNumber,imageUrl,hotelDescription,hotelLocation,hotelAmenities,hotelFacilities,productId,costNumberIds,regionId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from hotel
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from hotel
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Hotel" flushCache="true" >
+    insert into hotel (id, hotelName, hotelWeb, 
+      hotelCN, hotelStar, hotelAddress, 
+      hotelWebsite, hotelTelephone, city, 
+      sort, destinationId, costNumber, 
+      imageUrl, hotelDescription, hotelLocation, 
+      hotelAmenities, hotelFacilities,productId,costNumberIds,regionId
+      )
+    values (#{id,jdbcType=VARCHAR}, #{hotelname,jdbcType=VARCHAR}, #{hotelweb,jdbcType=VARCHAR}, 
+      #{hotelcn,jdbcType=VARCHAR}, #{hotelstar,jdbcType=DECIMAL}, #{hoteladdress,jdbcType=VARCHAR}, 
+      #{hotelwebsite,jdbcType=VARCHAR}, #{hoteltelephone,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{sort,jdbcType=INTEGER}, #{destinationid,jdbcType=VARCHAR}, #{costnumber,jdbcType=VARCHAR}, 
+      #{imageurl,jdbcType=LONGVARCHAR}, #{hoteldescription,jdbcType=LONGVARCHAR}, #{hotellocation,jdbcType=LONGVARCHAR}, 
+      #{hotelamenities,jdbcType=LONGVARCHAR}, #{hotelfacilities,jdbcType=LONGVARCHAR},#{productid,jdbcType=VARCHAR},
+      #{costNumberids,jdbcType=VARCHAR},#{regionid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Hotel" flushCache="true" >
+    insert into hotel
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      hotelName,
+      hotelWeb,
+      hotelCN,
+      hotelStar,
+      hotelAddress,
+      hotelWebsite,
+      hotelTelephone,
+      city,
+      sort,
+      destinationId,
+      costNumber,
+      imageUrl,
+      hotelDescription,
+      hotelLocation,
+      hotelAmenities,
+      hotelFacilities,
+      productId,
+      costNumberIds,
+      regionId,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{hotelname,jdbcType=VARCHAR},
+      #{hotelweb,jdbcType=VARCHAR},
+      #{hotelcn,jdbcType=VARCHAR},
+      #{hotelstar,jdbcType=DECIMAL},
+      #{hoteladdress,jdbcType=VARCHAR},
+      #{hotelwebsite,jdbcType=VARCHAR},
+      #{hoteltelephone,jdbcType=VARCHAR},
+      #{city,jdbcType=VARCHAR},
+      #{sort,jdbcType=INTEGER},
+      #{destinationid,jdbcType=VARCHAR},
+      #{costnumber,jdbcType=VARCHAR},
+      #{imageurl,jdbcType=LONGVARCHAR},
+      #{hoteldescription,jdbcType=LONGVARCHAR},
+      #{hotellocation,jdbcType=LONGVARCHAR},
+      #{hotelamenities,jdbcType=LONGVARCHAR},
+      #{hotelfacilities,jdbcType=LONGVARCHAR},
+      #{productid,jdbcType=VARCHAR},
+      #{costNumberids,jdbcType=VARCHAR},
+      #{regionid,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Hotel" flushCache="true" >
+    update hotel
+    <set >
+      <if test="hotelname != null" >
+        hotelName = #{hotelname,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelweb != null" >
+        hotelWeb = #{hotelweb,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelcn != null" >
+        hotelCN = #{hotelcn,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelstar != null" >
+        hotelStar = #{hotelstar,jdbcType=DECIMAL},
+      </if>
+      <if test="hoteladdress != null" >
+        hotelAddress = #{hoteladdress,jdbcType=VARCHAR},
+      </if>
+      <if test="hotelwebsite != null" >
+        hotelWebsite = #{hotelwebsite,jdbcType=VARCHAR},
+      </if>
+      <if test="hoteltelephone != null" >
+        hotelTelephone = #{hoteltelephone,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="destinationid != null" >
+        destinationId = #{destinationid,jdbcType=VARCHAR},
+      </if>
+      <if test="costnumber != null" >
+        costNumber = #{costnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="imageurl != null" >
+        imageUrl = #{imageurl,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="hoteldescription != null" >
+        hotelDescription = #{hoteldescription,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="hotellocation != null" >
+        hotelLocation = #{hotellocation,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="hotelamenities != null" >
+        hotelAmenities = #{hotelamenities,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="hotelfacilities != null" >
+        hotelFacilities = #{hotelfacilities,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="productid != null" >
+        productId = #{productid,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="costNumberids != null" >
+        costNumberIds = #{costNumberids,jdbcType=VARCHAR},
+      </if>
+      <if test="regionid != null" >
+        regionId = #{regionid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Hotel" flushCache="true" >
+    update hotel
+    set hotelName = #{hotelname,jdbcType=VARCHAR},
+      hotelWeb = #{hotelweb,jdbcType=VARCHAR},
+      hotelCN = #{hotelcn,jdbcType=VARCHAR},
+      hotelStar = #{hotelstar,jdbcType=DECIMAL},
+      hotelAddress = #{hoteladdress,jdbcType=VARCHAR},
+      hotelWebsite = #{hotelwebsite,jdbcType=VARCHAR},
+      hotelTelephone = #{hoteltelephone,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER},
+      destinationId = #{destinationid,jdbcType=VARCHAR},
+      costNumber = #{costnumber,jdbcType=VARCHAR},
+      imageUrl = #{imageurl,jdbcType=LONGVARCHAR},
+      hotelDescription = #{hoteldescription,jdbcType=LONGVARCHAR},
+      hotelLocation = #{hotellocation,jdbcType=LONGVARCHAR},
+      hotelAmenities = #{hotelamenities,jdbcType=LONGVARCHAR},
+      hotelFacilities = #{hotelfacilities,jdbcType=LONGVARCHAR},
+      productId = #{productid,jdbcType=LONGVARCHAR},
+      costNumberIds = #{costNumberids,jdbcType=LONGVARCHAR},
+      regionId = #{regionid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="findAllByCostNumber" resultMap="BaseResultMap">
+     select * from `hotel` 
+      order by costNumber,sort desc
+  </select> 
+ 
+  <update id="replaceByDestinationId" parameterType="java.lang.String" flushCache="true">
+  	update hotel set destinationId=#{replaceId} where destinationId=#{destinationId}
+  </update>
+ <!-- 查询总记录数 -->	
+ <select id="getMaxSort" resultType="java.lang.Integer">
+     select ifnull(max(sort),0) from `hotel` 
+  </select> 
+  <!-- 获取酒店总记录条数 -->
+	<select id="getVisaCount" resultType="java.lang.Integer">
+		select count(*) from `hotel`,cost,product,region where `hotel`.productId=product.id and 
+		`hotel`.costNumber=cost.id and `hotel`.regionId= region.id
+		<!--  and tourline.costNumber in
+		<foreach collection="costnumber" item="item" index="index"
+			separator="," close=")" open="(">
+			#{item}
+		</foreach>
+		-->
+		<if test="costnumberTD!=null">
+		  and `hotel`.costNumberIds like '%${costnumberTD}%'
+		</if>
+		
+		<if test="search != null" >
+	       and  CONCAT(hotel.`hotelName`,product.`code`,hotel.city) like '%${search}%'
+	    </if>
+	    <if test="indexShow != null and indexShow==1" >
+	      and `hotel`.id in (select tourlineId from indexshowtourline where costNumber=#{costnumberTD})
+	    </if>
+	    <if test="isShow != null and isShow==1" >
+	        and `hotel`.id in (select tourlineId from showtourline where costNumber=#{costnumberTD})
+	    </if>
+	    <if test="isHot != null and isHot==1" >
+	        and `hotel`.id in (select tourlineId from hottourline where costNumber=#{costnumberTD})
+	    </if>
+	</select>
+  <!-- 分页查询签证 -->
+	<select id="selectAllByPage" resultMap="BaseResultMap">
+		select
+		    `hotel`.*,
+		    cost.name costname,
+		    (SELECT addtime from showtourline where tourlineid = `hotel`.id
+		     <if test="costnumberTD!=null">
+	  		  and  costNumber=#{costnumberTD}
+			</if>
+		     limit 1) as showsort 
+		  from `hotel`,
+		       cost,
+		       product,
+		       region
+		  where `hotel`.productId=product.id 
+		        and `hotel`.costNumber=cost.id 
+		        and `hotel`.regionId= region.id
+				<!--  and tourline.costNumber in
+				<foreach collection="costnumber" item="item" index="index"
+					separator="," close=")" open="(">
+					#{item}
+				</foreach>
+				 -->
+				<if test="costnumberTD!=null">
+				  and `hotel`.costNumberIds like '%${costnumberTD}%'
+				</if>
+				<if test="search != null" >
+			      and  CONCAT(hotel.`hotelName`,product.`code`,hotel.city) like '%${search}%'
+			    </if> 
+			    <if test="indexShow != null and indexShow==1" >
+			      and `hotel`.id in (select tourlineId from indexshowtourline where costNumber=#{costnumberTD})
+			    </if>
+			    <if test="isShow != null and isShow==1" >
+			        and `hotel`.id in (select tourlineId from showtourline where costNumber=#{costnumberTD})
+			    </if>
+			    <if test="isHot != null and isHot==1" >
+			        and `hotel`.id in (select tourlineId from hottourline where costNumber=#{costnumberTD})
+			    </if>
+				order by showsort desc, sort desc limit #{startPos},#{pageSize}
+	</select>
+	<!-- 修改costNoIds-->
+  <update id="updateCostNumIds" flushCache="true">
+     update `hotel` set costNumberIds = #{costNumIds,jdbcType=VARCHAR} where productId = #{productid}
+  </update> 
+   <!-- 查询关联目的地信息 -->
+  <select id="selectByids" resultMap="BaseResultMap">
+   select * from `hotel` where  id in
+   <foreach collection="list" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+	</foreach>
+	</select>
+</mapper>

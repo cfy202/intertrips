@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.DepartureMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Departure" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+     <association property="cost" javaType="com.wenjing.entity.Cost">
+       <result column="costname" property="name" jdbcType="VARCHAR" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, `name`, city, address, price, remark, sort, costNumber
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from departure
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from departure
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Departure" flushCache="true" >
+    insert into departure (id, `name`, city, address, price, remark, sort, costNumber)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+            #{city,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
+            #{remark,jdbcType=LONGVARCHAR}, #{sort,jdbcType=INTEGER}, #{costnumber,jdbcType=VARCHAR}
+           )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Departure" flushCache="true" >
+    insert into departure
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+     id, `name`, city, address, price, remark, sort, costNumber,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+     #{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+     #{city,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
+     #{remark,jdbcType=LONGVARCHAR}, #{sort,jdbcType=INTEGER}, #{costnumber,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Departure" flushCache="true" >
+    update departure
+    <set >
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="costnumber != null" >
+        costNumber = #{costnumber,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Departure" flushCache="true" >
+    update departure
+    set `name` = #{name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      city = #{city,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=LONGVARCHAR},
+      costNumber = #{costnumber,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <!-- 查询全部出发地 -->
+  <select id="findAllByCostNumber" resultMap="BaseResultMap">
+    select departure.*,cost.name costname from departure,cost where departure.costNumber=cost.id and costNumber in 
+    <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+       #{item}
+    </foreach>
+     order by costNumber,departure.name
+  </select>
+  <!-- 获取当前sort最大值 -->
+  <select id="getMaxSort" resultType="java.lang.Integer" parameterType="java.lang.String">
+     select ifnull(max(sort),0) from departure
+     <!--where costNumber=#{costnumber}  --> 
+  </select>
+  <!--  -->
+  <select id="findByCostid" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select departure.* 
+    from departure where costNumber=#{costnumber}
+     order by costNumber,departure.name
+  </select>
+  
+  <!-- 根据tourDateId查询departure -->
+  <select id="findByTourDateId" resultMap="BaseResultMap">
+  	SELECT
+  		d.*
+  	FROM
+  		departuredate dd,
+  		departure d
+  	WHERE
+  		dd.tourdateid = #{tourdateid,jdbcType=VARCHAR}
+  	AND
+  		dd.departureid = d.id
+  </select>
+  
+  <!-- 查询所有出发地 -->
+  <select id="findAll" resultMap="BaseResultMap">
+     select * from departure order by departure.name
+  </select>
+  
+  <!-- 查询线路下的出发地 -->
+  <select id="findByDepartureIds" resultMap="BaseResultMap" parameterType="java.lang.String">
+     select * from departure where FIND_IN_SET(departure.id,'${departureIds}') ORDER BY FIELD(id, '2c4e1f27d1e346a7a9cd69ca557f51ac') DESC,`name`
+  </select>
+  
+  <select id="findByProductId" resultMap="BaseResultMap" parameterType="java.lang.String">
+	select * from departure where FIND_IN_SET(departure.id,(SELECT departureIds FROM product WHERE id=#{productId,jdbcType=VARCHAR})) 
+  </select>
+</mapper>

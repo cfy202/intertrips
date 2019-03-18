@@ -1,0 +1,241 @@
+@charset "utf-8";
+/* CSS Document */
+
+/*小导航*/
+.place{
+	margin-top:15px;
+	}
+
+/*线路筛选*/
+.line_filter{
+	margin-top:15px;
+	}
+.select {
+	padding: 5px 10px;
+	border: #ddd 1px solid;
+	font-size: 12px;
+	background:#ffffff;
+}
+.select li {
+	list-style: none;
+	padding: 10px 0 5px 80px;
+}
+.select_result {
+	border-bottom: #eee 1px solid;
+}
+.select dl {
+	zoom: 1;
+	position: relative;
+	line-height: 24px;
+}
+.select dl:after {
+	content: " ";
+	display: block;
+	clear: both;
+	height: 0;
+	overflow: hidden;
+}
+.select dt {
+	width: 92px;
+	margin-bottom: 5px;
+	position: absolute;
+	top: 0;
+	left: -100px;
+	text-align: right;
+	color: #666;
+	height: 24px;
+	line-height: 24px;
+}
+.select dd {
+	float: left;
+	display: inline;
+	margin: 0 0 5px 5px;
+}
+.select a {
+	display: inline-block;
+	white-space: nowrap;
+	height: 24px;
+	padding: 0 10px;
+	text-decoration: none;
+	color: #393939;
+}
+.select a:hover {
+	color: #ffffff;
+	background-color: #50b5f7;
+}
+.select .selected a {
+	color: #fff;
+	background-color: #50b5f7;
+}
+.select_result dt,.select_list dt {
+	font-weight: bold;
+}
+.select_no {
+	color: #999;
+}
+.select .select_result a {
+	color:#ffffff;
+	padding-right: 20px;
+	background: #50b5f7 url(../images/close.gif) right 9px no-repeat;
+}
+.select .select-result a:hover {
+	background-position: right -15px;
+}
+.select_colse{
+	float:right;
+	}
+.select_colse a{
+	color:#50b5f7 !important;
+	background:none !important;
+	}
+/*.select_time{
+	padding: 5px;
+	color: #707070;
+	border: 1px solid #ddd;
+	font-size: 12px;
+	width: 100px;
+	font-family: "微软雅黑",Arial, Helvetica, sans-serif;
+	}*/
+
+/*排序*/
+.list_cont_left{
+	width:885px;
+	float:left;
+	}
+.list_cont_sort{
+	background:#ffffff;
+	border:1px solid #dddddd;
+	height:37px;
+	}
+.list_cont_sort_1{
+	float:left;
+	height:37px;
+	line-height:37px;
+	}
+.list_cont_sort_1 a{
+	display:inline-block;
+	height:37px;
+	width:80px;
+	border-right:1px solid #dddddd;
+	text-align: center;
+	float: left;
+	}
+.list_cont_sort_1 a i{
+	display: inline-block;
+	background: url(../background/icon_bg_2.png) no-repeat;
+	margin-left:5px;
+	}
+.list_cont_sort_1 a i.list_icon{
+	width:7px;
+	height:8px;
+	background-position:0 -83px;
+	}
+.list_cont_sort_1 a i.list_icon_1{
+	width:7px;
+	height:8px;
+	background-position:-12px -83px;
+	}
+.list_cont_page{
+	line-height:37px;
+	float:right;
+	width:105px;
+	height:37px;
+	}
+.list_cont_page a{
+	display: inline-block;
+	float: left;
+	margin:8px 10px 0 0;
+	width: 20px;
+	height: 20px;
+	}
+.prev_paging:hover,.next_paging:hover{
+	background:#eeeeee;
+	}
+.page_arrow_p{
+	display:inline-block;
+	float:left;
+	width:6px;
+	height:9px;
+	margin:6px 0 0 7px;
+	background:url(../background/icon_bg_2.png) no-repeat;
+	background-position:-26px -83px;
+	}
+
+.page_arrow_n{
+	display:inline-block;
+	float:left;
+	width:6px;
+	height:9px;
+	background:url(../background/icon_bg_2.png) no-repeat;
+	margin:6px 0 0 7px;
+	background-position:-41px -83px;
+	}
+.page_num{
+	float:left;
+	margin-right:10px;
+	}
+	
+/*线路列表*/
+.list_cont_box ul li{
+	background:#ffffff;
+	width:883px;
+	height:232px;
+	border:1px solid #dddddd;
+	}
+.list_cont_img{
+	float:left;
+	display:inline-block;
+	width:248px;
+	height:232px;
+	}
+.list_cont_main{
+	width:490px;
+	float:left;
+	margin:20px 10px 10px 20px;
+	}
+.list_cont_main p{
+	float:left;
+	width:490px;
+	}
+
+.list_cont_main span{
+	display:inline-block;
+	float:left;
+	}
+.list_cont_main a{
+	float:left;
+	margin-right:8px;
+	}
+.list_cont_main h2 span{
+	color:#5d5c5c;
+	font-size:16px;
+	font-weight:normal;
+	}
+.list_cont_nr{
+	margin-top:10px;
+	}
+.list_cont_discount{
+	padding:3px 8px;
+	background:#ff872f;
+	color:#ffffff;
+	margin:0 10px 0 0;
+	}
+.list_cont_discount_1{
+	padding:3px 8px;
+	background:#50b5f7;
+	color:#ffffff;
+	margin:0 10px 0 0;
+	}
+.list_cont_message{
+	color:#989898;
+	}
+.list_cont_day{
+	color:#50b5f7;
+	}
+.list_cont_message_2{
+	color:#989898;
+	margin-left:30px;
+	}
+.list_cont_message_3{
+	width:400px;
+	}

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.BlogTagAssociationMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.BlogTagAssociation" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="blogId" property="blogId" jdbcType="VARCHAR" />
+    <result column="tagId" property="tagId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, blogId, tagId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from blogtagassociation
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from blogtagassociation
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByBlogIds">
+  	delete from blogtagassociation
+  	where blogId in
+  	<foreach collection="blogIds" item="blogId" separator="," open="(" close=")">
+  		#{blogId}
+  	</foreach>
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.BlogTagAssociation" >
+    insert into blogtagassociation (id, blogId, tagId
+      )
+    values (#{id,jdbcType=VARCHAR}, #{blogId,jdbcType=VARCHAR}, #{tagId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.BlogTagAssociation" >
+    insert into blogtagassociation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="blogId != null" >
+        blogId,
+      </if>
+      <if test="tagId != null" >
+        tagId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="blogId != null" >
+        #{blogId,jdbcType=VARCHAR},
+      </if>
+      <if test="tagId != null" >
+        #{tagId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <insert id="insertBatch" parameterType="java.util.List">
+   insert into blogtagassociation (id, blogId, tagId) values
+   <foreach collection="blogTagAssociationList" item="item" index="index" separator=",">
+	  (#{item.id}, #{item.blogId}, #{item.tagId})
+   </foreach>   	
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.BlogTagAssociation" >
+    update blogtagassociation
+    <set >
+      <if test="blogId != null" >
+        blogId = #{blogId,jdbcType=VARCHAR},
+      </if>
+      <if test="tagId != null" >
+        tagId = #{tagId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.BlogTagAssociation" >
+    update blogtagassociation
+    set blogId = #{blogId,jdbcType=VARCHAR},
+      tagId = #{tagId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

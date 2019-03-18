@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.ProducttagMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Producttag" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="tagId" property="tagid" jdbcType="VARCHAR" />
+    <result column="productId" property="productid" jdbcType="VARCHAR" />
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+    <association property="tagTagid" column="tagid" select="com.wenjing.dao.TagMapper.selectByPrimaryKey" />
+  </resultMap>
+  <select id="selectByTagid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from producttag where tagId =#{tagId}
+  </select>
+  <sql id="Base_Column_List" >
+    id, tagId, productId,costNumber
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from producttag
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from producttag
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Producttag">
+    insert into producttag (id, tagId, productId,costNumber
+      )
+    values (#{id,jdbcType=VARCHAR}, #{tagid,jdbcType=VARCHAR}, #{productid,jdbcType=VARCHAR},#{costnumber,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Producttag" >
+    insert into producttag
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      tagId,
+      productId,
+      costNumber,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{tagid,jdbcType=VARCHAR},
+      #{productid,jdbcType=VARCHAR},
+      #{costnumber,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Producttag" >
+    update producttag
+    <set >
+      <if test="tagid != null" >
+        tagId = #{tagid,jdbcType=VARCHAR},
+      </if>
+      <if test="productid != null" >
+        productId = #{productid,jdbcType=VARCHAR},
+      </if>
+       <if test="costnumber != null" >
+        costNumber = #{costnumber,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Producttag" >
+    update producttag
+      set tagId = #{tagid,jdbcType=VARCHAR},
+      productId = #{productid,jdbcType=VARCHAR},
+      costNumber = #{costnumber,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <!-- 根据产品id和销售中心ID删除 -->
+  <delete id="deleteWithProductIdAndCostnumber">
+   delete from producttag where productId = #{productid,jdbcType=VARCHAR} 
+   <if test="costnumber!=null">
+   and costNumber = #{costnumber,jdbcType=VARCHAR}
+   </if>
+  </delete>
+  <!-- 根据产品ID查询关联的标签 -->
+  <select id="findByProductid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from producttag where productId =#{productid} and costNumber = #{costnumber,jdbcType=VARCHAR} order by tagId
+  </select>
+   <!-- 根据TagID查询关联的标签条数 -->
+  <select id="findByTagIdCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+      select ifnull(COUNT(*),0) from producttag where tagId =#{tagId}
+  </select>
+</mapper>

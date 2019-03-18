@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.ServiceItemMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.ServiceItem" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="tittle" property="tittle" jdbcType="VARCHAR" />
+    <result column="ico" property="ico" jdbcType="VARCHAR" />
+    <result column="icoUrl" property="icoUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, tittle, ico,icoUrl
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from serviceitem
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from serviceitem
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.ServiceItem" >
+    insert into serviceitem (id, tittle, ico,icoUrl)
+    values (#{id,jdbcType=VARCHAR}, #{tittle,jdbcType=VARCHAR}, #{ico,jdbcType=VARCHAR},#{icoUrl,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.ServiceItem" >
+    update serviceitem
+    set tittle = #{tittle,jdbcType=VARCHAR},
+      ico = #{ico,jdbcType=VARCHAR},
+      icoUrl = #{icoUrl,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="findAll" resultMap="BaseResultMap">
+   select * from serviceitem 
+  </select>
+   <select id="findByTourlineId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  	select si.*  from tourline t,serviceitem si,serviceitemproduct sp 
+	where sp.productId = t.productId 
+	and sp.serviceItemId = si.id
+	and t.id = #{tourlineId,jdbcType=VARCHAR}
+   </select>
+   <select id="findBytourlineinclude" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  	select si.*  from serviceitem si 
+	where FIND_IN_SET(si.id,'${include}')
+   </select>
+   <select id="findProductIdAndType" resultMap="BaseResultMap">
+	select 
+		si.*
+	from 
+		serviceitem si,
+		serviceitemproduct sp
+	WHERE
+		si.id = sp.serviceItemId
+	AND
+		sp.productId = #{productId,jdbcType=VARCHAR}
+	AND
+		sp.type = #{type,jdbcType=INTEGER}
+  </select>
+</mapper>

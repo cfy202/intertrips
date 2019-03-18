@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.ServiceItemProductMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.ServiceItemProduct" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="productId" property="productId" jdbcType="VARCHAR" />
+    <result column="serviceItemId" property="serviceItemId" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, productId, serviceItemId,type
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+   select 
+   <include refid="Base_Column_List"/>
+   from serviceitemproduct
+   where id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByProductId" resultMap="BaseResultMap" parameterType="java.lang.String">
+	select
+	<include refid="Base_Column_List"/>  
+	from serviceitemproduct
+	where productId = #{productId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByServiceItemId" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	select
+  	<include refid="Base_Column_List"/>
+  	from serviceitemproduct
+  	where serviceItemId = #{serviceItemId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="findByItemIdAndProductId" resultType="java.lang.Integer">
+  	select
+  		count(*)
+  	from
+  		serviceitemproduct
+  	where
+  		serviceItemId = #{itemId,jdbcType=VARCHAR}
+  	AND
+  		productId = #{productId,jdbcType=VARCHAR}	
+  	AND
+  		type = 1	
+  </select>
+  
+  <insert id="insert" parameterType="com.wenjing.entity.ServiceItemProduct" >
+    insert into serviceitemproduct (id, productId, serviceItemId,type)
+    values (#{id,jdbcType=VARCHAR}, #{productId,jdbcType=VARCHAR}, #{serviceItemId,jdbcType=VARCHAR},#{type,jdbcType=INTEGER})
+  </insert>
+  
+  <insert id="batchInsert" parameterType="java.util.List">
+	insert into serviceitemproduct (id, productId, serviceItemId,type)
+	values
+	<foreach collection="serviceItemProductList" item="item" separator=",">
+		(#{item.id,jdbcType=VARCHAR}, #{item.productId,jdbcType=VARCHAR}, #{item.serviceItemId,jdbcType=VARCHAR},#{item.type,jdbcType=VARCHAR})
+	</foreach>  
+  </insert>
+  
+  <delete id="deleteById" parameterType="java.lang.String">
+  	delete from serviceitemproduct where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  
+  <delete id="deleteByProductId" parameterType="java.lang.String">
+  	delete from serviceitemproduct where productId = #{productId,jdbcType=VARCHAR}
+  </delete>
+  
+  <delete id="deleteByServiceItemId" parameterType="java.lang.String">
+  	delete from serviceitemproduct where serviceItemId = #{serviceItemId,jdbcType=VARCHAR}
+  </delete>
+</mapper>

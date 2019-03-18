@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.MemberinformationMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Memberinformation" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="question" property="question" jdbcType="VARCHAR" />
+    <result column="answer" property="answer" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="lastName" property="lastName" jdbcType="VARCHAR" />
+    <result column="firstName" property="firstName" jdbcType="VARCHAR" />
+    <result column="userTel" property="usertel" jdbcType="VARCHAR" />
+    <result column="userMobile" property="usermobile" jdbcType="VARCHAR" />
+    <result column="userSex" property="usersex" jdbcType="VARCHAR" />
+    <result column="userAddr" property="useraddr" jdbcType="VARCHAR" />
+    <result column="postalcode" property="postalcode" jdbcType="VARCHAR" />
+    <result column="userLevel" property="userlevel" jdbcType="INTEGER" />
+    <result column="imageUrl" property="imageurl" jdbcType="VARCHAR" />
+    <result column="memberId" property="memberid" jdbcType="VARCHAR" />
+    <result column="score" property="score" jdbcType="INTEGER" />
+    <result column="nationality" property="nationality" jdbcType="VARCHAR" />
+    <result column="passportNo" property="passportNo" jdbcType="VARCHAR" />
+    <result column="passportValid" property="passportValid" jdbcType="DATE" />
+    <result column="birthday" property="birthday" jdbcType="DATE" />
+    <result column="country" property="country" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="inviteId" property="inviteId" jdbcType="VARCHAR" />
+    
+    <association property="member" column="memberId" select="com.wenjing.dao.MemberMapper.selectByPrimaryKey" />
+  </resultMap>
+  <select id="findInfoByMemberId" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from memberinformation where memberId =#{memberid}
+  </select>
+  <sql id="Base_Column_List" >
+    id, question, answer, email, lastName, userTel, userMobile, userSex, userAddr, postalcode, 
+    userLevel, imageUrl, memberId, score, firstName, nationality, passportNo, passportValid, birthday, country, province, city, inviteId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from memberinformation
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByMemberId" resultMap="BaseResultMap" parameterType="java.lang.String">
+	SELECT
+		*
+	FROM
+		memberinformation
+	WHERE
+		memberId = #{memberId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from memberinformation
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Memberinformation" flushCache="true" >
+    insert into memberinformation (id, question, answer, 
+      email, lastName, userTel, 
+      userMobile, userSex, userAddr, 
+      postalcode, userLevel, imageUrl, 
+      memberId, score, firstName, nationality,
+      passportNo, passportValid, birthday, 
+      country, province, city, inviteId)
+    values (#{id,jdbcType=VARCHAR}, #{question,jdbcType=VARCHAR}, #{answer,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{lastName,jdbcType=VARCHAR}, #{usertel,jdbcType=VARCHAR}, 
+      #{usermobile,jdbcType=VARCHAR}, #{usersex,jdbcType=VARCHAR}, #{useraddr,jdbcType=VARCHAR}, 
+      #{postalcode,jdbcType=VARCHAR}, #{userlevel,jdbcType=INTEGER}, #{imageurl,jdbcType=VARCHAR}, 
+      #{memberid,jdbcType=VARCHAR}, #{score,jdbcType=INTEGER},
+      #{firstName,jdbcType=VARCHAR}, #{nationality,jdbcType=VARCHAR}, #{passportNo,jdbcType=VARCHAR}, 
+      #{passportValid,jdbcType=DATE}, #{birthday,jdbcType=DATE}, #{country,jdbcType=VARCHAR}, 
+      #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{inviteId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Memberinformation" flushCache="true" >
+    insert into memberinformation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      question,
+      answer,
+      email,
+      lastName,
+      userTel,
+      userMobile,
+      userSex,
+      userAddr,
+      postalcode,
+      userLevel,
+      imageUrl,
+      memberId,
+      score,
+      firstName, 
+      nationality,
+      passportNo, 
+      passportValid, 
+      birthday, 
+      country, 
+      province,
+      city,
+      inviteId,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{question,jdbcType=VARCHAR},
+      #{answer,jdbcType=VARCHAR},
+      #{email,jdbcType=VARCHAR},
+      #{lastName,jdbcType=VARCHAR},
+      #{usertel,jdbcType=VARCHAR},
+      #{usermobile,jdbcType=VARCHAR},
+      #{usersex,jdbcType=VARCHAR},
+      #{useraddr,jdbcType=VARCHAR},
+      #{postalcode,jdbcType=VARCHAR},
+      #{userlevel,jdbcType=INTEGER},
+      #{imageurl,jdbcType=VARCHAR},
+      #{memberid,jdbcType=VARCHAR},
+      #{score,jdbcType=INTEGER},
+      #{firstName,jdbcType=VARCHAR}, #{nationality,jdbcType=VARCHAR}, #{passportNo,jdbcType=VARCHAR}, 
+      #{passportValid,jdbcType=DATE}, #{birthday,jdbcType=DATE}, #{country,jdbcType=VARCHAR}, 
+      #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{inviteId,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Memberinformation" flushCache="true" >
+    update memberinformation
+    <set >
+      <if test="question != null" >
+        question = #{question,jdbcType=VARCHAR},
+      </if>
+      <if test="answer != null" >
+        answer = #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="lastName != null" >
+        lastName = #{lastName,jdbcType=VARCHAR},
+      </if>
+      <if test="usertel != null" >
+        userTel = #{usertel,jdbcType=VARCHAR},
+      </if>
+      <if test="usermobile != null" >
+        userMobile = #{usermobile,jdbcType=VARCHAR},
+      </if>
+      <if test="usersex != null" >
+        userSex = #{usersex,jdbcType=VARCHAR},
+      </if>
+      <if test="useraddr != null" >
+        userAddr = #{useraddr,jdbcType=VARCHAR},
+      </if>
+      <if test="postalcode != null" >
+        postalcode = #{postalcode,jdbcType=VARCHAR},
+      </if>
+      <if test="userlevel != null" >
+        userLevel = #{userlevel,jdbcType=INTEGER},
+      </if>
+      <if test="imageurl != null" >
+        imageUrl = #{imageurl,jdbcType=VARCHAR},
+      </if>
+      <if test="memberid != null" >
+        memberId = #{memberid,jdbcType=VARCHAR},
+      </if>
+       <if test="score != null" >
+        score = #{score,jdbcType=INTEGER},
+      </if>
+      <if test="score != null" >
+        score = #{score,jdbcType=INTEGER},
+      </if>
+      <if test="firstName != null" >
+        firstName = #{firstName,jdbcType=VARCHAR},
+      </if>
+      <if test="nationality != null" >
+        nationality = #{nationality,jdbcType=VARCHAR},
+      </if>
+      <if test="passportNo != null" >
+        passportNo = #{passportNo,jdbcType=VARCHAR},
+      </if>
+      <if test="passportValid != null" >
+        passportValid = #{passportValid,jdbcType=DATE},
+      </if>
+      <if test="birthday != null" >
+        birthday = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="country != null" >
+        country = #{country,jdbcType=VARCHAR},
+      </if>
+       <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+       <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="inviteId != null" >
+        inviteId = #{inviteId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Memberinformation" flushCache="true" >
+    update memberinformation
+    set question = #{question,jdbcType=VARCHAR},
+      answer = #{answer,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      lastName = #{lastName,jdbcType=VARCHAR},
+      userTel = #{usertel,jdbcType=VARCHAR},
+      userMobile = #{usermobile,jdbcType=VARCHAR},
+      userSex = #{usersex,jdbcType=VARCHAR},
+      userAddr = #{useraddr,jdbcType=VARCHAR},
+      postalcode = #{postalcode,jdbcType=VARCHAR},
+      userLevel = #{userlevel,jdbcType=INTEGER},
+      imageUrl = #{imageurl,jdbcType=VARCHAR},
+      memberId = #{memberid,jdbcType=VARCHAR},
+      score = #{score,jdbcType=INTEGER},
+      firstName = #{firstName,jdbcType=VARCHAR}, 
+      nationality = #{nationality,jdbcType=VARCHAR}, 
+      passportNo = #{passportNo,jdbcType=VARCHAR}, 
+      passportValid = #{passportValid,jdbcType=DATE}, 
+      birthday = #{birthday,jdbcType=DATE}, 
+      country = #{country,jdbcType=VARCHAR}, 
+      province = #{province,jdbcType=VARCHAR}, 
+      city = #{city,jdbcType=VARCHAR},
+      inviteId = #{inviteId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 根据memberid删除 -->
+  <delete id="deleteByMemberid" parameterType="java.lang.String" flushCache="true" >
+    delete from memberinformation
+    where memberId = #{memberid,jdbcType=VARCHAR}
+  </delete>
+  
+  <!-- 根据memberid修改积分 -->
+  <update id="updateScoreByMemberId" flushCache="true">
+    update memberinformation set score = score <![CDATA[+]]>#{score} where memberId = #{memberid}
+  </update>
+  
+  <!-- 用户修改资料 -->
+   <update id="updateProfileInfo" parameterType="com.wenjing.entity.Memberinformation" flushCache="true" >
+    update memberinformation
+    set question = #{question,jdbcType=VARCHAR},
+        answer = #{answer,jdbcType=VARCHAR},
+        lastName = #{lastName,jdbcType=VARCHAR},
+        userTel = #{usertel,jdbcType=VARCHAR},
+        userMobile = #{usermobile,jdbcType=VARCHAR},
+        userSex = #{usersex,jdbcType=VARCHAR},
+        userAddr = #{useraddr,jdbcType=VARCHAR},
+        postalcode = #{postalcode,jdbcType=VARCHAR},
+        imageUrl = #{imageurl,jdbcType=VARCHAR},
+        firstName = #{firstName,jdbcType=VARCHAR}, 
+        nationality = #{nationality,jdbcType=VARCHAR}, 
+        passportNo = #{passportNo,jdbcType=VARCHAR}, 
+        passportValid = #{passportValid,jdbcType=DATE}, 
+        birthday = #{birthday,jdbcType=DATE}, 
+        country = #{country,jdbcType=VARCHAR}, 
+        province = #{province,jdbcType=VARCHAR}, 
+        city = #{city,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

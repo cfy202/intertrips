@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.ProductvideoMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Productvideo" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="videoId" property="videoid" jdbcType="VARCHAR" />
+    <result column="productId" property="productid" jdbcType="VARCHAR" />
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+    <association property="videoVideoid" column="videoid" select="com.wenjing.dao.VideoMapper.selectByPrimaryKey" />
+  </resultMap>
+  <select id="selectByVideoid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from productvideo where videoId =#{videoId}
+  </select>
+  <sql id="Base_Column_List" >
+    id, videoId, productId, costNumber
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from productvideo
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from productvideo
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Productvideo" >
+    insert into productvideo (id, videoId, productId, 
+      costNumber)
+    values (#{id,jdbcType=VARCHAR}, #{videoid,jdbcType=VARCHAR}, #{productid,jdbcType=VARCHAR}, 
+      #{costnumber,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Productvideo" >
+    insert into productvideo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      videoId,
+      productId,
+      costNumber,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{videoid,jdbcType=VARCHAR},
+      #{productid,jdbcType=VARCHAR},
+      #{costnumber,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Productvideo" >
+    update productvideo
+    <set >
+      <if test="videoid != null" >
+        videoId = #{videoid,jdbcType=VARCHAR},
+      </if>
+      <if test="productid != null" >
+        productId = #{productid,jdbcType=VARCHAR},
+      </if>
+      <if test="costnumber != null" >
+        costNumber = #{costnumber,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Productvideo" >
+    update productvideo
+    set videoId = #{videoid,jdbcType=VARCHAR},
+      productId = #{productid,jdbcType=VARCHAR},
+      costNumber = #{costnumber,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <!-- 根据产品id和销售中心ID删除 -->
+  <delete id="deleteWithProductIdAndCostnumber">
+   delete from productvideo where productId = #{productid,jdbcType=VARCHAR} 
+   <if test="costnumber!=null">
+   and costNumber = #{costnumber,jdbcType=VARCHAR}
+   </if>
+  </delete>
+  <!-- 根据产品ID查询关联的标签 -->
+  <select id="findByProductid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from productvideo where productId =#{productid} and costNumber = #{costnumber,jdbcType=VARCHAR} order by videoId
+  </select>
+   <!-- 根据TagID查询关联的标签条数 -->
+  <select id="findByTagIdCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+      select ifnull(COUNT(*),0) from productvideo where videoId =#{videoId}
+  </select>
+</mapper>

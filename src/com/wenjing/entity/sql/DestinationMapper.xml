@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.DestinationMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Destination" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="nameCN" property="namecn" jdbcType="VARCHAR" />
+    <result column="namePY" property="namepy" jdbcType="VARCHAR" />
+    <result column="short" property="myshort" jdbcType="VARCHAR" />
+    <result column="upId" property="upid" jdbcType="VARCHAR" />
+    <result column="typeId" property="typeid" jdbcType="TINYINT" />
+    <result column="isHot" property="ishot" jdbcType="TINYINT" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+    <result column="ups" property="ups" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="INTEGER" />
+    <result column="imageUrl" property="imageUrl" jdbcType="VARCHAR" />
+    <result column="fileUrl" property="fileUrl" jdbcType="VARCHAR" />
+    <collection property="attractions" ofType="com.wenjing.entity.Attraction" column="id" select="com.wenjing.dao.AttractionMapper.selectByDestinationid" />
+    <collection property="hotels" ofType="com.wenjing.entity.Hotel" column="id" select="com.wenjing.dao.HotelMapper.selectByDestinationid" />
+    <!-- 
+    <collection property="tourlinedestinationsDestinationid" ofType="com.wenjing.entity.Tourlinedestination" column="id" select="com.wenjing.dao.TourlinedestinationMapper.selectByDestinationid" />
+     -->
+  </resultMap>
+    <resultMap id="PartResultMap" type="com.wenjing.entity.Destination" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="nameCN" property="namecn" jdbcType="VARCHAR" />
+    <result column="namePY" property="namepy" jdbcType="VARCHAR" />
+    <result column="short" property="myshort" jdbcType="VARCHAR" />
+    <result column="upId" property="upid" jdbcType="VARCHAR" />
+    <result column="typeId" property="typeid" jdbcType="TINYINT" />
+    <result column="isHot" property="ishot" jdbcType="TINYINT" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+    <result column="ups" property="ups" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="INTEGER"/>
+    <result column="imageUrl" property="imageUrl" jdbcType="VARCHAR" />
+    <result column="upName" property="upName" jdbcType="VARCHAR" />
+    <result column="fileUrl" property="fileUrl" jdbcType="VARCHAR" />
+    <result column="desUrl" property="desUrl" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap type="com.wenjing.entity.Destination" id="ResultMapWithAttractionsAndFood">
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="nameCN" property="namecn" jdbcType="VARCHAR" />
+    <result column="namePY" property="namepy" jdbcType="VARCHAR" />
+    <result column="short" property="myshort" jdbcType="VARCHAR" />
+    <result column="upId" property="upid" jdbcType="VARCHAR" />
+    <result column="typeId" property="typeid" jdbcType="TINYINT" />
+    <result column="isHot" property="ishot" jdbcType="TINYINT" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+    <result column="ups" property="ups" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="INTEGER" />
+    <result column="imageUrl" property="imageUrl" jdbcType="VARCHAR" />
+    <result column="fileUrl" property="fileUrl" jdbcType="VARCHAR" />
+    <collection property="admissiontickets" ofType="com.wenjing.entity.Admissionticket" column="{destinationId=id,costnumber=adcostnumber}" select="com.wenjing.dao.AdmissionticketMapper.selectWithPriceByDestinationId" />
+    <collection property="foods" ofType="com.wenjing.entity.Food" column="{destinationId=id,costnumber=adcostnumber}" select="com.wenjing.dao.FoodMapper.selectWithPriceByDestinationId" />
+  </resultMap>
+  
+  <resultMap type="com.wenjing.entity.Destination" id="ResultMapWithSelfPay">
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="nameCN" property="namecn" jdbcType="VARCHAR" />
+    <result column="namePY" property="namepy" jdbcType="VARCHAR" />
+    <result column="short" property="myshort" jdbcType="VARCHAR" />
+    <result column="upId" property="upid" jdbcType="VARCHAR" />
+    <result column="typeId" property="typeid" jdbcType="TINYINT" />
+    <result column="isHot" property="ishot" jdbcType="TINYINT" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+    <result column="ups" property="ups" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="INTEGER" />
+    <result column="imageUrl" property="imageUrl" jdbcType="VARCHAR" />
+    <result column="fileUrl" property="fileUrl" jdbcType="VARCHAR" />
+    <!--
+    <collection property="selfpayList" ofType="com.wenjing.entity.Selfpay" column="{destinationId=id,sIds=selfPayIdArray}" select="com.wenjing.dao.SelfpayMapper.selectByDestinationAndSelfPayIds"></collection>
+    -->
+  </resultMap>  
+  
+  <sql id="Base_Column_List" >
+    id, `name`, nameCN, namePY, short, upId, typeId, isHot, sort, costNumber,ups,level,imageUrl,fileUrl
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select 
+    <include refid="Base_Column_List" />
+    from destination
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByTourlineId" resultMap="BaseResultMap" parameterType="java.lang.String">
+	SELECT
+		d.id AS id, `name`, nameCN, namePY, short, upId, typeId, isHot, td.sort AS sort, costNumber,level
+	FROM 
+		destination d,
+		tourlinedestination td
+	WHERE
+		td.tourlineId = #{id,jdbcType=VARCHAR} 
+	AND
+		d.id = td.destinationId
+	ORDER BY
+		td.sort
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from destination
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Destination" flushCache="true" >
+    insert into destination (id, `name`, nameCN, 
+      namePY, short, upId, 
+      typeId, isHot, sort, costNumber,ups,level,imageUrl,fileUrl
+      )
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{namecn,jdbcType=VARCHAR}, 
+      #{namepy,jdbcType=VARCHAR}, #{myshort,jdbcType=VARCHAR}, #{upid,jdbcType=VARCHAR}, 
+      #{typeid,jdbcType=TINYINT}, #{ishot,jdbcType=TINYINT}, #{sort,jdbcType=INTEGER}, 
+      #{costnumber,jdbcType=VARCHAR},#{ups,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER},
+      #{imageUrl,jdbcType=VARCHAR}, #{fileUrl,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Destination" flushCache="true" >
+    insert into destination
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      `name`,
+      nameCN,
+      namePY,
+      short,
+      upId,
+      typeId,
+      isHot,
+      sort,
+      costNumber,
+      ups,
+      level,
+      imageUrl,
+      fileUrl,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR},
+      #{namecn,jdbcType=VARCHAR},
+      #{namepy,jdbcType=VARCHAR},
+      #{myshort,jdbcType=VARCHAR},
+      #{upid,jdbcType=VARCHAR},
+      #{typeid,jdbcType=TINYINT},
+      #{ishot,jdbcType=TINYINT},
+      #{sort,jdbcType=INTEGER},
+      #{costnumber,jdbcType=VARCHAR},
+      #{ups,jdbcType=VARCHAR},
+      #{level,jdbcType=INTEGER},
+      #{imageUrl,jdbcType=VARCHAR},
+      #{fileUrl,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Destination" flushCache="true" >
+    update destination
+    <set >
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="namecn != null" >
+        nameCN = #{namecn,jdbcType=VARCHAR},
+      </if>
+      <if test="namepy != null" >
+        namePY = #{namepy,jdbcType=VARCHAR},
+      </if>
+      <if test="myshort != null" >
+        short = #{myshort,jdbcType=VARCHAR},
+      </if>
+      <if test="upid != null" >
+        upId = #{upid,jdbcType=VARCHAR},
+      </if>
+      <if test="typeid != null" >
+        typeId = #{typeid,jdbcType=TINYINT},
+      </if>
+      <if test="ishot != null" >
+        isHot = #{ishot,jdbcType=TINYINT},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="costnumber != null" >
+        costNumber = #{costnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="ups != null" >
+        ups = #{ups,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=INTEGER},
+      </if>
+      <if test="imageUrl != null" >
+        imageUrl = #{imageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="fileUrl != null" >
+        fileUrl = #{fileUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Destination" flushCache="true" >
+    update destination
+    set `name` = #{name,jdbcType=VARCHAR},
+      nameCN = #{namecn,jdbcType=VARCHAR},
+      namePY = #{namepy,jdbcType=VARCHAR},
+      short = #{myshort,jdbcType=VARCHAR},
+      upId = #{upid,jdbcType=VARCHAR},
+      typeId = #{typeid,jdbcType=TINYINT},
+      isHot = #{ishot,jdbcType=TINYINT},
+      sort = #{sort,jdbcType=INTEGER},
+      costNumber = #{costnumber,jdbcType=VARCHAR},
+      ups = #{ups,jdbcType=VARCHAR},
+      level = #{level,jdbcType=INTEGER},
+      imageUrl = #{imageUrl,jdbcType=VARCHAR},
+      fileUrl = #{fileUrl,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="findAllByCostNumber" resultMap="BaseResultMap">
+     select * from `destination`
+     order by sort desc
+  </select>
+  <select id="findByCostNumber" resultMap="BaseResultMap">
+     select * from `destination` where typeId !=4
+     order by name
+  </select>
+  <select id="getMaxSort" resultType="java.lang.Integer">
+     select ifnull(max(sort),0) from `destination` 
+  </select>
+  <select id="findCityByCostNumber" resultMap="BaseResultMap">
+     select * from `destination` where typeId =4
+     order by name
+  </select>
+  <select id="findCityAndProvinceByCostNumber" resultMap="BaseResultMap">
+     select * from `destination` where typeId in(2,3,4)
+     order by name 
+  </select>
+  <select id="findByNameNamacn" resultMap="BaseResultMap">
+     select * from `destination` where 
+     name=#{name,jdbcType=VARCHAR} or nameCN=#{name,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 获取目的地总记录条数 -->
+  <select id="getSDestionCount" resultType="java.lang.Integer">
+     select count(*) from `destination`  
+     <if test="search != null" >
+	       where  CONCAT(`name`, nameCN) like '%${search}%'
+	 </if>
+  </select>
+  <!-- 分页查询目的地 -->
+  <select id="selectAllByPage" resultMap="BaseResultMap">
+     select * from `destination`  
+     <if test="search != null" >
+	       where  CONCAT(`name`, nameCN) like '%${search}%'
+	 </if> 
+     order by sort desc limit #{startPos},#{pageSize}
+  </select>
+  <!-- 查询与线路相关的目的地 -->
+  <select id="selectWithTourline" resultMap="BaseResultMap">
+   select * from `destination` where id in 
+   <foreach collection="list" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+	</foreach>
+  </select>
+  <update id="updateNamepy" parameterType="com.wenjing.entity.Destination" flushCache="true" >
+  	update destination set namePY = #{namepy,jdbcType=VARCHAR} where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="findNamecnAndNamepy" resultMap="PartResultMap" parameterType="java.lang.String">
+    select  nameCN,namePY  from destination  where id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="findRegionShow" resultMap="BaseResultMap" parameterType="java.lang.String">
+	select namecn,namePY from destination,destinationlevel where destination.`level` = destinationlevel.`level` and destination.id in (
+	select destinationId from tourlinedestination inner join 
+	(
+	select t.id from tourline t,product p,region r,showtourline st where t.id=st.tourlineId 
+	and r.id = t.regionId and r.isShow = 1
+	and st.costNumber = #{costnumber,jdbcType=VARCHAR} 
+	and p.costNumberIds like '%${costnumber}%' and t.productId=p.id and t.parentIds like '%${regionid}%' 
+	and (select min(sellingPrice) from `tourprice`,tourdate where tourprice.tourDateId=tourdate.id and tourdate.tourLineId=t.id and tourdate.isshow = true and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR} and tourdate.endDate >= #{time,jdbcType=INTEGER}) is not null
+	) as tl on tl.id = tourLineId) ORDER BY destinationlevel.`level` 
+		
+  </select>
+    <select id="searchRegionShow" resultMap="BaseResultMap" parameterType="java.lang.String">
+	select namecn,namePY from destination where id in (
+	select destinationId from tourlinedestination inner join 
+	(
+	select t.id from tourline t,product p,region r,showtourline st where t.id=st.tourlineId 
+	and r.id = t.regionId and r.isShow = 1
+	and st.costNumber = #{costnumber,jdbcType=VARCHAR} 
+	and p.costNumberIds like '%${costnumber}%' and t.productId=p.id and t.parentIds like '%${regionid}%' 
+	and (select min(sellingPrice) from `tourprice`,tourdate where tourprice.tourDateId=tourdate.id and tourdate.tourLineId=t.id and tourdate.isshow = true and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR} and tourdate.endDate >= #{time,jdbcType=INTEGER}) is not null
+	) as tl on tl.id = tourLineId)
+		
+  </select>
+  
+  <!--xj in-->
+  <select id="searchShowDestination" resultMap="PartResultMap">
+    select des.*,ides.fileUrl as desUrl,(select name from destination where id = des.upId) as upName from destination des,indexshowdestination ides
+	where des.id = ides.destinationId
+	and ides.costNumber= #{costnumber,jdbcType=VARCHAR}
+	and ides.showType= #{showType,jdbcType=INTEGER}
+	ORDER BY ides.addTime
+    <if test="showType == 1" >
+    	limit 0,3
+	</if> 
+    <if test="showType == 2" >
+    	limit 0,5
+	</if>
+  </select>
+  <select id="findDesNav" resultMap="PartResultMap" parameterType="java.lang.String">
+    select DISTINCT des.*,isd.fileUrl as desUrl from destination des,indexshowdestination isd 
+	where isd.destinationId = des.id
+	and isd.costNumber = #{costnumber,jdbcType=VARCHAR}
+	order by isd.showType
+  </select>
+  <select id="findWithSuoYin" resultMap="PartResultMap">
+     select * from `destination` where id in (select destinationId from tourlinedestination)
+  </select>
+  
+  <!-- 查询与线路相关的目的地 -->
+  <select id="selectByids" resultMap="PartResultMap">
+   select * from `destination` where id in 
+   <foreach collection="list" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+	</foreach>
+  </select>
+  
+  <!-- 查找目的地以及景点和美食 -->
+  <select id="selectWithAttractionAndFood" resultMap="ResultMapWithAttractionsAndFood">
+	SELECT
+		<include refid="Base_Column_List"/>,#{costnumber} AS adcostnumber
+	FROM
+		`destination`
+	WHERE
+		id IN
+    <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+		#{item}
+    </foreach> 	
+  </select>
+  
+  <!-- 根据目的地ID加载 -->
+  <select id="findWithAttractionByIds" resultMap="BaseResultMap">
+   select 
+   <include refid="Base_Column_List"/>   
+   from `destination` where id in 
+   <foreach collection="destinationIds" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+	</foreach>
+  </select>
+  
+  <select id="selectWithSelfPay" resultMap="ResultMapWithSelfPay" >
+  	SELECT
+  		<include refid="Base_Column_List"/>,#{selfPayIds} AS selfPayIdArray
+  	FROM
+  		`destination`
+  	WHERE	
+  		id IN
+  	<foreach collection="ids" item="item" open="(" separator="," close=")">
+  		#{item}
+  	</foreach>		
+  </select>
+</mapper>

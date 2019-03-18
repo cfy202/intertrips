@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.TourpriceMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Tourprice" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="markedPrice" property="markedprice" jdbcType="DECIMAL" />
+    <result column="sellingPrice" property="sellingprice" jdbcType="DECIMAL" />
+    <result column="singleRoomPrice" property="singleroomprice" jdbcType="DECIMAL" />
+    <result column="extraBedPrice" property="extrabedprice" jdbcType="DECIMAL" />
+    <result column="noBedPrice" property="nobedprice" jdbcType="DECIMAL" />
+    <result column="currencyId" property="currencyid" jdbcType="VARCHAR" />
+    <result column="tourDateId" property="tourdateid" jdbcType="VARCHAR" />
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+    <result column="babyPrice" property="babyPrice" jdbcType="DECIMAL" />
+    <result column="childPrice" property="childPrice" jdbcType="DECIMAL" />
+    <result column="threesellingPrice" property="threesellingprice" jdbcType="DECIMAL" />
+    <result column="foursellingPrice" property="foursellingprice" jdbcType="DECIMAL" />
+    <association property="tourdateTourdateid" column="tourdateid" select="com.wenjing.dao.TourdateMapper.selectByPrimaryKey" />
+    <association property="currencyCurrencyid" column="currencyid" select="com.wenjing.dao.CurrencyMapper.selectByPrimaryKey" />
+  </resultMap>
+  <select id="selectByTourdateid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from tourprice where tourDateId =#{tourDateId}
+  </select>
+  <select id="selectByCurrencyid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from tourprice where currencyId =#{currencyId}
+  </select>
+  <sql id="Base_Column_List" >
+    id, markedPrice, sellingPrice, singleRoomPrice, extraBedPrice, noBedPrice, currencyId, 
+    tourDateId, costNumber, threesellingPrice, foursellingPrice, babyPrice, childPrice
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tourprice
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from tourprice
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Tourprice" flushCache="true" >
+    insert into tourprice (id, markedPrice, sellingPrice, 
+      singleRoomPrice, extraBedPrice, noBedPrice, 
+      currencyId, tourDateId, costNumber, threesellingPrice, foursellingPrice, babyPrice, childPrice
+      )
+    values (#{id,jdbcType=VARCHAR}, #{markedprice,jdbcType=DECIMAL}, #{sellingprice,jdbcType=DECIMAL}, 
+      #{singleroomprice,jdbcType=DECIMAL}, #{extrabedprice,jdbcType=DECIMAL}, #{nobedprice,jdbcType=DECIMAL}, 
+      #{currencyid,jdbcType=VARCHAR}, #{tourdateid,jdbcType=VARCHAR}, #{costnumber,jdbcType=VARCHAR}, #{threesellingprice,jdbcType=DECIMAL}, #{foursellingprice,jdbcType=DECIMAL},
+      #{babyPrice,jdbcType=DECIMAL}, #{childPrice,jdbcType=DECIMAL}
+      #{currencyid,jdbcType=VARCHAR}, #{tourdateid,jdbcType=VARCHAR}, #{costnumber,jdbcType=VARCHAR},
+      #{threesellingprice,jdbcType=DECIMAL}, #{foursellingprice,jdbcType=DECIMAL},
+      #{babyPrice,jdbcType=DECIMAL}, #{childPrice,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Tourprice" flushCache="true" >
+    insert into tourprice
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      markedPrice,
+      sellingPrice,
+      singleRoomPrice,
+      extraBedPrice,
+      noBedPrice,
+      currencyId,
+      tourDateId,
+      costNumber,
+      threesellingPrice,
+      foursellingPrice,
+      babyPrice,
+      childPrice
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{markedprice,jdbcType=DECIMAL},
+      #{sellingprice,jdbcType=DECIMAL},
+      #{singleroomprice,jdbcType=DECIMAL},
+      #{extrabedprice,jdbcType=DECIMAL},
+      #{nobedprice,jdbcType=DECIMAL},
+      #{currencyid,jdbcType=VARCHAR},
+      #{tourdateid,jdbcType=VARCHAR},
+      #{costnumber,jdbcType=VARCHAR},
+      #{threesellingprice,jdbcType=DECIMAL},
+      #{foursellingprice,jdbcType=DECIMAL},
+      #{babyPrice,jdbcType=DECIMAL},
+      #{childPrice,jdbcType=DECIMAL}
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Tourprice" flushCache="true" >
+    update tourprice
+    <set >
+      <if test="markedprice != null" >
+        markedPrice = #{markedprice,jdbcType=DECIMAL},
+      </if>
+      <if test="sellingprice != null" >
+        sellingPrice = #{sellingprice,jdbcType=DECIMAL},
+      </if>
+      <if test="singleroomprice != null" >
+        singleRoomPrice = #{singleroomprice,jdbcType=DECIMAL},
+      </if>
+      <if test="extrabedprice != null" >
+        extraBedPrice = #{extrabedprice,jdbcType=DECIMAL},
+      </if>
+      <if test="nobedprice != null" >
+        noBedPrice = #{nobedprice,jdbcType=DECIMAL},
+      </if>
+      <if test="currencyid != null" >
+        currencyId = #{currencyid,jdbcType=VARCHAR},
+      </if>
+      <if test="tourdateid != null" >
+        tourDateId = #{tourdateid,jdbcType=VARCHAR},
+      </if>
+      <if test="costnumber != null" >
+        costNumber = #{costnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="threesellingPrice != null" >
+        threesellingPrice = #{threesellingprice,jdbcType=DECIMAL},
+      </if>
+      <if test="foursellingPrice != null" >
+        foursellingPrice = #{foursellingprice,jdbcType=DECIMAL},
+      </if>
+      <if test="babyPrice != null">
+      	babyPrice = #{babyPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="childPrice != null">
+      	childPrice = #{childPrice,jdbcType=DECIMAL}
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Tourprice" flushCache="true" >
+    update tourprice
+    set markedPrice = #{markedprice,jdbcType=DECIMAL},
+      sellingPrice = #{sellingprice,jdbcType=DECIMAL},
+      singleRoomPrice = #{singleroomprice,jdbcType=DECIMAL},
+      extraBedPrice = #{extrabedprice,jdbcType=DECIMAL},
+      noBedPrice = #{nobedprice,jdbcType=DECIMAL},
+      currencyId = #{currencyid,jdbcType=VARCHAR},
+      tourDateId = #{tourdateid,jdbcType=VARCHAR},
+      costNumber = #{costnumber,jdbcType=VARCHAR},
+      threesellingPrice = #{threesellingprice,jdbcType=DECIMAL},
+      foursellingPrice = #{foursellingprice,jdbcType=DECIMAL},
+      babyPrice = #{babyPrice,jdbcType=DECIMAL},
+      childPrice = #{childPrice,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <!-- 批量插入 -->
+  <insert id="batchAddprice" parameterType="java.util.List" flushCache="true" >
+    insert into tourprice (id, markedPrice, sellingPrice, 
+      singleRoomPrice, extraBedPrice, noBedPrice, 
+      currencyId, tourDateId, costNumber, threesellingPrice, foursellingPrice, babyPrice, childPrice
+      )
+    values 
+      <foreach collection="list" item="item" index="index" separator="," >  
+         (#{item.id,jdbcType=VARCHAR}, #{item.markedprice,jdbcType=DECIMAL}, #{item.sellingprice,jdbcType=DECIMAL}, 
+          #{item.singleroomprice,jdbcType=DECIMAL}, #{item.extrabedprice,jdbcType=DECIMAL}, #{item.nobedprice,jdbcType=DECIMAL}, 
+          #{item.currencyid,jdbcType=VARCHAR}, #{item.tourdateid,jdbcType=VARCHAR}, #{item.costnumber,jdbcType=VARCHAR},
+          #{item.threesellingprice,jdbcType=DECIMAL},#{item.foursellingprice,jdbcType=DECIMAL},#{item.babyPrice,jdbcType=DECIMAL},
+          #{item.childPrice,jdbcType=DECIMAL}
+         )
+    </foreach>  
+  </insert>
+  <select id="getminsprice" parameterType="java.lang.String" resultType="java.math.BigDecimal">
+  select min(sellingPrice) from `tourprice`,tourdate where 
+  tourprice.tourDateId=tourdate.id 
+  and tourdate.tourLineId=#{tourlineId,jdbcType=VARCHAR} 
+  and tourdate.isshow = true
+  </select>
+  <select id="getminsellPrice" resultType="java.math.BigDecimal">
+	SELECT
+		MIN(tp.sellingPrice)
+	FROM
+		`tourprice` tp,
+		tourdate td
+	WHERE
+	  CASE
+		 WHEN
+				(SELECT excludeLandPrice FROM product WHERE id = #{productId,jdbcType=VARCHAR}) = 1
+		 THEN
+                tp.tourDateId = td.id
+			and
+				td.productId = #{productId,jdbcType=VARCHAR}
+			and
+				td.isshow = true
+			and
+				tp.costNumber = #{costnumber,jdbcType=VARCHAR}
+			AND
+				td.endDate <![CDATA[>=]]> #{time,jdbcType=INTEGER}
+			and
+				tp.sellingPrice != 0
+			AND
+				NOT EXISTS (
+					 SELECT
+							id
+					 FROM
+							departuredate
+					 WHERE
+							departureid = '2c4e1f27d1e346a7a9cd69ca557f51ac'
+					 AND
+							tourDateId = td.id
+				 )
+		 ELSE
+				tp.tourDateId = td.id
+			and
+				td.productId = #{productId,jdbcType=VARCHAR}
+			and
+				td.isshow = true
+			and
+				tp.costNumber = #{costnumber,jdbcType=VARCHAR}
+			AND
+				td.endDate <![CDATA[>=]]> #{time,jdbcType=INTEGER}
+			and
+				tp.sellingPrice != 0
+	END	   
+  </select>
+  <select id="getminmprice" resultType="java.math.BigDecimal">
+  select min(markedPrice) from `tourprice`,tourdate where 
+  tourprice.tourDateId=tourdate.id 
+  and tourdate.tourLineId=#{tourlineId,jdbcType=VARCHAR} 
+  and tourdate.isshow = true
+  and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+  and tourdate.endDate >= #{time,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 根据TourDateId查询出 -->
+  <select id="findByTourDateIdAndCostNumber" resultMap="BaseResultMap">
+  SELECT
+  	<include refid="Base_Column_List" />
+  FROM
+  	tourprice
+  WHERE
+  	tourDateId = #{tourDateId,jdbcType=VARCHAR} 
+  AND
+  	costNumber = #{costNumber,jdbcType=VARCHAR}
+  </select>
+  
+   <!-- 根据线路id查询价格对应的costnumid -->
+   <select id="getPriceCostNumByProductid" parameterType="java.lang.String" resultType="java.lang.String">
+      select tourprice.costNumber 
+       from tourprice,tourdate 
+       where tourprice.tourDateId=tourdate.id 
+             AND tourdate.productId=#{productid}
+       GROUP BY tourprice.costNumber
+   </select>
+   
+   <!-- 根据costnum查询对应的价格列表 -->
+   <select id="findSellingPriceByCostNum" resultMap="BaseResultMap" parameterType="java.util.List">
+     select id,sellingPrice from tourprice where costNumber in
+     <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+        #{item}
+     </foreach>
+   </select>
+   
+   <!-- 批量更新售价 -->
+   <update id="batchUpdateSellingPrice" parameterType="java.util.List" flushCache="true">  
+      update tourprice
+            <trim prefix="set" suffixOverrides=",">
+	             <trim prefix="sellingPrice = case" suffix="end,">
+	                 <foreach collection="list" item="i" index="index">
+	                         <if test="i.id!=null">
+	                          when id=#{i.id} then #{i.sellingprice}
+	                         </if>
+	                 </foreach>
+	              </trim>
+             </trim>
+            where
+          <foreach collection="list" separator="or" item="i" index="index" >
+              id=#{i.id}
+          </foreach>
+   </update>
+  <!-- 根据线路Id删除价格 -->
+  <delete id="deleteWithProductid" parameterType="java.lang.String" flushCache="true" >
+   delete from tourprice where tourDateId in (select id from tourdate where productId = #{productId});
+  </delete>
+  
+   <!-- 根据线路Id删除出发日期 -->
+   <delete id="batchDelete" flushCache="true" >
+	    delete from tourprice where id in 
+	    <foreach collection="list" index="index" item="item" open="(" separator="," close=")">   
+	        #{item}   
+	    </foreach>
+   </delete>
+   
+</mapper>

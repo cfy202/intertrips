@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.BlogCategoryMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.BlogCategory" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="blogNumber" property="blogNumber" jdbcType="INTEGER" />
+    <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="isShow" property="isShow" jdbcType="INTEGER"/>
+    <result column="pageId" property="pageId" jdbcType="VARCHAR"/>
+    <result column="isCreate" property="isCreate" jdbcType="INTEGER"/>
+  </resultMap>
+  <resultMap type="com.wenjing.entity.BlogCategory" id="resultMapWithPage" extends="BaseResultMap">
+  	<association property="page" column="pageId" select="com.wenjing.dao.PageMapper.selectByPrimaryKey"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, blogNumber, createTime,isShow,pageId,isCreate
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from blogcategory
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectWithPageById" resultMap="resultMapWithPage" parameterType="java.lang.String">
+    select 
+    <include refid="Base_Column_List" />
+    from blogcategory
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="findAll" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from blogcategory
+  </select>
+  <select id="findAllShowCategory" resultMap="resultMapWithPage">
+    select 
+    <include refid="Base_Column_List" />
+    from blogcategory
+    where isShow = 1	
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from blogcategory
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.BlogCategory" >
+    insert into blogcategory (id, name, blogNumber, 
+      createTime,isShow,pageId)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{blogNumber,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP},#{isShow,jdbcType=INTEGER},#{pageId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.BlogCategory" >
+    insert into blogcategory
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="blogNumber != null" >
+        blogNumber,
+      </if>
+      <if test="createTime != null" >
+        createTime,
+      </if>
+      <if test="isShow != null">
+      	isShow,
+      </if>
+      <if test="pageId != null">
+      	pageId
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="blogNumber != null" >
+        #{blogNumber,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isShow != null">
+      	#{isShow,jdbcType=INTEGER},
+      </if>
+      <if test="pageId != null">
+      	#{pageId,jdbcType=VARCHAR}
+      </if>
+    </trim>
+  </insert>
+  <update id="changeBlogNumberById">
+	UPDATE
+		blogcategory
+	SET
+		blogNumber = blogNumber + #{changeValue,jdbcType=INTEGER}
+	WHERE
+		id = #{id,jdbcType=VARCHAR}		
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.BlogCategory" >
+    update blogcategory
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="blogNumber != null" >
+        blogNumber = #{blogNumber,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        createTime = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isShow != null">
+      	isShow = #{isShow,jdbcType=INTEGER},
+      </if>
+      <if test="pageId != null">
+      	pageId = #{pageId,jdbcType=VARCHAR},
+      </if>
+      <if test="isCreate != null">
+      	isCreate = #{isCreate,jdbcType=INTEGER}
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.BlogCategory" >
+    update blogcategory
+    set name = #{name,jdbcType=VARCHAR},
+      blogNumber = #{blogNumber,jdbcType=INTEGER},
+      createTime = #{createTime,jdbcType=TIMESTAMP},
+      isSHow = #{isShow,jdbcType=INTEGER},
+      pageId = #{pageId,jdbcType=VARCHAR},
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateIsCreateById">
+	update blogcategory
+	set isCreate = #{isCreate}
+	where id = #{id}
+  </update>
+</mapper>

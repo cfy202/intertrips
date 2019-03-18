@@ -1,0 +1,721 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.OrdersMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Orders">
+    <id column="Id" property="id" jdbcType="VARCHAR" />
+    <result column="orderNo" property="orderno" jdbcType="VARCHAR" />
+    <result column="quantity" property="quantity" jdbcType="INTEGER" />
+    <result column="totalPrice" property="totalprice" jdbcType="DECIMAL" />
+    <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="receiveWay" property="receiveway" jdbcType="VARCHAR" />
+    <result column="payway" property="payway" jdbcType="VARCHAR" />
+    <result column="score" property="score" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="IP" property="ip" jdbcType="VARCHAR" />
+    <result column="statusId" property="statusid" jdbcType="VARCHAR" />
+    <result column="userId" property="userid" jdbcType="VARCHAR" />
+    <result column="orderType" property="orderType" jdbcType="INTEGER"/>
+    <result column="isSynchronized" property="isSynchronized" jdbcType="INTEGER" />
+    <result column="synchronizedOrderNo" property="synchronizedOrderNo" jdbcType="VARCHAR"/>
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+    <result column="timeLineStatus" property="timeLineStatus" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <resultMap type="com.wenjing.entity.Orders" id="ResultMapWithOccupyTime" extends="BaseResultMap">
+  	<result column="occupyTime" property="occupyTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  
+  <resultMap type="com.wenjing.entity.Orders" id="CollectionAndPeople">
+  	<result column="totalCollection" property="totalprice" jdbcType="DECIMAL" />
+  	<result column="totalPeople" property="quantity" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <resultMap type="com.wenjing.entity.Orders" id="PayInfoResult" extends="ResultMapWithOccupyTime">
+  	<association property="cost" column="costNumber" select="com.wenjing.dao.CostMapper.selectByPrimaryKey"></association>
+  	<collection property="orderdetails" column="id" javaType="java.util.List" select="com.wenjing.dao.OrderdetailMapper.findPayInfo"></collection>
+  	<collection property="orderexpenseList" column="id" javaType="java.util.List" select="com.wenjing.dao.OrderexpenseMapper.findByOrderId"></collection>
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List">
+    Id, orderNo, quantity, totalPrice, createTime, receiveWay, payway, score, remark, 
+    IP, statusId, userId, isSynchronized, synchronizedOrderNo, costNumber, timeLineStatus,orderType
+  </sql>
+  
+  <resultMap id="adminOrdersList" type="com.wenjing.entity.Orders" extends="ResultMapWithOccupyTime">
+  	<result column="pName" property="productName" jdbcType="VARCHAR" />
+  	<result column="pCode" property="productCode" jdbcType="VARCHAR" /> 
+  	<result column="contacterName" property="contacterName" jdbcType="VARCHAR"/>
+  	<result column="firstName" property="firstName" jdbcType="VARCHAR"/>
+  	<result column="lastName" property="lastName" jdbcType="VARCHAR"/>
+  	<association property="orderStatus" javaType="com.wenjing.entity.Orderstatus" resultMap="orderStatusResultMap" />
+  	<association property="cost" column="costNumber" select="com.wenjing.dao.CostMapper.selectByPrimaryKey"/>
+  	<collection property="orderDetailIds" javaType="java.util.List" ofType="java.lang.String" >
+  		<result column="dId" property="orderDetailIds" jdbcType="VARCHAR" />
+  	</collection>
+  </resultMap>
+  
+  <resultMap id="ordersDetailResultMap" type="com.wenjing.entity.Orders" extends="BaseResultMap">
+  	<association property="orderStatus" column="statusId" select="com.wenjing.dao.OrderstatusMapper.selectByPrimaryKey"/>
+  	<association property="orderContacter" column="id" select="com.wenjing.dao.OrdercontacterMapper.selectByOrderId"/>
+	<collection property="orderdetails" javaType="java.util.List" ofType="com.wenjing.entity.Orderdetail" column="id" select="com.wenjing.dao.OrderdetailMapper.selectByOrderId"/>
+  </resultMap>
+  
+  <resultMap id="resultMapWithContacter" type="com.wenjing.entity.Orders" extends="BaseResultMap">
+  	<association property="orderContacter" column="id" select="com.wenjing.dao.OrdercontacterMapper.selectByOrderId"/>
+  </resultMap>
+  
+  <resultMap id="resultWithStatus" type="com.wenjing.entity.Orders" extends="BaseResultMap">
+  	<association property="cost" column="costnumber" select="com.wenjing.dao.CostMapper.selectByPrimaryKey"></association>
+  	<association property="orderStatus" column="statusId" select="com.wenjing.dao.OrderstatusMapper.selectByPrimaryKey"/>
+  	<association property="orderContacter" column="id" select="com.wenjing.dao.OrdercontacterMapper.selectByOrderId"/>
+  	<collection property="orderdetails" column="id" select="com.wenjing.dao.OrderdetailMapper.selectWithTourPassengersAndProductByOrdersId"></collection>
+  	<collection property="orderexpenseList" column="id" select="com.wenjing.dao.OrderexpenseMapper.findByOrderId"></collection>
+  </resultMap>
+  
+  <resultMap id="orderStatusResultMap" type="com.wenjing.entity.Orderstatus" >
+    <id column="oId" property="id" jdbcType="VARCHAR" />
+    <result column="oName" property="name" jdbcType="VARCHAR" />
+    <result column="oText" property="text" jdbcType="VARCHAR" />
+    <result column="oCode" property="code" jdbcType="INTEGER" />
+  </resultMap>
+  
+   <!-- 根据用户id查询订单（用户中心） -->
+  <resultMap id="MemberOrdersResultMap" type="com.wenjing.entity.Orders" extends="BaseResultMap">
+  	<association property="orderStatus" column="statusId" select="com.wenjing.dao.OrderstatusMapper.selectByPrimaryKey"/>
+  	<collection property="product" column="productId" select="com.wenjing.dao.ProductMapper.selectProductAndPageById" />
+  	<collection property="orderdetails" javaType="java.util.List" ofType="com.wenjing.entity.Orderdetail" column="id" select="com.wenjing.dao.OrderdetailMapper.selectByOrderId"/>
+  </resultMap>
+	  
+  <select id="selectByStatusid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from orders where statusId =#{statusId}
+  </select>
+  
+  <select id="selectByUserid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from orders where userId =#{userId}
+  </select>
+  
+  <select id="findOrders" resultMap="ordersDetailResultMap" parameterType="java.lang.String">
+  	SELECT
+  		<include refid="Base_Column_List" />
+  	FROM
+  		orders
+  	WHERE
+  		Id = #{ordersId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM orders
+    WHERE Id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByIdWithOccupyTime" resultMap="ResultMapWithOccupyTime" parameterType="java.lang.String" >
+    SELECT 
+    <include refid="Base_Column_List" />,occupyTime
+    FROM orders
+    WHERE Id = #{id,jdbcType=VARCHAR}
+    AND
+      statusId = '0df0f0e4-1e47-11e5-9bc2-94de800aa37e'
+  </select>  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    DELETE FROM orders
+    where Id = #{id,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.wenjing.entity.Orders" flushCache="true" >
+    insert into orders (Id, orderNo, quantity, 
+      totalPrice, createTime, receiveWay, 
+      payway, score, remark, 
+      IP, statusId, userId, isSynchronized,synchronizedOrderNo,orderType,
+      costNumber)
+    values (#{id,jdbcType=VARCHAR}, #{orderno,jdbcType=VARCHAR}, #{quantity,jdbcType=INTEGER}, 
+      #{totalprice,jdbcType=DECIMAL}, #{createtime,jdbcType=TIMESTAMP}, #{receiveway,jdbcType=VARCHAR}, 
+      #{payway,jdbcType=VARCHAR}, #{score,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
+      #{ip,jdbcType=VARCHAR}, #{statusid,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, #{isSynchronized,jdbcType=INTEGER},#{synchronizedOrderNo,jdbcType=VARCHAR},#{orderType,jdbcType=INTEGER},
+      #{costnumber,jdbcType=VARCHAR})
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Orders" flushCache="true" >
+    insert into orders
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      Id,
+      orderNo,
+      quantity,
+      totalPrice,
+      createTime,
+      receiveWay,
+      payway,
+      score,
+      remark,
+      IP,
+      statusId,
+      userId,
+      isSynchronized,
+      synchronizedOrderNo,
+      orderType,
+      costNumber
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{orderno,jdbcType=VARCHAR},
+      #{quantity,jdbcType=INTEGER},
+      #{totalprice,jdbcType=DECIMAL},
+      #{createtime,jdbcType=TIMESTAMP},
+      #{receiveway,jdbcType=VARCHAR},
+      #{payway,jdbcType=VARCHAR},
+      #{score,jdbcType=INTEGER},
+      #{remark,jdbcType=VARCHAR},
+      #{ip,jdbcType=VARCHAR},
+      #{statusid,jdbcType=VARCHAR},
+      #{userid,jdbcType=VARCHAR},
+      #{isSynchronized,jdbcType=INTEGER},
+      #{synchronizedOrderNo,jdbcType=VARCHAR},
+      #{orderType,jdbcType=INTEGER},
+      #{costnumber,jdbcType=VARCHAR}
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Orders" flushCache="true" >
+    update orders
+    <set >
+      <if test="orderno != null" >
+        orderNo = #{orderno,jdbcType=VARCHAR},
+      </if>
+      <if test="quantity != null" >
+        quantity = #{quantity,jdbcType=INTEGER},
+      </if>
+      <if test="totalprice != null" >
+        totalPrice = #{totalprice,jdbcType=DECIMAL},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="receiveway != null" >
+        receiveWay = #{receiveway,jdbcType=VARCHAR},
+      </if>
+      <if test="payway != null" >
+        payway = #{payway,jdbcType=VARCHAR},
+      </if>
+      <if test="score != null" >
+        score = #{score,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null" >
+        IP = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="statusid != null" >
+        statusId = #{statusid,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null" >
+        userId = #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="isSynchronized != null">
+		isSynchronized = #{isSynchronized,jdbcType=INTEGER},     
+      </if>
+      <if test="synchronizedOrderNo != null">
+      	synchronizedOrderNo = #{synchronizedOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="orderType != null">
+      	orderType = #{orderType,jdbcType=INTEGER},
+      </if>
+      <if test="costnumber != null" >
+        costNumber = #{costnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="timeLineStatus != null" >
+        timeLineStatus = #{timeLineStatus,jdbcType=VARCHAR}
+      </if>
+    </set>
+    where Id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Orders" flushCache="true" >
+    update orders
+    set orderNo = #{orderno,jdbcType=VARCHAR},
+      quantity = #{quantity,jdbcType=INTEGER},
+      totalPrice = #{totalprice,jdbcType=DECIMAL},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      receiveWay = #{receiveway,jdbcType=VARCHAR},
+      payway = #{payway,jdbcType=VARCHAR},
+      score = #{score,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      IP = #{ip,jdbcType=VARCHAR},
+      statusId = #{statusid,jdbcType=VARCHAR},
+      userId = #{userid,jdbcType=VARCHAR},
+      isSynchronized = #{isSynchronized,jdbcType=INTEGER},
+      synchronizedOrderNo = #{synchronizedOrderNo,jdbcType=VARCHAR},
+      orderType = #{orderType,jdbcType=INTEGER},
+      costNumber = #{costnumber,jdbcType=VARCHAR},
+      occupyTime = #{occupyTime,jdbcType=TIMESTAMP},
+      timeLineStatus = #{timeLineStatus,jdbcType=VARCHAR}
+    where Id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="findByMemberId" resultMap="MemberOrdersResultMap" parameterType="java.lang.Integer">
+     SELECT
+		orders.Id as id,
+		orders.orderNo,
+		orders.quantity,
+		orders.totalPrice,
+		orders.createTime,
+		orders.receiveWay,
+		orders.payway,
+		orders.score,
+		orders.remark,
+		orders.IP,
+		orders.statusId as statusId,
+		orders.userId,
+		orders.isSynchronized,
+		orders.synchronizedOrderNo,
+		orders.orderType,
+		orders.costNumber,
+		orders.timeLineStatus,
+		orderstatus.`name`,
+		product.id as productId
+		FROM
+		orders, orderdetail, orderstatus, product 
+		 where orders.id = orderdetail.orderId
+		 and orders.statusId = orderstatus.id
+		 and orderdetail.productId = product.id
+	     and orders.userId=#{memberid}
+	     and product.type=#{type}
+	     order by orders.createTime desc
+	 <!--   limit #{startPos},#{pageSize}  --> 
+  </select>
+  
+  <select id="getOrdersTotalNumber" resultType="INTEGER">
+	SELECT
+		count(o.id) 
+	FROM
+		orders o
+		<if test="contacterName != null">   
+			,ordercontacter oc
+		</if>
+	    <if test="departureDateBeforeLimit != null || departureDateAfterLimit != null || productNoOrCode != null">
+			,orderdetail od
+		</if>	
+		<if test="productNoOrCode != null">
+			,product p
+		</if>
+	WHERE
+		1 = 1
+		AND
+			o.costnumber = #{costNumber}
+		<if test="contacterName != null">  	
+		AND
+			oc.orderId = o.Id
+		</if>
+		<if test="departureDateBeforeLimit != null || departureDateAfterLimit != null || productNoOrCode != null">	
+		AND
+			od.orderId = o.Id
+		</if>	
+		<if test="productNoOrCode != null">	
+		AND
+			od.productId = p.id
+		</if>
+		<if test="orderNo != null">	
+		AND
+			o.orderNo LIKE '%${orderNo}%'
+		</if>
+		<if test="bookingTimeBeforeLimit != null">	
+		AND
+			o.createTime <![CDATA[>=]]> #{bookingTimeBeforeLimit}
+		</if>
+		<if test="bookingTimeAfterLimit != null">	
+		AND	
+			o.createTime <![CDATA[<=]]> #{bookingTimeAfterLimit}
+		</if>
+		<if test="contacterName != null"> 	
+		AND
+			CONCAT(oc.firstName,oc.lastName) like '%${contacterName}%'
+		</if>
+		<if test="orderStatusId != null">	
+		AND
+			o.statusId = #{orderStatusId}
+		</if>
+		<if test="departureDateBeforeLimit != null">	
+		AND
+			od.departureDate <![CDATA[>=]]> #{departureDateBeforeLimit}
+		</if>
+		<if test="departureDateAfterLimit != null">	
+		AND
+			od.departureDate <![CDATA[<=]]> #{departureDateAfterLimit}
+		</if>	
+		<if test="productNoOrCode != null">
+		AND
+			CONCAT(p.`name`,p.code) LIKE '%${productNoOrCode}%'
+		</if>	 
+  </select>
+  
+  <select id="getTotalCollectionAndTotalPeople" resultMap="CollectionAndPeople">
+  	SELECT
+		SUM(od.despotPrice) AS totalCollection,SUM(adults) + SUM(children) + SUM(babies) AS totalPeople
+	FROM
+		orders o,
+		orderdetail od
+		<if test="contacterName != null">   
+			,ordercontacter oc
+		</if>
+		<if test="productNoOrCode != null">
+			,product p
+		</if>
+	WHERE
+			o.statusId = '0e0bdd79-1e47-11e5-9bc2-94de800aa37e'
+		AND
+			od.orderId = o.Id	
+		AND
+			o.costnumber = #{costNumber}
+		<if test="contacterName != null">  	
+		AND
+			oc.orderId = o.Id
+		</if>
+		<if test="productNoOrCode != null">	
+		AND
+			od.productId = p.id
+		</if>
+		<if test="orderNo != null">	
+		AND
+			o.orderNo LIKE '%${orderNo}%'
+		</if>
+		<if test="bookingTimeBeforeLimit != null">	
+		AND
+			o.createTime <![CDATA[>=]]> #{bookingTimeBeforeLimit}
+		</if>
+		<if test="bookingTimeAfterLimit != null">	
+		AND	
+			o.createTime <![CDATA[<=]]> #{bookingTimeAfterLimit}
+		</if>
+		<if test="contacterName != null"> 	
+		AND
+			CONCAT(oc.firstName,oc.lastName) like '%${contacterName}%'
+		</if>
+		<if test="orderStatusId != null">	
+		AND
+			o.statusId = #{orderStatusId}
+		</if>
+		<if test="departureDateBeforeLimit != null">	
+		AND
+			od.departureDate <![CDATA[>=]]> #{departureDateBeforeLimit}
+		</if>
+		<if test="departureDateAfterLimit != null">	
+		AND
+			od.departureDate <![CDATA[<=]]> #{departureDateAfterLimit}
+		</if>	
+		<if test="productNoOrCode != null">
+		AND
+			CONCAT(p.`name`,p.code) LIKE '%${productNoOrCode}%'
+		</if>	
+  </select>
+  
+  <select id="findPayInfo" resultMap="PayInfoResult">
+	SELECT
+	<include refid="Base_Column_List"/>,occupyTime
+	FROM
+	    orders
+	WHERE
+		id = #{id,jdbcType=VARCHAR}      
+  </select>
+  
+  <select id="findWithOccupyTimeById" resultMap="ResultMapWithOccupyTime">
+	SELECT
+	<include refid="Base_Column_List"/>,occupyTime
+	FROM
+	    orders
+	WHERE
+		id = #{id,jdbcType=VARCHAR}     
+  </select>
+  
+  <select id="getOrdersByPage" resultMap="adminOrdersList">
+  	SELECT	
+	    o.Id AS id, orderNo, quantity, totalPrice, createTime, receiveWay, payway, o.score AS score, remark,orderType,isSynchronized, synchronizedOrderNo, timeLineStatus,
+	    IP, statusId, o.userId AS userId, o.costNumber AS costNumber,o.occupyTime AS occupyTime,os.id AS oId, os.name AS oName, os.text AS oText, os.code AS oCode,od.id AS dId, p.name AS pName,p.code AS pCode,oc.firstName AS firstName,oc.lastName AS lastName	
+	FROM
+		orders o,
+		orderstatus os,
+		orderdetail od,
+		product p,
+		ordercontacter oc
+	WHERE
+			o.statusId = os.Id
+		AND 
+			oc.orderId = o.Id
+		AND	
+			od.orderId = o.Id
+		AND 
+			od.productId = p.id
+		AND
+			o.costnumber = #{costNumber}
+		<if test="orderNo != null">	
+		AND
+			o.orderNo LIKE '%${orderNo}%'
+		</if>
+		<if test="bookingTimeBeforeLimit != null">	
+		AND
+			o.createTime <![CDATA[>=]]> #{bookingTimeBeforeLimit}
+		</if>
+		<if test="bookingTimeAfterLimit != null">	
+		AND	
+			o.createTime <![CDATA[<=]]> #{bookingTimeAfterLimit}
+		</if>
+		<if test="contacterName != null"> 	
+		AND
+			CONCAT(oc.firstName,oc.lastName) like '%${contacterName}%'
+		</if>
+		<if test="orderStatusId != null">	
+		AND
+			o.statusId = #{orderStatusId}
+		</if>
+		<if test="departureDateBeforeLimit != null">	
+		AND
+			od.departureDate <![CDATA[>=]]> #{departureDateBeforeLimit}
+		</if>
+		<if test="departureDateAfterLimit != null">	
+		AND
+			od.departureDate <![CDATA[<=]]> #{departureDateAfterLimit}
+		</if>	
+		<if test="productNoOrCode != null">
+		AND
+			CONCAT(p.`name`,p.code) LIKE '%${productNoOrCode}%'
+		</if>		
+	ORDER BY
+		FIND_IN_SET(o.statusId,'0e0bdd79-1e47-11e5-9bc2-94de800aa37e,0df0f0e4-1e47-11e5-9bc2-94de800aa37e,0e149a16-1e47-11e5-9bc2-94de800aa37e'),
+		o.isSynchronized,
+		o.createTime DESC	
+	LIMIT #{startPos},#{pageSize}
+  </select>
+  
+  <!-- 获取签证订单情况 -->
+  <select id="findWithVisa" resultMap="MemberOrdersResultMap" parameterType="java.lang.Integer">
+   SELECT
+		orders.Id as id,
+		orders.orderNo,
+		orders.quantity,
+		orders.totalPrice,
+		orders.createTime,
+		orders.receiveWay,
+		orders.payway,
+		orders.orderType,		
+		orders.score,
+	  orders.IP,
+		orders.statusId as statusId,
+		orders.costNumber,
+		ordercontacter.`name` as userId,
+    product.`name` as remark
+		FROM
+		orders, orderdetail, orderstatus, product,ordercontacter 
+		 where orders.id = orderdetail.orderId
+		 and orders.statusId = orderstatus.id
+		 and orderdetail.productId = product.id and ordercontacter.orderId = orders.Id
+	     and product.type=#{type}
+	     order by orders.createTime desc
+  </select>
+  
+  <!-- 根据订单编号和联系人邮件查询出总订单 -->
+  <select id="findByOrderNoAndEmail" resultMap="resultWithStatus">
+  	SELECT
+  		o.*
+  	FROM
+  		orders o,
+  		orderContacter oc
+  	WHERE
+  		o.orderNo = #{orderNo,jdbcType=VARCHAR} 
+  	AND	
+  		oc.email = #{email,jdbcType=VARCHAR}
+  	AND
+  		o.id = oc.orderId
+  </select>
+  
+  <select id="findAllInfoByOrdersId" resultMap="resultWithStatus">
+  	SELECT
+  		<include refid="Base_Column_List"/>
+  	FROM
+  		orders
+  	WHERE
+		id = #{id,jdbcType=VARCHAR}  
+	AND
+		statusId = '0e0bdd79-1e47-11e5-9bc2-94de800aa37e'	
+	AND
+		isSynchronized = 0	
+  </select>
+  
+  <!-- 查询用户订单总条数 -->
+  <select id="getCountByMemberid" parameterType="java.lang.String" resultType="java.lang.Integer">
+     select COUNT(*) from orders where userId=#{userId}
+  </select>
+  
+  <resultMap id="MemberOrderDetailResultMap" type="com.wenjing.entity.Orders" extends="BaseResultMap">
+  	<association property="orderStatus" column="statusId" select="com.wenjing.dao.OrderstatusMapper.selectByPrimaryKey"/>
+  	<association property="orderContacter" column="id" select="com.wenjing.dao.OrdercontacterMapper.selectByOrderId"/>
+	<collection property="orderdetails" column="id" select="com.wenjing.dao.OrderdetailMapper.GetTourPassengersAndProductByOrdersId"/>
+  </resultMap>
+  
+  <!-- 根据订单Id查询订单详情（会员中心） -->
+  <select id="getMemberOrderDetailById" resultMap="MemberOrderDetailResultMap" parameterType="java.lang.String">
+     select <include refid="Base_Column_List" />
+	 from orders
+	 where id=#{id,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 根据订单号查询订单详情（会员中心） -->
+  <select id="getMemberOrderDetailByOrderNo" resultMap="MemberOrderDetailResultMap" parameterType="java.lang.String">
+     select <include refid="Base_Column_List" />
+	 from orders
+	 where orderNo=#{orderNo}
+  </select>
+    
+   <!-- 非注册用户根据订单号查询订单详情（会员中心） -->
+  <select id="getOrderDetailByOrderNoAndEmail" resultMap="MemberOrderDetailResultMap" parameterType="java.lang.String">
+     select  orders.Id as id, 
+             orders.orderNo, 
+             orders.quantity, 
+             orders.totalPrice, 
+             orders.createTime, 
+             orders.receiveWay, 
+             orders.payway, 
+             orders.score, 
+             orders.remark, 
+             orders.IP, 
+             orders.statusId, 
+             orders.userId, 
+             orders.isSynchronized,
+             orders.synchronizedOrderNo,
+             orders.orderType,      
+             orders.costNumber,
+             orders.timeLineStatus
+	 from orders,ordercontacter 
+	 where orders.Id=ordercontacter.orderId 
+	       and orders.orderNo =#{orderNo} 
+	       and ordercontacter.email =#{email}
+  </select>
+  
+  <!-- 根据订单号查询 -->
+  <select id="finByOrderNo" resultMap="resultMapWithContacter" parameterType="java.lang.String">
+     select <include refid="Base_Column_List" />
+	 from orders
+	 where orderNo=#{orderNo}
+  </select>
+  
+   <update id="updateByOrderNo" parameterType="java.lang.String" flushCache="true" >
+    UPDATE orders
+    SET statusId = #{statusId,jdbcType=VARCHAR}
+    WHERE orderNo = #{orderNo,jdbcType=VARCHAR}
+  </update>
+  <!-- 查询当天订单数量 -->
+  <select id="findOrderWithNow" resultType="java.lang.Integer" >
+  select count(*) from orders where CONCAT(createTime) like '%${date}%' and costNumber in
+		<foreach collection="costnumbers" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+  </select>
+  <!-- 查询固定期间内所有未同步至系统的线路订单 -->
+  <select id="findAllTourlineOrders" resultMap="resultWithStatus">
+	SELECT
+		id, orderNo, quantity, totalPrice, createTime, receiveWay, payway, score, remark, 
+		IP, statusId, userId, isSynchronized, synchronizedOrderNo, costNumber, orderType
+	FROM
+		orders
+	WHERE
+		orderType = 1
+	AND
+		statusId = '0e0bdd79-1e47-11e5-9bc2-94de800aa37e'	
+	AND
+		isSynchronized = 0	
+	AND
+		UNIX_TIMESTAMP(createTime) BETWEEN #{starttime} AND #{endtime}
+	ORDER BY
+		createTime
+  </select>
+  
+  <select id="findAllInfoByOrderIds" resultMap="resultWithStatus">
+  	SELECT
+		id, orderNo, quantity, totalPrice, createTime, receiveWay, payway, score, remark, 
+		IP, statusId, userId, isSynchronized, synchronizedOrderNo, costNumber, orderType
+	FROM
+		orders
+	WHERE
+		orderType = 1
+	AND
+		statusId = '0e0bdd79-1e47-11e5-9bc2-94de800aa37e'	
+	AND
+		isSynchronized = 0	
+	AND
+		id IN
+		<foreach collection="orderIds" item="item" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	ORDER BY
+		createTime
+  </select>
+  
+  <select id="findCancelingOrders" resultType="java.lang.String">
+	SELECT 
+		id
+	FROM 
+		orders
+	WHERE
+		 (unix_timestamp(now())-unix_timestamp(occupyTime))/60 > #{time}
+	AND
+		statusId = '0df0f0e4-1e47-11e5-9bc2-94de800aa37e'
+  </select>
+  
+  <update id="cancelOrders" parameterType="java.lang.String">
+	UPDATE
+		orders
+	SET
+		statusId = '0e149a16-1e47-11e5-9bc2-94de800aa37e'
+	WHERE
+		id in
+	<foreach collection="orderIds" item="item" open="(" separator="," close=")">
+		#{item,jdbcType=VARCHAR}
+	</foreach>					  	
+  </update>
+  
+  
+  <update id="setOccupyTimeByIds">
+  	UPDATE
+  		orders
+  	SET
+  		occupyTime = #{occupyTime,jdbcType=TIMESTAMP}
+  	WHERE
+  		id in 
+  	    <foreach collection="orderIds" item="item" open="(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+		</foreach>			
+  </update>
+  
+  <update id="setOccupyTimeById">
+  	UPDATE
+  		orders
+  	SET
+  		occupyTime = #{occupyTime,jdbcType=TIMESTAMP}
+  	WHERE
+  		id = #{id,jdbcType=VARCHAR}		
+  </update>
+  
+  <update id="returnStores">
+	UPDATE
+		tourdate t,
+	(SELECT 
+		tourdateId,SUM(adults) + SUM(children) + SUM(babies) AS total
+	FROM 
+		orderdetail
+	where
+		orderId in
+		<foreach collection="orderIds" item="item" open="(" separator="," close=")">
+			#{item,jdbcType=VARCHAR}
+		</foreach>	
+	group by 
+		tourdateId) tourdateTotal
+	SET
+		t.soldNum = t.soldNum - tourdateTotal.total,
+		t.remainNum = t.remainNum + tourdateTotal.total
+	WHERE
+		t.id = tourdateTotal.tourdateId
+  </update>
+</mapper>

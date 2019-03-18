@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.MemberMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Member" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="createTime" property="createtime" jdbcType="VARCHAR" />
+    <result column="lasttime" property="lasttime" jdbcType="VARCHAR" />
+    <result column="userStatus" property="userstatus" jdbcType="TINYINT" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <!-- 
+    <collection property="memberinformationsUserid" ofType="com.wenjing.entity.Memberinformation" column="id" select="com.wenjing.dao.MemberinformationMapper.selectByUserid" />
+    <collection property="ordercontactersUserid" ofType="com.wenjing.entity.Ordercontacter" column="id" select="com.wenjing.dao.OrdercontacterMapper.selectByUserid" />
+    <collection property="orderssUserid" ofType="com.wenjing.entity.Orders" column="id" select="com.wenjing.dao.OrdersMapper.selectByUserid" />
+     -->
+  </resultMap>
+  
+  <resultMap type="com.wenjing.entity.Member" id="ResultMapWithInfo" extends="BaseResultMap">
+  	<association property="memberinformation" column="id" select="com.wenjing.dao.MemberinformationMapper.selectByMemberId"/>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, account, `password`, createTime, lasttime, userStatus, ip
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from `member`
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectWithInfoById" resultMap="ResultMapWithInfo" parameterType="java.lang.String">
+  	SELECT
+  	<include refid="Base_Column_List"/>
+  	from `member`
+  	where id =  #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from `member`
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Member" flushCache="true">
+    insert into `member` (id, account, `password`, 
+      createTime, lasttime, userStatus, ip)
+    values (#{id,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=VARCHAR}, #{lasttime,jdbcType=VARCHAR}, #{userstatus,jdbcType=TINYINT}, #{ip,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Member" flushCache="true">
+    insert into `member`
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      account,
+      `password`,
+      createTime,
+      lasttime,
+      userStatus,
+      ip,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{id,jdbcType=VARCHAR},
+      #{account,jdbcType=VARCHAR},
+      #{password,jdbcType=VARCHAR},
+      #{createtime,jdbcType=VARCHAR},
+      #{lasttime,jdbcType=VARCHAR},
+      #{userstatus,jdbcType=TINYINT},
+      #{ip,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Member" flushCache="true">
+    update `member`
+    <set >
+      <if test="account != null" >
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        `password` = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=VARCHAR},
+      </if>
+      <if test="lasttime != null" >
+        lasttime = #{lasttime,jdbcType=VARCHAR},
+      </if>
+      <if test="userstatus != null" >
+        userStatus = #{userstatus,jdbcType=TINYINT},
+      </if>
+      <if test="ip != null" >
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Member" flushCache="true">
+    update `member`
+    set account = #{account,jdbcType=VARCHAR},
+      `password` = #{password,jdbcType=VARCHAR},
+      createTime = #{createtime,jdbcType=VARCHAR},
+      lasttime = #{lasttime,jdbcType=VARCHAR},
+      userStatus = #{userstatus,jdbcType=TINYINT},
+      ip = #{ip,jdbcType=VARCHAR},
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <!-- 根据用户名查询 -->
+  <select id="findByAccount" resultMap="ResultMapWithInfo" parameterType="java.lang.String">
+    select <include refid="Base_Column_List" /> from member where account=#{account,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 查询所有会员列表 -->
+  <select id="findAll" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" /> from member
+  </select>
+  
+  <select id="findByCommentsId" resultMap="BaseResultMap">
+	SELECT
+		m.id AS id, account, `password`, m.createTime AS createTime, lasttime, userStatus, ip
+	FROM
+		member m,
+		commentstoblog ctg
+	WHERE
+		ctg.commentMemberId = m.id
+	AND
+		ctg.id = #{id}	
+  </select>
+  
+   <!-- 修改用户状态 -->
+  <update id="updateStatus" flushCache="true">
+    update member set userStatus = #{userstatus} where id = #{id}
+  </update>
+  <!-- 根据id 修改密码 -->
+  <update id="updatePasswordById" flushCache="true">
+    update member
+    set password = #{password,jdbcType=VARCHAR}
+    where id = #{memberid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 修改最后登录时间 -->
+  <update id="updateLasttime" flushCache="true">
+    update member
+    set lasttime = #{lasttime,jdbcType=VARCHAR}
+    where id = #{memberid,jdbcType=VARCHAR}
+  </update>
+  <!-- 查询会员数量 -->
+  <select id="findCount" resultType="java.lang.Integer">
+   select count(*) from member;
+  </select>
+</mapper>

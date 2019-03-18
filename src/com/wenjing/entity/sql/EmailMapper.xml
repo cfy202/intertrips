@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.EmailMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Email" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="addTime" property="addTime" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="cancelTime" property="cancelTime" jdbcType="INTEGER" />
+    <result column="costNumber" property="costNumber" jdbcType="VARCHAR" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, `email`,addTime, status, cancelTime,costNumber,ip
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from email
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from email
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Email" flushCache="true" >
+    insert into email (id, `email`,addTime, status, cancelTime,costNumber,ip)
+    values (#{id,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{addTime,jdbcType=INTEGER},
+     #{status,jdbcType=INTEGER}, #{cancelTime,jdbcType=INTEGER}, #{costNumber,jdbcType=VARCHAR},
+     #{ip,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Email" flushCache="true" >
+    insert into email
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      `email`,
+      addTime, 
+      status,
+      cancelTime,
+      costNumber,
+      ip,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{email,jdbcType=VARCHAR},
+      #{addTime,jdbcType=INTEGER},
+      #{status,jdbcType=INTEGER}, 
+      #{cancelTime,jdbcType=INTEGER},
+      #{costNumber,jdbcType=VARCHAR},
+      #{ip,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Email" flushCache="true" >
+    update attractiontype
+    <set >
+      <if test="email != null" >
+        `email` = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="addTime != null" >
+        `addTime` = #{addTime,jdbcType=INTEGER},
+      </if>
+      <if test="cancelTime != null" >
+        `cancelTime` = #{cancelTime,jdbcType=INTEGER},
+      </if>
+      <if test="costNumber != null" >
+        `costNumber` = #{costNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null" >
+        `ip` = #{ip,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Email" flushCache="true" >
+    update email
+    set `email` = #{email,jdbcType=VARCHAR},
+    `status` = #{status,jdbcType=INTEGER},
+    `addTime` = #{addTime,jdbcType=INTEGER},
+    `cancelTime` = #{cancelTime,jdbcType=INTEGER},
+    `costNumber` = #{costNumber,jdbcType=VARCHAR},
+    `ip` = #{ip,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="findAll" parameterType="java.util.List" resultMap="BaseResultMap">
+     select * from email
+     
+     order by addTime desc
+  </select>
+  <select id="findByEmailAddress" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from email
+    where `email` = #{emailAddress,jdbcType=VARCHAR}
+  </select>
+  <update id="updateEmailStatus" flushCache="true" >
+    update email set 
+    `status` = 0,
+    `cancelTime` = #{time,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

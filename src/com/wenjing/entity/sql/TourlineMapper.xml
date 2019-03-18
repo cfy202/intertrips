@@ -1,0 +1,1295 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.TourlineMapper">
+	<cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+	<resultMap id="BaseResultMap" type="com.wenjing.entity.Tourline">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="days" property="days" jdbcType="INTEGER" />
+		<result column="interval" property="interval" jdbcType="INTEGER" />
+		<result column="notice" property="notice" jdbcType="VARCHAR" />
+		<result column="highlights" property="highlights" jdbcType="VARCHAR" />
+		<result column="include" property="include" jdbcType="VARCHAR" />
+		<result column="exclude" property="exclude" jdbcType="VARCHAR" />
+		<result column="mapUrl" property="mapurl" jdbcType="VARCHAR" />
+		<result column="sort" property="sort" jdbcType="INTEGER" />
+		<result column="regionId" property="regionid" jdbcType="VARCHAR" />
+		<result column="productId" property="productid" jdbcType="VARCHAR" />
+		<result column="selfPayList" property="selfpaylist" jdbcType="LONGVARCHAR" />
+		<result column="destinationList" property="destinationlist"
+			jdbcType="LONGVARCHAR" />
+		<result column="attractionList" property="attractionlist"
+			jdbcType="LONGVARCHAR" />
+		<result column="tourname" property="tourname" jdbcType="VARCHAR" />
+		<result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+		<result column="parentIds" property="parentIds" jdbcType="VARCHAR" />
+		<result column="startDestination" property="startDestination"
+			jdbcType="VARCHAR" />
+		<result column="endDestination" property="endDestination"
+			jdbcType="VARCHAR" />
+		<result column="tipPrice" property="tipPrice" jdbcType="DECIMAL" />
+		<result column="steamPrice" property="steamPrice" jdbcType="DECIMAL" />
+		<result column="costNumberIds" property="costnumberids" jdbcType="VARCHAR" />
+		<result column="rate" property="rate" jdbcType="INTEGER" />
+		<result column="departure" property="departure" jdbcType="LONGVARCHAR" />
+		<result column="avgScore" property="avgScore" jdbcType="DECIMAL"/> 	
+		<result column="flightNotice" property="flightnotice" jdbcType="VARCHAR" />
+		<association property="region" column="regionid"
+			select="com.wenjing.dao.RegionMapper.selectByPrimaryKey" />
+		<!-- <collection property="itinerarysTourlineid" ofType="com.wenjing.entity.Itinerary" 
+			column="id" select="com.wenjing.dao.ItineraryMapper.selectByTourlineid" /> 
+			<collection property="tourdatesTourlineid" ofType="com.wenjing.entity.Tourdate" 
+			column="id" select="com.wenjing.dao.TourdateMapper.selectByTourlineid" /> 
+			<collection property="tourlineattractionsTourlineid" ofType="com.wenjing.entity.Tourlineattraction" 
+			column="id" select="com.wenjing.dao.TourlineattractionMapper.selectByTourlineid" 
+			/> <collection property="tourlinedestinationsTourlineid" ofType="com.wenjing.entity.Tourlinedestination" 
+			column="id" select="com.wenjing.dao.TourlinedestinationMapper.selectByTourlineid" 
+			/> <collection property="tourlinehotelsTourlineid" ofType="com.wenjing.entity.Tourlinehotel" 
+			column="id" select="com.wenjing.dao.TourlinehotelMapper.selectByTourlineid" 
+			/> <collection property="tourlineimagesTourlineid" ofType="com.wenjing.entity.Tourlineimage" 
+			column="id" select="com.wenjing.dao.TourlineimageMapper.selectByTourlineid" 
+			/> <collection property="tourlineselfpaysTourlineid" ofType="com.wenjing.entity.Tourlineselfpay" 
+			column="id" select="com.wenjing.dao.TourlineselfpayMapper.selectByTourlineid" 
+			/> -->
+	</resultMap>
+	
+	<resultMap id="resultWithItinerary" type="com.wenjing.entity.Tourline" extends="BaseResultMap">
+			<collection property="itinerarys" ofType="com.wenjing.entity.Itinerary"
+			column="id" select="com.wenjing.dao.ItineraryMapper.selectWithHotelByTourlineid" />
+	</resultMap>
+	
+	<resultMap type="com.wenjing.entity.Tourline" id="ResultMapWithProduct" extends="BaseResultMap">
+		<association property="productProductid" column="productId" select="com.wenjing.dao.ProductMapper.selectByPrimaryKey"></association>
+	</resultMap>
+
+	<resultMap id="GeneralResultMap" type="com.wenjing.entity.Tourline"
+		extends="BaseResultMap">
+		<association property="productProductid" column="productid"
+			select="com.wenjing.dao.ProductMapper.selectByPrimaryKey" />
+		<collection property="tourdatesTourlineid" ofType="com.wenjing.entity.Tourdate"
+			column="id" select="com.wenjing.dao.TourdateMapper.selectByProductId" />
+		<collection property="tourlineattractionsTourlineid"
+			ofType="com.wenjing.entity.Tourlineattraction" column="id"
+			select="com.wenjing.dao.TourlineattractionMapper.selectByTourlineid" />
+		<collection property="tourlinehotelsTourlineid" ofType="com.wenjing.entity.Tourlinehotel"
+			column="id" select="com.wenjing.dao.TourlinehotelMapper.selectByTourlineid" />
+	</resultMap>
+
+	<resultMap id="indexHotMap" type="com.wenjing.entity.Tourline"
+		extends="BaseResultMap">
+		<association property="productProductid" column="productid"
+			select="com.wenjing.dao.ProductMapper.selectByPrimaryKey" />
+	</resultMap>
+	<resultMap id="indexSaleMap" type="com.wenjing.entity.Tourline"
+		extends="BaseResultMap">
+		<association property="productProductid" column="productid"
+			select="com.wenjing.dao.ProductMapper.findById" />
+	</resultMap>
+
+	<resultMap id="tourlineListMap" type="com.wenjing.entity.Tourline" extends="BaseResultMap">
+		<result column="lowsprice" property="lowsprice" jdbcType="DECIMAL" />
+		<!--  
+		<result column="tagsname" property="tagsname" jdbcType="VARCHAR" />
+		-->
+		<association property="productProductid" column="productid"
+			select="com.wenjing.dao.ProductMapper.selectByPrimaryKey" />
+		<collection property="tourdatesTourlineid" ofType="com.wenjing.entity.Tourdate"
+			column="id" select="com.wenjing.dao.TourdateMapper.selectByProductId" />
+	</resultMap>
+
+	<resultMap id="WholeInfoResultMap" type="com.wenjing.entity.Tourline"
+		extends="BaseResultMap">
+		<collection property="itinerarys" ofType="com.wenjing.entity.Itinerary"
+			column="id" select="com.wenjing.dao.ItineraryMapper.selectByTourlineid" />
+		<collection property="destinations" ofType="com.wenjing.entity.Destination"
+			column="id" select="com.wenjing.dao.DestinationMapper.selectByTourlineId"></collection>
+	</resultMap>
+
+	<select id="selectByProductid" parameterType="java.lang.String"
+		resultMap="GeneralResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tourline where productId =#{productId}
+	</select>
+
+	<select id="selectByRegionid" parameterType="java.lang.String"
+		resultMap="GeneralResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tourline where regionId =#{regionId}
+	</select>
+	
+   <select id="selectTourlineWithItinerary" resultMap="resultWithItinerary">
+		SELECT
+			<include refid="Base_Column_List"/>
+		FROM
+			tourline
+		WHERE
+			productId = #{id,jdbcType=VARCHAR}	
+	</select>
+
+	<sql id="Base_Column_List">
+		id, `days`, `interval`,notice, highlights, `include`, `exclude`, mapUrl, sort,
+		regionId, productId,selfPayList, destinationList, attractionList,
+		tourname, costNumber, parentIds,startDestination,endDestination,
+		tipPrice, steamPrice,costNumberIds,rate,departure,avgScore,flightNotice
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="GeneralResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from tourline
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="findWholeInfoByProductId" parameterType="java.lang.String"
+		resultMap="WholeInfoResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM tourline
+		WHERE productId = #{productId,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String"
+		flushCache="true">
+		delete from tourline
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.wenjing.entity.Tourline"
+		flushCache="true">
+		insert into tourline (id, `days`, `interval`, notice,
+		highlights, `include`, `exclude`,
+		mapUrl, sort, regionId,
+		productId, selfPayList, destinationList,
+		attractionList,tourname,costNumber,parentIds,startDestination,endDestination,
+		tipPrice,steamPrice,costNumberIds,rate,departure,flightNotice)
+
+		values (#{id,jdbcType=VARCHAR}, #{days,jdbcType=INTEGER},#{interval,jdbcType=INTEGER},
+		#{notice,jdbcType=VARCHAR},
+		#{highlights,jdbcType=VARCHAR}, #{include,jdbcType=VARCHAR}, #{exclude,jdbcType=VARCHAR},
+		#{mapurl,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER},
+		#{regionid,jdbcType=VARCHAR},
+		#{productid,jdbcType=VARCHAR}, #{selfpaylist,jdbcType=LONGVARCHAR},
+		#{destinationlist,jdbcType=LONGVARCHAR},
+		#{attractionlist,jdbcType=LONGVARCHAR},#{tourname,jdbcType=VARCHAR},
+		#{costnumber,jdbcType=VARCHAR},#{parentIds,jdbcType=VARCHAR},#{startDestination,jdbcType=VARCHAR},#{endDestination,jdbcType=VARCHAR},
+		#{tipPrice,jdbcType=DECIMAL},#{steamPrice,jdbcType=DECIMAL},#{costnumberids,jdbcType=VARCHAR},
+		#{rate,jdbcType=INTEGER},#{departure,jdbcType=LONGVARCHAR},#{flightnotice,jdbcType=LONGVARCHAR})
+
+	</insert>
+	<insert id="insertSelective" parameterType="com.wenjing.entity.Tourline"
+		flushCache="true">
+		insert into tourline
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,
+			`days`,
+			`interval`,
+			notice,
+			highlights,
+			`include`,
+			`exclude`,
+			mapUrl,
+			sort,
+			regionId,
+			productId,
+			selfPayList,
+			destinationList,
+			attractionList,
+			tourname,
+			costNumber,
+			parentIds,
+			startDestination,
+			endDestination,
+			tipPrice,
+			steamPrice,
+			costNumberIds,
+			rate,
+			departure,
+			flightNotice,
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id,jdbcType=VARCHAR},
+			#{days,jdbcType=INTEGER},
+			#{interval,jdbcType=INTEGER},
+			#{notice,jdbcType=VARCHAR},
+			#{highlights,jdbcType=VARCHAR},
+			#{include,jdbcType=VARCHAR},
+			#{exclude,jdbcType=VARCHAR},
+			#{mapurl,jdbcType=VARCHAR},
+			#{sort,jdbcType=INTEGER},
+			#{regionid,jdbcType=VARCHAR},
+			#{productid,jdbcType=VARCHAR},
+			#{selfpaylist,jdbcType=LONGVARCHAR},
+			#{destinationlist,jdbcType=LONGVARCHAR},
+			#{attractionlist,jdbcType=LONGVARCHAR},
+			#{tourname,jdbcType=VARCHAR},
+			#{costnumber,jdbcType=VARCHAR},
+			#{parentIds,jdbcType=VARCHAR},
+			#{startDestination,jdbcType=VARCHAR},
+			#{endDestination,jdbcType=VARCHAR}}
+			#{tipPrice,jdbcType=DECIMAL},
+			#{steamPrice,jdbcType=DECIMAL},
+			#{costnumberids,jdbcType=VARCHAR},
+			#{rate,jdbcType=INTEGER},
+			#{departure,jdbcType=LONGVARCHAR},
+			#{flightnotice,jdbcType=LONGVARCHAR},
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Tourline"
+		flushCache="true">
+		update tourline
+		<set>
+			<if test="days != null">
+				`days` = #{days,jdbcType=INTEGER},
+			</if>
+			<if test="interval != null">
+				`interval` = #{interval,jdbcType=INTEGER},
+			</if>
+			<if test="notice != null">
+				notice = #{notice,jdbcType=VARCHAR},
+			</if>
+			<if test="highlights != null">
+				highlights = #{highlights,jdbcType=VARCHAR},
+			</if>
+			<if test="include != null">
+				`include` = #{include,jdbcType=VARCHAR},
+			</if>
+			<if test="exclude != null">
+				`exclude` = #{exclude,jdbcType=VARCHAR},
+			</if>
+			<if test="mapurl != null">
+				mapUrl = #{mapurl,jdbcType=VARCHAR},
+			</if>
+			<if test="sort != null">
+				sort = #{sort,jdbcType=INTEGER},
+			</if>
+			<if test="regionid != null">
+				regionId = #{regionid,jdbcType=VARCHAR},
+			</if>
+			<if test="productid != null">
+				productId = #{productid,jdbcType=VARCHAR},
+			</if>
+			<if test="selfpaylist != null">
+				selfPayList = #{selfpaylist,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="destinationlist != null">
+				destinationList = #{destinationlist,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="attractionlist != null">
+				attractionList = #{attractionlist,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="tourname != null">
+				tourname = #{tourname,jdbcType=VARCHAR},
+			</if>
+			<if test="costnumber != null">
+				costNumber = #{costnumber,jdbcType=VARCHAR},
+			</if>
+			<if test="parentIds != null">
+				parentIds = #{parentIds,jdbcType=VARCHAR},
+			</if>
+
+			<if test="startDestination != null">
+				startDestination = #{startDestination,jdbcType=VARCHAR},
+			</if>
+			<if test="endDestination != null">
+				endDestination = #{endDestination,jdbcType=VARCHAR},
+			</if>
+
+			<if test="tipPrice != null">
+				tipPrice = #{tipPrice,jdbcType=VARCHAR},
+			</if>
+			<if test="steamPrice != null">
+				steamPrice = #{steamPrice,jdbcType=VARCHAR},
+			</if>
+            <if test="costnumberids != null">
+				costNumberIds = #{costnumberids,jdbcType=VARCHAR},
+			</if>
+			<if test="rate != null">
+				rate = #{rate,jdbcType=INTEGER},
+			</if>
+			<if test="departure != null">
+				departure = #{departure,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="flightnotice != null">
+				flightNotice = #{flightnotice,jdbcType=LONGVARCHAR},
+			</if>
+			
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.wenjing.entity.Tourline"
+		flushCache="true">
+		update tourline
+		set `days` = #{days,jdbcType=INTEGER},
+		`interval` = #{interval,jdbcType=INTEGER},
+		notice = #{notice,jdbcType=VARCHAR},
+		highlights = #{highlights,jdbcType=VARCHAR},
+		`include` = #{include,jdbcType=VARCHAR},
+		`exclude` = #{exclude,jdbcType=VARCHAR},
+		mapUrl = #{mapurl,jdbcType=VARCHAR},
+		sort = #{sort,jdbcType=INTEGER},
+		regionId = #{regionid,jdbcType=VARCHAR},
+		productId = #{productid,jdbcType=VARCHAR},
+		tourname = #{tourname,jdbcType=VARCHAR},
+		costNumber = #{costnumber,jdbcType=VARCHAR},
+		parentIds = #{parentIds,jdbcType=VARCHAR},
+		startDestination = #{startDestination,jdbcType=VARCHAR},
+		endDestination = #{endDestination,jdbcType=VARCHAR},
+		selfPayList = #{selfpaylist,jdbcType=LONGVARCHAR},
+		destinationList = #{destinationlist,jdbcType=LONGVARCHAR},
+		attractionList = #{attractionlist,jdbcType=LONGVARCHAR},
+		rate = #{rate,jdbcType=INTEGER},
+		departure = #{departure,jdbcType=INTEGER},
+		flightNotice = #{flightnotice,jdbcType=LONGVARCHAR}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Tourline"
+		flushCache="true">
+		update tourline
+		set `days` = #{days,jdbcType=INTEGER},
+		`interval` = #{interval,jdbcType=INTEGER},
+		notice = #{notice,jdbcType=VARCHAR},
+		highlights = #{highlights,jdbcType=VARCHAR},
+		`include` = #{include,jdbcType=VARCHAR},
+		`exclude` = #{exclude,jdbcType=VARCHAR},
+		mapUrl = #{mapurl,jdbcType=VARCHAR},
+		sort = #{sort,jdbcType=INTEGER},
+		regionId = #{regionid,jdbcType=VARCHAR},
+		productId = #{productid,jdbcType=VARCHAR},
+		tourname = #{tourname,jdbcType=VARCHAR},
+		costNumber = #{costnumber,jdbcType=VARCHAR},
+		parentIds = #{parentIds,jdbcType=VARCHAR},
+		startDestination = #{startDestination,jdbcType=VARCHAR},
+		endDestination = #{endDestination,jdbcType=VARCHAR},
+		parentIds = #{parentIds,jdbcType=VARCHAR},
+		tipPrice = #{tipPrice,jdbcType=VARCHAR},
+		steamPrice = #{steamPrice,jdbcType=VARCHAR},
+		costNumberIds = #{costnumberids,jdbcType=VARCHAR},
+		rate = #{rate,jdbcType=INTEGER},
+        departure = #{departure,jdbcType=INTEGER},
+        avgScore = #{avgScore},
+        flightNotice = #{flightnotice,jdbcType=LONGVARCHAR}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<!-- 获取线路总记录条数 -->
+	<select id="getSTourlineCount" resultType="java.lang.Integer">
+		select count(*) from tourline,cost,product,region where tourline.productId=product.id and 
+		tourline.costNumber=cost.id and tourline.regionId= region.id
+		<!--  and tourline.costNumber in
+		<foreach collection="costnumber" item="item" index="index"
+			separator="," close=")" open="(">
+			#{item}
+		</foreach>
+		-->
+		<if test="costnumberTD!=null">
+		  and tourline.costNumberIds like '%${costnumberTD}%'
+		</if>
+		
+		<if test="search != null" >
+	       and  CONCAT(`days`,tourname,product.`code`,region.`name`) like '%${search}%'
+	    </if>
+	    <if test="indexShow != null and indexShow==1" >
+	      and tourline.id in (select tourlineId from indexshowtourline where costNumber=#{costnumberTD})
+	    </if>
+	    <if test="isShow != null and isShow==1" >
+	        and tourline.id in (select tourlineId from showtourline where costNumber=#{costnumberTD})
+	    </if>
+	    <if test="isHot != null and isHot==1" >
+	        and tourline.id in (select tourlineId from hottourline where costNumber=#{costnumberTD})
+	    </if>
+	</select>
+	
+	<!-- 分页查询图库图片 -->
+	<select id="selectAllByPage" resultMap="indexHotMap">
+		select
+		    tourline.*,
+		    cost.name costname,
+		    (SELECT addtime from showtourline where tourlineid = tourline.id
+		     <if test="costnumberTD!=null">
+	  		  and  costNumber=#{costnumberTD}
+			</if>
+		     limit 1) as showsort 
+		  from tourline,
+		       cost,
+		       product,
+		       region
+		  where tourline.productId=product.id 
+		        and tourline.costNumber=cost.id 
+		        and tourline.regionId= region.id
+				<!--  and tourline.costNumber in
+				<foreach collection="costnumber" item="item" index="index"
+					separator="," close=")" open="(">
+					#{item}
+				</foreach>
+				 -->
+				<if test="costnumberTD!=null">
+				  and tourline.costNumberIds like '%${costnumberTD}%'
+				</if>
+				<if test="search != null" >
+			       and  CONCAT(`days`,tourname,product.`code`,region.`name`) like '%${search}%'
+			    </if> 
+			    <if test="indexShow != null and indexShow==1" >
+			      and tourline.id in (select tourlineId from indexshowtourline where costNumber=#{costnumberTD})
+			    </if>
+			    <if test="isShow != null and isShow==1" >
+			        and tourline.id in (select tourlineId from showtourline where costNumber=#{costnumberTD})
+			    </if>
+			    <if test="isHot != null and isHot==1" >
+			        and tourline.id in (select tourlineId from hottourline where costNumber=#{costnumberTD})
+			    </if>
+				order by showsort desc, sort desc limit #{startPos},#{pageSize}
+	</select>
+	 
+    <!-- 获取线路总记录条数 
+	<select id="getSTourlineCount" resultType="java.lang.Integer">
+		select count(*) from tourline,product where tourline.productId=product.id 
+		<if test="search != null" >
+	       and  CONCAT(`days`,tourname,product.`code`) like '%${search}%'
+	    </if>
+	</select>
+	-->
+	 <!-- 分页查询图库图片 
+	<select id="selectAllByPage" resultMap="indexHotMap">
+		select tourline.* from tourline,product where tourline.productId=product.id 
+		<if test="search != null" >
+	       and  CONCAT(`days`,tourname,product.`code`) like '%${search}%'
+	    </if> 
+
+		order by sort desc limit #{startPos},#{pageSize}
+	</select>
+	 -->
+	<!-- 根据运营中心ID来查询所有线路 -->
+	<select id="findAllInCost" resultMap="GeneralResultMap"
+		parameterType="java.lang.String">
+		select tourline.*,cost.name costname from tourline,cost where
+		tourline.costNumber=cost.id and tourline.costNumber in
+		<foreach collection="list" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		order by sort DESC
+	</select>
+
+	<select id="getMaxSort" resultType="java.lang.Integer"
+		parameterType="java.lang.String">
+		select ifnull(max(sort),0) from tourline
+		<!-- where costNumber = #{costnumber,jdbcType=VARCHAR} -->
+	</select>
+	
+	<!-- xj 首页热卖线路显示-->
+	<select id="findbyHotIndexShow" resultMap="indexHotMap">
+		select t.id,t.costNumber,t.tourname,t.productId
+		from tourline t,product p,region r,hottourline ht,showtourline st
+		where 
+		t.id = st.tourlineId
+		and st.costNumber = #{costnumber,jdbcType=VARCHAR}
+		
+		and ht.tourlineId = t.id
+		and ht.costNumber = #{costnumber,jdbcType=VARCHAR}
+		and r.isShow = 1
+		and p.costNumberIds like '%${costnumber}%'
+		and t.productId=p.id
+		and r.id = t.regionId
+		and (select min(sellingPrice) from `tourprice`,tourdate where 
+		  tourprice.tourDateId=tourdate.id 
+		  and tourdate.productId=p.id 
+		  and tourdate.isshow = true
+		  and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+		  and tourdate.endDate >= #{time,jdbcType=INTEGER})
+		is not null
+		order by ht.addtime 
+	</select>
+	
+	<select id="findRandomByHotIndexShow" resultMap="indexHotMap" flushCache="true">
+		select t.id,t.costNumber,t.tourname,t.productId
+		from tourline t,product p,region r,hottourline ht,showtourline st
+		where 
+		t.id = st.tourlineId
+		and st.costNumber = #{costnumber,jdbcType=VARCHAR}
+		
+		and ht.tourlineId = t.id
+		and ht.costNumber = #{costnumber,jdbcType=VARCHAR}
+		and r.isShow = 1
+		and p.costNumberIds like '%${costnumber}%'
+		and t.productId=p.id
+		and r.id = t.regionId
+		and (select min(sellingPrice) from `tourprice`,tourdate where 
+		  tourprice.tourDateId=tourdate.id 
+		  and tourdate.productId=p.id 
+		  and tourdate.isshow = true
+		  and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+		  and tourdate.endDate >= #{time,jdbcType=INTEGER})
+		is not null
+		order by rand() limit 3
+	</select>
+	
+	<!-- xj 二级页面热卖线路显示-->
+	<select id="findbyHotShowRegionid" resultMap="indexHotMap">
+		select t.id,t.costNumber,t.tourname,t.productId, p.minPrice 
+		from tourline t,product p,region r,showtourline st,hottourline ht
+		where
+		t.id = st.tourlineId
+		and st.costNumber = #{costnumber,jdbcType=VARCHAR}
+		and t.id = ht.tourlineId
+		and ht.costNumber = #{costnumber,jdbcType=VARCHAR}
+		<!--   
+		p.isHot=#{ishot,jdbcType=BIT}
+		and p.isShow=#{isshow,jdbcType=BIT}
+		-->
+		<!--  
+		and p.costNumber = #{costnumber,jdbcType=VARCHAR}
+		-->
+		and p.costNumberIds like '%${costnumber}%'
+		and t.productId=p.id
+		and t.parentIds like '%${regionid}%'
+		and r.id = t.regionId
+		and r.isShow = 1
+		and (select min(sellingPrice) from `tourprice`,tourdate where 
+		  tourprice.tourDateId=tourdate.id 
+		  and tourdate.productId=p.id 
+		  and tourdate.isshow = true
+		  and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+		  and tourdate.endDate >= #{time,jdbcType=INTEGER})
+		is not null
+		limit 0,4
+	</select>
+	
+	<!-- xj -->
+	<select id="findByShowRegionid" resultMap="tourlineListMap">
+		select
+		t.id,t.costNumber,t.tourname,t.startDestination,t.endDestination,t.productId,t.days,t.destinationList,t.highlights,
+		p.code ,(select addTime from hottourline where hottourline.tourlineId=t.id and hottourline.costNumber=#{costnumber,jdbcType=VARCHAR}) as hotaddtime
+		<!-- 
+		(select GROUP_CONCAT(`name`) from tag,producttag where producttag.costNumber = #{costnumber,jdbcType=VARCHAR} and producttag.productId = p.id and producttag.tagId = tag.id) as tagsname
+		 -->
+		from tourline t,product p,region r,showtourline st
+		where
+		t.id=st.tourlineId
+		and st.costNumber = #{costnumber,jdbcType=VARCHAR}
+		and p.costNumberIds like '%${costnumber}%'
+		and t.productId=p.id
+		and r.id = t.regionId
+		and r.isShow = 1
+		<if test="searchdestination == null and searchAttractions == null">
+		and t.parentIds like '%${regionid}%'
+		</if>
+		<if test="searchAttractions != null">
+			and (t.attractionList like '%${searchAttractions}%' or t.destinationList like '%${searchAttractions}%')
+		</if>
+		<if test="searchdestination != null">		
+			and (concat(',',t.destinationList,',') regexp concat (',(',replace((select GROUP_CONCAT(nameCN) from destination where ups like '%${searchdestination}/%'),',','|'),'),')
+			or FIND_IN_SET('${searchdestination}',t.destinationList) or FIND_IN_SET('${searchdestination}',t.attractionList))
+			<!-- 
+			and (t.destinationList like '%${searchdestination}%' or t.attractionList like '%${searchdestination}%')
+			-->
+		</if>
+		<if test="tagName != null">
+			and (select GROUP_CONCAT(`name`) from tag,producttag where producttag.costNumber = #{costnumber,jdbcType=VARCHAR} and producttag.productId = p.id and producttag.tagId = tag.id) like '%${tagName}%'
+		</if>
+		and (select min(sellingPrice) from `tourprice`,tourdate where 
+		  tourprice.tourDateId=tourdate.id 
+		  and tourdate.productId=p.id 
+		  and tourdate.isshow = true
+		  and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+		  and tourdate.endDate >= #{time,jdbcType=INTEGER})
+		is not null
+		order by hotaddtime desc
+		limit #{startPos},#{pageSize}
+	</select>
+	
+	<!-- xj -->
+	<select id="getTourlineCount" resultType="java.lang.Integer">
+		select count(*) from tourline,product,region r,showtourline st
+		where 
+		tourline.id=st.tourlineId
+		and st.costNumber = #{costnumber,jdbcType=VARCHAR}
+		and product.costNumberIds like '%${costnumber}%'
+		and tourline.productId=product.id
+		and r.id = tourline.regionId
+		and r.isShow = 1
+		<if test="searchdestination == null and searchAttractions == null">
+		and tourline.parentIds like '%${regionid}%'
+		</if>
+		<if test="searchAttractions != null">
+			and (tourline.attractionList like '%${searchAttractions}%' or tourline.destinationList like '%${searchAttractions}%')
+		</if>
+		<if test="searchdestination != null">
+			and (concat(',',tourline.destinationList,',') regexp concat (',(',replace((select GROUP_CONCAT(nameCN) from destination where ups like '%${searchdestination}/%'),',','|'),'),')
+			or FIND_IN_SET('${searchdestination}',tourline.destinationList) or FIND_IN_SET('${searchdestination}',tourline.attractionList))
+			<!-- 
+			and (tourline.destinationList like '%${searchdestination}%' or tourline.attractionList like '%${searchdestination}%')
+			-->
+		</if>
+		<if test="tagName != null">
+			and (select GROUP_CONCAT(`name`) from tag,producttag where producttag.costNumber = #{costnumber,jdbcType=VARCHAR} and producttag.productId = product.id and producttag.tagId = tag.id) like '%${tagName}%'
+		</if>
+		and (select min(sellingPrice) from `tourprice`,tourdate where 
+		  tourprice.tourDateId=tourdate.id 
+		  and tourdate.productId=tourline.productId 
+		  and tourdate.isshow = true
+		  and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+		  and tourdate.endDate >= #{time,jdbcType=INTEGER})
+		is not null
+	</select>
+	
+	<!-- xj -->
+	<select id="findByShowRegionid2" resultMap="indexHotMap">
+		select
+		distinct t.startDestination,t.attractionList
+		from tourline t,product p,region r,showtourline st,destination ds,destinationlevel dl
+		where 
+		instr(t.startDestination,ds.nameCN)>0 
+		and dl.`level`=ds.`level` 
+		and t.id=st.tourlineId
+		and st.costNumber = #{costnumber,jdbcType=VARCHAR}
+		and p.costNumberIds like '%${costnumber}%'
+		and t.productId=p.id
+		and t.parentIds like '%${regionid}%'
+		and r.id = t.regionId
+		and r.isShow = 1
+		and (select min(sellingPrice) from `tourprice`,tourdate where 
+		  tourprice.tourDateId=tourdate.id 
+		  and tourdate.productId=t.productId 
+		  and tourdate.isshow = true
+		  and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+		  and tourdate.endDate >= #{time,jdbcType=INTEGER})
+		is not null 
+		GROUP BY t.startDestination ORDER BY dl.`level`
+	</select>
+	
+	<!-- xj -->
+	<select id="findByRegionid" resultMap="indexHotMap">
+		select
+		t.startDestination,t.attractionList
+		from tourline t,product p,region r,showtourline st
+		where 
+		t.id=st.tourlineId
+		and st.costNumber = #{costnumber,jdbcType=VARCHAR}
+		and p.costNumberIds like '%${costnumber}%'
+		and t.productId=p.id
+		and t.parentIds like '%${regionid}%'
+		and r.id = t.regionId
+		and r.isShow = 1
+		and (select min(sellingPrice) from `tourprice`,tourdate where 
+		  tourprice.tourDateId=tourdate.id 
+		  and tourdate.productId=t.productId 
+		  and tourdate.isshow = true
+		  and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+		  and tourdate.endDate >= #{time,jdbcType=INTEGER})
+		is not null 
+	</select>
+	
+	<!-- xj -->
+	<select id="findByShowRegionidattra2" resultMap="indexHotMap">
+		select t.id,t.costNumber,t.tourname,t.productId,t.highlights,p.minPrice 
+		from tourline t,product p,region r,showtourline st,indexshowtourline ist
+		where 
+		t.id=st.tourlineId
+		and st.costNumber = #{costnumber,jdbcType=VARCHAR}
+		and t.id=ist.tourlineId
+		and ist.costNumber = #{costnumber,jdbcType=VARCHAR}
+		<!--  
+		p.isShow=#{isshow,jdbcType=BIT}
+		and p.indexShow=#{indexshow,jdbcType=BIT}
+		-->
+		<!--  
+		and p.costNumber = #{costnumber,jdbcType=VARCHAR}
+		-->
+		<!--  
+		and t.attractionList like '%${attrhotname}%'
+		-->
+		and p.costNumberIds like '%${costnumber}%'
+		and t.productId=p.id
+		and t.parentIds like '%${regionid}%'
+		and r.id = t.regionId
+		and r.isShow = 1
+		and (select min(sellingPrice) from `tourprice`,tourdate where 
+				  tourprice.tourDateId=tourdate.id 
+				  and tourdate.productId=t.productId 
+				  and tourdate.isshow = true
+				  and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+				  and tourdate.endDate >= #{time,jdbcType=INTEGER})
+			is not null
+		limit 0,9
+	</select>
+	
+	<!-- xj -->
+	<select id="findByCondition" resultMap="tourlineListMap">
+		select
+		t.id,t.costNumber,t.tourname,t.startDestination,t.endDestination,t.productId,t.days,t.destinationList,t.highlights,
+		p.minPrice,p.code,
+		(select min(sellingPrice) from `tourprice`,tourdate where 
+				  tourprice.tourDateId=tourdate.id 
+				  and tourdate.productId=t.productId 
+				  and tourdate.isshow = true
+				  and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+				  and tourdate.endDate >= #{time,jdbcType=INTEGER}) as lowsprice ,
+		(select addTime from hottourline where hottourline.tourlineId=t.id and hottourline.costNumber=#{costnumber,jdbcType=VARCHAR}) as hotaddtime
+		<!--  
+		(select GROUP_CONCAT(`name`) from tag,producttag where producttag.costNumber = #{costnumber,jdbcType=VARCHAR} and producttag.productId = p.id and producttag.tagId = tag.id) as tagsname
+		-->
+		from tourline t,product p,region r,showtourline st
+		where
+		t.id=st.tourlineId
+		and st.costNumber = #{costnumber,jdbcType=VARCHAR}
+		and p.costNumberIds like '%${costnumber}%'
+		and t.productId=p.id
+		and r.id = t.regionId
+		and r.isShow = 1
+		and (select min(sellingPrice) from `tourprice`,tourdate where 
+		  tourprice.tourDateId=tourdate.id 
+		  and tourdate.productId=t.productId 
+		  and tourdate.isshow = true
+		  and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+		  and tourdate.endDate >= #{time,jdbcType=INTEGER})
+		is not null
+		<if test="regionid != null and attr == null">
+			and t.parentIds like '%${regionid}%'
+		</if>
+		<if test="keyword != null and keyword != ''">
+			and (p.code like '%${keyword}%' or t.destinationList like '%${keyword}%'
+			or t.attractionList like '%${keyword}%' or p.name like '%${keyword}%')
+		</if>
+		<if test="startCity != null and startCity != ''">
+			and t.startDestination = #{startCity,jdbcType=VARCHAR}
+		</if>
+		<if test="minDay != null">
+			and t.days between #{minDay} and #{maxDay}
+		</if>
+		<if test="minPrice != null">
+			and (select min(sellingPrice) from `tourprice`,tourdate where 
+				  tourprice.tourDateId=tourdate.id 
+				  and tourdate.productId=t.productId 
+				  and tourdate.isshow = true
+				  and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+				  and tourdate.endDate >= #{time,jdbcType=INTEGER})
+			between #{minPrice} and #{maxPrice}
+		</if>
+		<if test="attr != null">
+			and
+			<foreach collection="attr" item="item" index="index" open="("
+				separator="or" close=")">
+				<!--  
+				t.attractionList like '%${item}%' 
+				or t.destinationList like '%${item}%'
+				-->
+				find_in_set('${item}',t.attractionList)
+				or find_in_set('${item}',t.destinationList)
+				or concat(',',t.destinationList,',') regexp concat (',(',replace((select GROUP_CONCAT(nameCN) from destination where ups like '%${item}/%'),',','|'),'),')
+			</foreach>
+		</if>
+		<if test="tag != null">
+			and
+			<foreach collection="tag" item="item" index="index" open="("
+				separator="or" close=")">
+				(select GROUP_CONCAT(`name`) from tag,producttag where producttag.costNumber = #{costnumber,jdbcType=VARCHAR} and producttag.productId = p.id and producttag.tagId = tag.id) like '%${item}%'
+			</foreach>
+		</if>
+		<if test="sort == 'hot'">
+			order by hotaddtime desc
+		</if>
+		<if test="sort == 'daydowntotop'">
+			order by t.days
+		</if>
+		<if test="sort == 'daytoptodown'">
+			order by t.days desc
+		</if>
+		<if test="sort == 'pricetoptodown'">
+			order by lowsprice desc
+		</if>
+		<if test="sort == 'pricedowntotop'">
+			order by ifnull(lowsprice,999999)		
+		</if>
+		limit #{startPos},#{pageSize}
+	</select>
+	
+	<!-- xj -->
+	<select id="getCountByCondition" resultType="java.lang.Integer">
+		select count(*) from tourline t,product,region r,showtourline st
+		where
+		t.id=st.tourlineId
+		and st.costNumber = #{costnumber,jdbcType=VARCHAR}
+		<!--  
+		product.isShow=#{isshow,jdbcType=BIT}
+		and product.costNumber = #{costnumber,jdbcType=VARCHAR}
+		-->
+		and product.costNumberIds like '%${costnumber}%'
+		and t.productId=product.id
+		and r.id = t.regionId
+		and r.isShow = 1
+		and (select min(sellingPrice) from `tourprice`,tourdate where 
+		  tourprice.tourDateId=tourdate.id 
+		  and tourdate.productId=t.productId 
+		  and tourdate.isshow = true
+		  and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+		  and tourdate.endDate >= #{time,jdbcType=INTEGER})
+		is not null
+		<if test="regionid != null and attr == null">
+			and t.parentIds like '%${regionid}%'
+		</if>
+		<if test="keyword != null and keyword != ''">
+			and (product.code like '%${keyword}%' or t.destinationList like
+			'%${keyword}%' or t.attractionList like '%${keyword}%' or product.name like '%${keyword}%')
+		</if>
+		<if test="startCity != null and startCity != ''">
+			and t.startDestination = #{startCity,jdbcType=VARCHAR}
+		</if>
+		<if test="minDay != null">
+			and t.days between #{minDay} and #{maxDay}
+		</if>
+		<if test="minPrice != null">
+			and ( select min(sellingPrice) from `tourprice`,tourdate where 
+				  tourprice.tourDateId=tourdate.id 
+				  and tourdate.productId=t.productId 
+				  and tourdate.isshow = true
+				  and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+				  and tourdate.endDate >= #{time,jdbcType=INTEGER}) 
+			between #{minPrice} and #{maxPrice}
+		</if>
+		<if test="attr != null">
+			and
+			<foreach collection="attr" item="item" index="index" open="("
+				separator="or" close=")">
+				<!--  
+				t.attractionList like '%${item}%' 
+				or t.destinationList like '%${item}%'
+				-->
+				find_in_set('${item}',t.attractionList)
+				or find_in_set('${item}',t.destinationList)
+				or concat(',',t.destinationList,',') regexp concat (',(',replace((select GROUP_CONCAT(nameCN) from destination where ups like '%${item}/%'),',','|'),'),')
+			</foreach>
+		</if>
+		<if test="tag != null">
+			and
+			<foreach collection="tag" item="item" index="index" open="("
+				separator="or" close=")">
+				(select GROUP_CONCAT(`name`) from tag,producttag where producttag.costNumber = #{costnumber,jdbcType=VARCHAR} and producttag.productId = product.id and producttag.tagId = tag.id) like '%${item}%'
+			</foreach>
+		</if>
+	</select>
+	
+	<select id="findByProductId" resultMap="ResultMapWithProduct"
+		parameterType="java.lang.String">
+		SELECT * FROM tourline WHERE productId = #{productId,jdbcType=VARCHAR}
+	</select>
+
+	<select id="findByCostNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select * from tourline where costNumber = #{costnumber,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="findWithCouponseChoose" resultMap="BaseResultMap" parameterType="java.lang.String">
+	select tourline.* from tourline,product where tourline.productId = product.id and product.isShow and INSTR(tourline.costNumberIds,#{costnumber}) and tourline.id not in(select tourlineId from couponsetourline )
+	</select>
+	
+	<!-- xj -->
+	<select id="searchTourline" resultMap="tourlineListMap">
+		select
+		t.id,t.costNumber,t.startDestination,t.endDestination,t.tourname,
+		t.productId,t.days,t.destinationList,t.highlights,
+		p.minPrice,p.code ,(select addTime from hottourline where hottourline.tourlineId=t.id and hottourline.costNumber=#{costnumber,jdbcType=VARCHAR}) as hotaddtime
+		<!--  
+		(select GROUP_CONCAT(`name`) from tag,producttag where producttag.costNumber = #{costnumber,jdbcType=VARCHAR} and producttag.productId = p.id and producttag.tagId = tag.id) as tagsname
+		-->
+		from tourline t,product p,region r,showtourline st
+		where
+		t.id=st.tourlineId
+		and st.costNumber = #{costnumber,jdbcType=VARCHAR}
+		and r.id = t.regionId
+		and r.isShow = 1
+		and p.costNumberIds like '%${costnumber}%'
+		and t.productId=p.id
+		and (p.code like '%${keyword}%' or t.destinationList like '%${keyword}%'
+		or t.attractionList like '%${keyword}%' or p.name like '%${keyword}%')
+		and (select min(sellingPrice) from `tourprice`,tourdate where 
+		  tourprice.tourDateId=tourdate.id 
+		  and tourdate.productId=t.productId 
+		  and tourdate.isshow = true
+		  and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+		  and tourdate.endDate >= #{time,jdbcType=INTEGER})
+		is not null
+		order by hotaddtime desc 
+		limit #{startPos},#{pageSize}
+	</select>
+	
+	<!-- xj -->
+	<select id="searchTourlineCount" resultType="java.lang.Integer">
+		select count(*) from tourline,product,region r,showtourline st
+		where
+		tourline.id=st.tourlineId
+		and st.costNumber = #{costnumber,jdbcType=VARCHAR}
+		and r.id = tourline.regionId
+		and r.isShow = 1
+		and product.costNumberIds like '%${costnumber}%'
+		and tourline.productId=product.id
+		and (product.code like '%${keyword}%' or tourline.destinationList like
+		'%${keyword}%' or tourline.attractionList like '%${keyword}%' or product.name like '%${keyword}%')
+		and (select min(sellingPrice) from `tourprice`,tourdate where 
+		  tourprice.tourDateId=tourdate.id 
+		  and tourdate.productId=tourline.productId 
+		  and tourdate.isshow = true
+		  and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+		  and tourdate.endDate >= #{time,jdbcType=INTEGER})
+		is not null
+	</select>
+	
+	<!-- xj -->
+	<select id="searchTourline2" resultMap="indexHotMap">
+		select
+		t.id,t.costNumber,t.productId,t.startDestination,endDestination,t.destinationList,t.attractionList
+		from tourline t,product p,region r,showtourline st
+		where
+		t.id=st.tourlineId
+		and st.costNumber = #{costnumber,jdbcType=VARCHAR}
+		and r.id = t.regionId
+		and r.isShow = 1
+		and p.costNumberIds like '%${costnumber}%'
+		and t.productId=p.id
+		and (p.code like '%${keyword}%' or t.destinationList like '%${keyword}%'
+		or t.attractionList like '%${keyword}%')
+		and (select min(sellingPrice) from `tourprice`,tourdate where 
+		  tourprice.tourDateId=tourdate.id 
+		  and tourdate.productId=t.productId 
+		  and tourdate.isshow = true
+		  and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+		  and tourdate.endDate >= #{time,jdbcType=INTEGER})
+		is not null
+	</select>
+	
+	<!-- xj 搜索页面热推线路-->
+	<select id="searchTourlineHot" resultMap="indexHotMap">
+		select t.id,t.costNumber,t.tourname,t.productId, p.minPrice 
+		from tourline t,product p,region r,showtourline st,hottourline ht
+		where 
+		t.id=st.tourlineId
+		and st.costNumber = #{costnumber,jdbcType=VARCHAR}
+		and t.id = ht.tourlineId
+		and ht.costNumber = #{costnumber,jdbcType=VARCHAR}
+		and r.id = t.regionId
+		and r.isShow = 1
+		<!--  
+		p.isHot=#{ishot,jdbcType=BIT}
+		and p.isShow=#{isshow,jdbcType=BIT}
+		and p.costNumber = #{costnumber,jdbcType=VARCHAR}
+		-->
+		and p.costNumberIds like '%${costnumber}%'
+		and t.productId=p.id
+		and (select min(sellingPrice) from `tourprice`,tourdate where 
+		  tourprice.tourDateId=tourdate.id 
+		  and tourdate.productId=t.productId 
+		  and tourdate.isshow = true
+		  and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+		  and tourdate.endDate >= #{time,jdbcType=INTEGER})
+		is not null
+		limit 0,4
+	</select>
+	
+	<select id="findByIdIsshow" resultMap="tourlineListMap"
+		parameterType="java.lang.String">
+		select
+		t.*
+		from tourline t,product p
+		where t.id = #{id,jdbcType=VARCHAR}
+		and t.productId = p.id
+	</select>
+	
+	<select id="findAllIsShow" resultMap="tourlineListMap">
+		select
+		t.*
+		from tourline t,product p
+		where t.productId = p.id
+	</select>	
+	
+	<!-- xj -->
+	<select id="findByUrlIsshow" resultMap="tourlineListMap"
+        parameterType="java.lang.String">
+        select
+        t.*
+        from tourline t,product p,page
+        where page.filePath = #{url,jdbcType=VARCHAR}
+        and t.productId = p.id
+        and p.pageId = page.id
+    </select>
+    
+    <!-- xj -->
+	<select id="findSaleTourline" resultMap="indexSaleMap">
+		select distinct t.id,t.tourname,t.productId, page.filePath
+		from tourline t,product p , page, promotionproduct pp,promotion prom,region r,showtourline st
+		where page.id = p.pageId
+		and t.productId=p.id
+		and r.id = t.regionId
+		and r.isShow = 1
+		and pp.productId = p.id
+		and pp.promotionId = prom.id
+		and t.id=st.tourlineId
+		and st.costNumber = #{costnumber,jdbcType=VARCHAR}
+		<!--  
+		and p.costNumber = #{costnumber,jdbcType=VARCHAR}
+		-->
+		<!--  
+		and p.indexShow=1
+		-->
+		<!--  
+		and p.isShow=1
+		-->
+		<!--  
+		and (prom.title = "特卖" or prom.title = "减价")
+		-->
+		and p.costNumberIds like '%${costnumber}%'
+		and prom.isShow = 1
+		and	( #{timeNow,jdbcType=VARCHAR} between prom.starttime and prom.endtime )
+		and prom.costNumber = #{costnumber,jdbcType=VARCHAR}
+		and (select min(sellingPrice) from `tourprice`,tourdate where 
+		  tourprice.tourDateId=tourdate.id 
+		  and tourdate.productId=t.productId 
+		  and tourdate.isshow = true
+		  and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+		  and tourdate.endDate >= #{timeNow,jdbcType=INTEGER})
+		is not null
+		order by prom.title
+	</select>
+	
+  <!-- 修改costNoIds-->
+  <update id="updatedeparture" flushCache="true">
+     update `tourline` set departure = #{departure} where id = #{tourlineid}
+  </update>
+  <!-- 更新出发日期-->
+  <update id="updateCostNumIds" flushCache="true">
+     update `tourline` set costNumberIds = #{costNumIds} where productId = #{productid}
+  </update>
+  <!-- 查询即将过期的线路 -->
+  <select id="findTourlineWithTourdate" resultMap="indexHotMap">
+   select tourline.* from tourline ,tourdate where tourline.productId = tourdate.productId and tourdate.costNumber in
+		<foreach collection="costnumber" item="item" index="index"
+			separator="," close=")" open="(">
+			#{item}
+		</foreach> GROUP BY tourline.id  HAVING MAX(tourdate.endDate) <![CDATA[<=]]> #{date}
+  </select>
+  <!-- 查询没价格的线路 -->
+  <select id="findTourlineWithNoprice" resultMap="indexHotMap">
+    select * from tourline where productId not in (select productId from tourdate where costNumber in 
+       <foreach collection="costnumber" item="item" index="index"
+			separator="," close=")" open="(">
+			#{item}
+		</foreach>  )
+  </select>
+  	<!-- xj -->
+	<select id="getByCostNumber" resultMap="BaseResultMap" parameterType="java.lang.String">
+	select t.id,t.tourname,t.productId from tourline t,showtourline st
+	where st.costNumber=#{costNumber} 
+	and t.id = st.tourlineId;
+    </select>
+    <!-- xj -->
+	<select id="findByPromotionId" resultMap="tourlineListMap">
+		select
+		t.id,t.costNumber,t.startDestination,t.endDestination,t.tourname,
+		t.productId,t.days,t.destinationList,t.highlights,t.rate,t.departure,t.`include`,
+		p.minPrice,p.code,p.id
+		from tourline t,product p,region r,showtourline st,promotionproduct pp
+		where
+		pp.promotionId=#{promotionId,jdbcType=VARCHAR}
+		and pp.productId =p.id
+		and t.id=st.tourlineId
+		and st.costNumber = #{costnumber,jdbcType=VARCHAR}
+		and r.id = t.regionId
+		and r.isShow = 1
+		and p.costNumberIds like '%${costnumber}%'
+		and t.productId=p.id
+		and (select min(sellingPrice) from `tourprice`,tourdate where 
+		  tourprice.tourDateId=tourdate.id 
+		  and tourdate.productId=t.productId 
+		  and tourdate.isshow = true
+		  and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+		  and tourdate.endDate >= #{time,jdbcType=INTEGER})
+		is not null
+	</select>
+    <!-- 根据优惠券ID查询 -->
+    <select id="findTourlineByCouponseID" resultMap="tourlineListMap" >
+    select
+		t.id,t.costNumber,t.startDestination,t.endDestination,t.tourname,
+		t.productId,t.days,t.destinationList,t.highlights,
+		p.minPrice,p.code ,(select addTime from hottourline where hottourline.tourlineId=t.id and hottourline.costNumber=#{costnumber,jdbcType=VARCHAR}) as hotaddtime
+	 from tourline t,product p,couponseproduct cp where t.productId = p.id and cp.productId = p.id and cp.couponseId= #{couponseid}
+    </select>
+    
+    <!-- xj in-->
+	<select id="getTourlineCountByCondition" resultType="java.lang.Integer">
+		select
+			count(distinct p.id)
+		from tourline t,product p,region r,showtourline st
+		<if test="promotionId != null and promotionId != ''">
+		,promotion prom ,promotionproduct pp
+		</if>
+		where
+		t.id=st.tourlineId
+		and st.costNumber = #{costnumber,jdbcType=VARCHAR}
+		and p.costNumberIds like '%${costnumber}%'
+		and t.productId=p.id
+		and r.id = t.regionId
+		and r.isShow = 1
+		<if test="regionId != null and regionId !=''">
+			and t.parentIds like '%${regionId}%'
+		</if>
+		<if test="keyword != null and keyword != ''">
+			and (p.code like '%${keyword}%' or t.destinationList like '%${keyword}%'
+			or t.attractionList like '%${keyword}%' or p.name like '%${keyword}%')
+		</if>
+		<choose>
+			<when test="minPrice != null">
+			and (select min(sellingPrice) from `tourprice`,tourdate where 
+					tourprice.tourDateId=tourdate.id 
+					and tourdate.productId=t.productId 
+					and tourdate.isshow = true
+					and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+					and tourdate.endDate >= #{time,jdbcType=INTEGER}
+					and tourprice.sellingPrice != 0
+				) between #{minPrice} and #{maxPrice}
+			</when>	
+		    <otherwise>
+			and (select min(sellingPrice) from `tourprice`,tourdate where 
+						    tourprice.tourDateId=tourdate.id 
+						and tourdate.productId=t.productId 
+						and tourdate.isshow = true
+						and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+						and tourdate.endDate >= #{time,jdbcType=INTEGER}
+						and tourprice.sellingPrice != 0)
+			is not null
+		    </otherwise>
+		</choose>
+		<if test="destination != null and destination !=''">		
+			and (
+			concat(',',t.destinationList,',') regexp concat(',(',replace((select GROUP_CONCAT(name) from destination where ups like '%${destination}/%'),',','|'),'),')
+			or FIND_IN_SET('${destination}',t.destinationList)
+			)
+		</if>
+		<if test="rateString != null and rateString != ''">
+			and FIND_IN_SET(t.rate , #{rateString,jdbcType=VARCHAR})
+		</if>
+		<if test="dateFrom != 0">
+			and ( select max(endDate) from tourdate where 
+				  tourdate.productId=t.productId 
+				  and tourdate.isshow = true
+				  and tourdate.costNumber = #{costnumber,jdbcType=VARCHAR}
+				  and tourdate.endDate >= #{time,jdbcType=INTEGER}) 
+		  	<![CDATA[>=]]> #{dateFrom,jdbcType=INTEGER}
+		</if>
+		<if test="dateTo != 0">
+			and ( select min(startDate) from tourdate where 
+				  tourdate.productId=t.productId 
+				  and tourdate.isshow = true
+				  and tourdate.costNumber = #{costnumber,jdbcType=VARCHAR}
+				  and tourdate.endDate >= #{time,jdbcType=INTEGER}) 
+		  	<![CDATA[<=]]> #{dateTo,jdbcType=INTEGER}
+		</if>
+		<if test="promotionId != null and promotionId != ''">
+			and pp.promotionId = prom.id
+			and pp.productId = p.id
+			and prom.id = #{promotionId,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<!-- xj in-->
+	<select id="getTourlineByCondition" resultMap="tourlineListMap">
+		select
+		t.id,t.costNumber,t.tourname,t.startDestination,t.endDestination,t.departure,t.include,
+		t.productId,t.days,t.destinationList,t.highlights,t.rate,p.code,
+		(select min(sellingPrice) from `tourprice`,tourdate where 
+					    tourprice.tourDateId=tourdate.id 
+					and tourdate.productId=t.productId 
+					and tourdate.isshow = true
+					and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+					and tourdate.endDate >= #{time,jdbcType=INTEGER}
+					and tourprice.sellingPrice != 0) as lowsprice ,
+		 (select min(markedPrice) from `tourprice`,tourdate where 
+					    tourprice.tourDateId=tourdate.id 
+					and tourdate.productId=t.productId 
+					and tourdate.isshow = true
+					and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+					and tourdate.endDate >= #{time,jdbcType=INTEGER}
+					and tourprice.sellingPrice != 0) as lowmprice ,
+		(select addTime from hottourline where hottourline.tourlineId=t.id and hottourline.costNumber=#{costnumber,jdbcType=VARCHAR}) as hotaddtime
+		from tourline t,product p,region r,showtourline st
+		<if test="promotionId != null and promotionId != ''">
+		,promotion prom ,promotionproduct pp
+		</if>
+		where
+		t.id=st.tourlineId
+		and st.costNumber = #{costnumber,jdbcType=VARCHAR}
+		and p.costNumberIds like '%${costnumber}%'
+		and t.productId=p.id
+		and r.id = t.regionId
+		and r.isShow = 1
+		<if test="regionId != null and regionId !=''">
+			and t.parentIds like '%${regionId}%'
+		</if>
+		<if test="keyword != null and keyword != ''">
+			and (p.code like '%${keyword}%' or t.destinationList like '%${keyword}%'
+			or t.attractionList like '%${keyword}%' or p.name like '%${keyword}%')
+		</if>
+		<choose>
+			<when test="minPrice != null">
+			and (select min(sellingPrice) from `tourprice`,tourdate where 
+						    tourprice.tourDateId=tourdate.id 
+						and tourdate.productId=t.productId 
+						and tourdate.isshow = true
+						and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+						and tourdate.endDate >= #{time,jdbcType=INTEGER}
+						and tourprice.sellingPrice != 0) between #{minPrice} and #{maxPrice}
+			</when>	
+		    <otherwise>
+			and (select min(sellingPrice) from `tourprice`,tourdate where 
+						    tourprice.tourDateId=tourdate.id 
+						and tourdate.productId=t.productId 
+						and tourdate.isshow = true
+						and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+						and tourdate.endDate >= #{time,jdbcType=INTEGER}
+						and tourprice.sellingPrice != 0)
+			is not null
+		    </otherwise>
+		</choose>
+		<if test="destination != null and destination !=''">		
+			and (concat(',',t.destinationList,',') regexp concat(',(',replace((select GROUP_CONCAT(name) from destination where ups like '%${destination}/%'),',','|'),'),')or FIND_IN_SET('${destination}',t.destinationList))
+		</if>
+		<if test="rateString != null and rateString != ''">
+			and FIND_IN_SET(t.rate , #{rateString,jdbcType=VARCHAR})
+		</if>
+		<if test="dateFrom != 0">
+			and ( select max(endDate) from tourdate where 
+				  tourdate.productId=t.productId 
+				  and tourdate.isshow = true
+				  and tourdate.costNumber = #{costnumber,jdbcType=VARCHAR}
+				  and tourdate.endDate >= #{time,jdbcType=INTEGER}) 
+		  	<![CDATA[>=]]> #{dateFrom,jdbcType=INTEGER}
+		</if>
+		<if test="dateTo != 0">
+			and ( select min(startDate) from tourdate where 
+				  tourdate.productId=t.productId 
+				  and tourdate.isshow = true
+				  and tourdate.costNumber = #{costnumber,jdbcType=VARCHAR}
+				  and tourdate.endDate >= #{time,jdbcType=INTEGER}) 
+		  	<![CDATA[<=]]> #{dateTo,jdbcType=INTEGER}
+		</if>
+		<if test="promotionId != null and promotionId != ''">
+			and pp.promotionId = prom.id
+			and pp.productId = p.id
+			and prom.id = #{promotionId,jdbcType=VARCHAR}
+		</if>
+		<choose>
+			<when test="sort == 'pricetoptodown'">
+				order by lowsprice desc
+			</when>
+			<when test="sort == 'pricedowntotop'">
+				order by ifnull(lowsprice,999999)		
+			</when>
+			<when test="sort == 'ratetoptudown'">
+				order by t.rate desc
+			</when>
+			<when test="sort == 'ratedowntotop'">
+			   order by t.rate		
+			</when>	
+			<otherwise>
+			   order by hotaddtime desc
+			</otherwise>
+		</choose>
+		limit #{startPos},#{pageSize}
+	</select>
+</mapper>

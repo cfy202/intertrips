@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.OrderstatusMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Orderstatus" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="text" property="text" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="INTEGER" />
+    <collection property="orderssStatusid" ofType="com.wenjing.entity.Orders" column="id" select="com.wenjing.dao.OrdersMapper.selectByStatusid" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, `name`, `text`, code
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from orderstatus
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="findAll" resultMap="BaseResultMap">
+  	SELECT
+  	<include refid="Base_Column_List" />
+  	FROM orderstatus
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from orderstatus
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Orderstatus" flushCache="true" >
+    insert into orderstatus (id, `name`, `text`, code
+      )
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{text,jdbcType=VARCHAR}, #{code,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Orderstatus" flushCache="true" >
+    insert into orderstatus
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      `name`,
+      `text`,
+      code,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR},
+      #{text,jdbcType=VARCHAR},
+      #{code,jdbcType=INTEGER},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Orderstatus" flushCache="true" >
+    update orderstatus
+    <set >
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="text != null" >
+        `text` = #{text,jdbcType=VARCHAR},
+      </if>
+       <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Orderstatus" flushCache="true" >
+    update orderstatus
+    set `name` = #{name,jdbcType=VARCHAR},
+      `text` = #{text,jdbcType=VARCHAR}
+       code = #{code,jdbcType=VARCHAR},
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

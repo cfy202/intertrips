@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.CouponsactivityMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Couponsactivity" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="createTime" property="createtime" jdbcType="INTEGER" />
+    <result column="releaseStatus" property="releasestatus" jdbcType="INTEGER" />
+    <result column="useStatus" property="usestatus" jdbcType="INTEGER" />
+    <result column="couponseId" property="couponseid" jdbcType="VARCHAR" />
+    <result column="levelId" property="levelid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, code, createTime, releaseStatus, useStatus, couponseId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from couponsactivity
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from couponsactivity
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Couponsactivity" >
+    insert into couponsactivity (id, code, createTime, 
+      releaseStatus, useStatus, couponseId,levelId
+      )
+    values (#{id,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{createtime,jdbcType=INTEGER}, 
+      #{releasestatus,jdbcType=INTEGER}, #{usestatus,jdbcType=INTEGER}, #{couponseid,jdbcType=VARCHAR}
+      , #{levelid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Couponsactivity" >
+    insert into couponsactivity
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      code,
+      createTime,
+      releaseStatus,
+      useStatus,
+      couponseId,
+      levelId
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{code,jdbcType=VARCHAR},
+      #{createtime,jdbcType=INTEGER},
+      #{releasestatus,jdbcType=INTEGER},
+      #{usestatus,jdbcType=INTEGER},
+      #{couponseid,jdbcType=VARCHAR},
+      #{levelid,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Couponsactivity" >
+    update couponsactivity
+    <set >
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=INTEGER},
+      </if>
+      <if test="releasestatus != null" >
+        releaseStatus = #{releasestatus,jdbcType=INTEGER},
+      </if>
+      <if test="usestatus != null" >
+        useStatus = #{usestatus,jdbcType=INTEGER},
+      </if>
+      <if test="couponseid != null" >
+        couponseId = #{couponseid,jdbcType=VARCHAR},
+      </if>
+      <if test="levelid != null" >
+        levelId = #{levelid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Couponsactivity" >
+    update couponsactivity
+    set code = #{code,jdbcType=VARCHAR},
+      createTime = #{createtime,jdbcType=INTEGER},
+      releaseStatus = #{releasestatus,jdbcType=INTEGER},
+      useStatus = #{usestatus,jdbcType=INTEGER},
+      couponseId = #{couponseid,jdbcType=VARCHAR},
+      levelId = #{levelid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update> 
+  <select id="findByUstatus" resultMap="BaseResultMap">
+    select * from couponsactivity where
+      useStatus = #{usestatus,jdbcType=INTEGER}
+    <if test="couponseid!=null">
+    and  couponseId = #{couponseid,jdbcType=VARCHAR}
+    </if>
+     
+  </select>
+   <select id="findByCode" resultMap="BaseResultMap">
+    select * from couponsactivity where code = #{code,jdbcType=VARCHAR}
+  </select>
+</mapper>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.PriceMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Price" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="information" property="information" jdbcType="VARCHAR" />
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+    <result column="productId" property="productid" jdbcType="VARCHAR" />
+    <result column="serviceType" property="serviceType" jdbcType="INTEGER" />
+    <result column="overTimePrice" property="overTimePrice" jdbcType="DECIMAL"/>
+    <association property="cost" javaType="com.wenjing.entity.Cost">
+        <result column="costname" property="name" jdbcType="VARCHAR" />
+        <result column="costCode" property="code" jdbcType="VARCHAR" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, title, price, information, costNumber, productId,serviceType,overTimePrice
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from price
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from price
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Price" >
+    insert into price (id, title, `price`, 
+      information, costNumber, productId,serviceType,overTimePrice
+      )
+    values (#{id,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
+      #{information,jdbcType=VARCHAR}, #{costnumber,jdbcType=VARCHAR}, #{productid,jdbcType=VARCHAR}, #{serviceType,jdbcType=INTEGER},
+      #{overTimePrice,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Price" >
+    insert into price
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      title,
+      `price`,
+      information,
+      costNumber,
+      productId,
+      serviceType,
+      overTimePrice
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{title,jdbcType=VARCHAR},
+      #{price,jdbcType=DECIMAL},
+      #{information,jdbcType=VARCHAR},
+      #{costnumber,jdbcType=VARCHAR},
+      #{productid,jdbcType=VARCHAR},
+      #{serviceType,jdbcType=INTEGER},
+      #{overTimePrice,jdbcType=DECIMAL}
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Price" >
+    update price
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        `price` = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="information != null" >
+        information = #{information,jdbcType=VARCHAR},
+      </if>
+      <if test="costnumber != null" >
+        costNumber = #{costnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="productid != null" >
+        productId = #{productid,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceType != null" >
+         serviceType = #{serviceType,jdbcType=INTEGER},
+      </if>
+      <if test="overTimePrice != null">
+      	overTimePrice = #{overTimePrice,jdbcType=DECIMAL}
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Price" >
+    update price
+    set title = #{title,jdbcType=VARCHAR},
+      `price` = #{price,jdbcType=DECIMAL},
+      information = #{information,jdbcType=VARCHAR},
+      costNumber = #{costnumber,jdbcType=VARCHAR},
+      productId = #{productid,jdbcType=VARCHAR},
+      serviceType = #{serviceType,jdbcType=INTEGER},
+      overTimePrice = #{overTimePrice,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="findByCostnumberOrProdcutId" resultMap="BaseResultMap">
+   select * from price 
+   <if test="productid!=null">
+    where productId = #{productid,jdbcType=VARCHAR}
+   </if>
+   
+  </select>
+  
+  <select id="findByCostnumberOrProdcutId2" resultMap="BaseResultMap">
+   select * from price 
+   <if test="productid!=null">
+    where productId = #{productid,jdbcType=VARCHAR}
+   </if>
+   
+  </select>
+  <!-- 根据线路id查询价格对应的costnumid -->
+   <select id="getPriceCostNumByProductId" parameterType="java.lang.String" resultType="java.lang.String">
+      select price.costNumber 
+       from price
+       where price.productId=#{productid}
+       GROUP BY price.costNumber
+   </select>
+ 
+  <!-- 批量插入 -->
+  <insert id="batchAddPrice" parameterType="java.util.List" flushCache="true">
+    insert into price 
+    (id, title, `price`, information, costNumber, productId,serviceType,overTimePrice)
+     values
+    <foreach collection="list" item="item" index="index" separator="," >  
+        (#{item.id,jdbcType=VARCHAR}, #{item.title,jdbcType=VARCHAR}, #{item.price,jdbcType=DECIMAL}, 
+         #{item.information,jdbcType=VARCHAR}, #{item.costnumber,jdbcType=VARCHAR}, #{item.productid,jdbcType=VARCHAR},#{item.serviceType,jdbcType=INTEGER},#{item.overTimePrice,jdbcType=DECIMAL})
+    </foreach>  
+  </insert>
+   <!-- 根据线路Id删除出发日期 -->
+   <delete id="deleteNotCostnumber"  >
+        delete from price where productId =#{productid} and costNumber <![CDATA[<>]]> #{costnumber}
+   </delete>
+</mapper>

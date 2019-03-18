@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.ReviewMapper">
+	<cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+	<resultMap id="BaseResultMap" type="com.wenjing.entity.Review">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="LONGVARCHAR" />
+		<result column="createDate" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="productId" property="productId" jdbcType="VARCHAR" />
+		<result column="memberId" property="memberId" jdbcType="VARCHAR" />
+		<result column="picture" property="picture" jdbcType="VARCHAR" />
+		<result column="isshow" property="isshow" jdbcType="BIT" />
+		<result column="tourGroupScore" property="tourGroupScore" jdbcType="INTEGER" />
+		<result column="wenjingScore" property="wenjingScore" jdbcType="INTEGER" />
+		<result column="ip" property="ip" jdbcType="VARCHAR" />
+		<result column="costNumber" property="costNumber" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="BIT" />
+		<result column="orderNo" property="orderNo" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR"/>
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, title, content, createDate, productId, memberId, picture, isshow,
+		tourGroupScore, wenjingScore, ip, costNumber, status, orderNo,email
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM review
+		WHERE id = #{id,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String"
+		flushCache="true">
+		DELETE FROM review
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+
+	<insert id="insert" parameterType="com.wenjing.entity.Review"
+		flushCache="true">
+		insert into review (id, title, content,
+		productId, memberId,
+		picture, isshow, tourGroupScore, wenjingScore,
+		ip, costNumber, status, orderNo, email)
+		values (#{id,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR},
+		#{content,jdbcType=LONGVARCHAR},
+		#{productId,jdbcType=VARCHAR},#{memberId,jdbcType=VARCHAR},
+		#{picture,jdbcType=VARCHAR}, #{isshow,jdbcType=BIT},
+		#{tourGroupScore,jdbcType=INTEGER}, #{wenjingScore,jdbcType=INTEGER},
+		#{ip,jdbcType=VARCHAR}, #{costNumber,jdbcType=VARCHAR}, #{status,jdbcType=BIT},
+		#{orderNo,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR})
+	</insert>
+
+	<insert id="insertSelective" parameterType="com.wenjing.entity.Review"
+		flushCache="true">
+		insert into review
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,
+			title,
+			content,
+			createDate,
+			productId,
+			memberId,
+			picture,
+			isshow,
+			tourGroupScore,
+			wenjingScore,
+			ip,
+			costNumber,
+			status,
+			orderNo,
+			email
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id,jdbcType=VARCHAR},
+			#{title,jdbcType=VARCHAR},
+			#{content,jdbcType=LONGVARCHAR},
+			#{createDate,jdbcType=TIMESTAMP},
+			#{productId,jdbcType=VARCHAR},
+			#{memberId,jdbcType=VARCHAR},
+			#{picture,jdbcType=VARCHAR},
+			#{isshow,jdbcType=BIT},
+			#{tourGroupScore,jdbcType=INTEGER},
+			#{wenjingScore,jdbcType=INTEGER},
+			#{ip,jdbcType=VARCHAR},
+			#{costNumber,jdbcType=VARCHAR},
+			#{status,jdbcType=BIT},
+			#{orderNo,jdbcType=VARCHAR},
+			#{email,jdbcType=VARCHAR}
+		</trim>
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Review"
+		flushCache="true">
+		update review
+		<set>
+			<if test="title != null">
+				title = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				content =#{content,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="createDate != null">
+				createDate = #{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="productId != null">
+				productId = #{productId,jdbcType=VARCHAR},
+			</if>
+			<if test="memberId != null">
+				memberId =#{memberId,jdbcType=VARCHAR},
+			</if>
+			<if test="picture != null">
+				picture = #{picture,jdbcType=VARCHAR},
+			</if>
+			<if test="memberId != null">
+				memberId = #{memberId,jdbcType=VARCHAR},
+			</if>
+			<if test="isshow != null">
+				isshow = #{isshow,jdbcType=BIT},
+			</if>
+			<if test="tourGroupScore != null">
+				tourGroupScore = #{tourGroupScore,jdbcType=INTEGER},
+			</if>
+			<if test="wenjingScore != null">
+				wenjingScore = #{wenjingScore,jdbcType=INTEGER},
+			</if>
+			<if test="ip != null">
+				ip = #{ip,jdbcType=VARCHAR},
+			</if>
+			<if test="costNumber != null">
+				costNumber = #{costNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=BIT},
+			</if>
+			<if test="orderNo != null">
+				orderNo = #{orderNo,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				email = #{email,jdbcType=VARCHAR}
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Review"
+		flushCache="true">
+		update review
+		set 
+			title = #{title,jdbcType=VARCHAR},
+			content =#{content,jdbcType=LONGVARCHAR},
+			createDate = #{createDate,jdbcType=TIMESTAMP},
+			productId = #{productId,jdbcType=VARCHAR},
+			memberId =#{memberId,jdbcType=VARCHAR},
+			picture = #{picture,jdbcType=VARCHAR},
+			memberId = #{memberId,jdbcType=VARCHAR},
+			isshow = #{isshow,jdbcType=BIT},
+			tourGroupScore = #{tourGroupScore,jdbcType=INTEGER},
+			wenjingScore = #{wenjingScore,jdbcType=INTEGER},
+			ip = #{ip,jdbcType=VARCHAR},
+			status = #{status,jdbcType=BIT}
+			costNumber = #{costNumber,jdbcType=VARCHAR},
+			orderNo = #{orderNo,jdbcType=VARCHAR},
+			email = #{email,jdbcType=VARHCAR}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 根据costnum查询总提问记录条数 -->
+  <select id="getCountByCostNum" resultType="java.lang.Integer">
+    select count(*) 
+        from review review,
+             tourline tourline,
+             product product
+        where review.productId=product.id
+        	  and product.id=tourline.productId
+              and review.costNumber in 
+		      <foreach collection="costNumList" item="item" index="index" open="(" separator="," close=")">
+		        #{item}
+		      </foreach>
+		      <if test="search != null and !''.equals(search)" >
+			     and  CONCAT(tourline.tourname, review.title) like '%${search}%'
+			  </if>
+  </select>
+  
+  <!-- 分页查询review -->
+  <resultMap id="adminReviewListMap" type="com.wenjing.entity.Review" extends="BaseResultMap">
+     <association property="tourline" javaType="com.wenjing.entity.Tourline" >
+        <result column="tourname" property="tourname" jdbcType="VARCHAR" />
+     </association>
+  </resultMap>
+  <select id="findByCostNumAndPage" resultMap="adminReviewListMap">
+     select 
+		    review.id as id,
+			review.title,
+			review.content,
+			review.createDate,
+			review.picture,
+			review.isshow,
+			review.status,
+			review.orderNo,
+			tourline.tourname as tourname 
+	  from review review,
+	       tourline tourline
+	  where review.productId = tourline.productId
+	        <if test="status !=null and status!=2">
+	        and review.status=#{status}
+	        </if>
+	        and review.costNumber in 
+	        <foreach collection="costNumList" item="item" index="index" open="(" separator="," close=")">
+		      #{item}
+		    </foreach>
+		    <if test="search != null and !''.equals(search)" >
+			     and  CONCAT(tourline.tourname, review.title) like '%${search}%'
+			</if>
+	  order by review.createDate desc
+	  limit #{startPos},#{pageSize}
+  </select>
+  
+   <!-- 编辑是否显示 -->
+  <update id="editIsshow" parameterType="com.wenjing.entity.Review" flushCache="true">
+    update review
+      set isshow = #{isshow,jdbcType=BIT},
+          status = #{status,jdbcType=BIT}
+      where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 修改处理状态 -->
+  <update id="updateStatus"  flushCache="true">
+      update review
+      set status = #{status,jdbcType=BIT}
+      where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 根据reviewId查询评论详细信息 -->
+  <resultMap id="adminReviewDetailsMap" type="com.wenjing.entity.Review" extends="BaseResultMap">
+     <association property="tourline" javaType="com.wenjing.entity.Tourline" >
+        <result column="tourname" property="tourname" jdbcType="VARCHAR" />
+     </association>
+     <association property="page" javaType="com.wenjing.entity.Page" >
+        <result column="filePath" property="filepath" jdbcType="VARCHAR" />
+     </association>
+     <association property="member" column="memberId" select="com.wenjing.dao.MemberMapper.selectByPrimaryKey"/>
+  </resultMap>
+  <select id="getReviewByQid" parameterType="java.lang.String" resultMap="adminReviewDetailsMap">
+     select 
+           review.*,
+           tourline.tourname as tourname,
+           page.filePath as filePath
+	    from review review,
+		     tourline tourline,
+		     product product,
+		     page page
+		where review.productId = product.id
+		      and tourline.productId = product.id
+		      and product.pageId = page.id
+		      and review.id = #{id}
+  </select>
+  
+   <resultMap id="frontReviewMap" type="com.wenjing.entity.Review" extends="BaseResultMap">
+     <association property="member" column="memberId" select="com.wenjing.dao.MemberMapper.selectByPrimaryKey"/>
+  </resultMap>
+  <select id="getReviewCount" resultType="java.lang.Integer" parameterType="java.lang.String">
+  	select count(*) from review 
+  	where productId=#{productId}  
+  	and costNumber=#{costnumber}  
+  	and isshow=1 
+  	and `status`=1
+  </select>
+  <select id="getReview" resultMap="frontReviewMap" parameterType="java.lang.String">
+  	select * from review 
+  	where productId=#{productId}  
+  	and costNumber=#{costnumber}  
+  	and isshow=1 
+  	and `status`=1
+  	limit #{startPos},#{pageSize}
+  </select>
+  
+  <select id="getAllReviewByProductId" resultMap="BaseResultMap" parameterType="java.lang.String">
+  	select 
+  		*
+  	from
+  		review
+  	where
+  		productId = #{productId}
+  	and
+  		isshow = 1
+  	and
+  	    `status`= 1		
+  </select>
+</mapper>

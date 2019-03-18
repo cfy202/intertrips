@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.RolecostMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Rolecost" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="roleId" property="roleid" jdbcType="VARCHAR" />
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+    <association property="costCostnumber" column="costnumber" select="com.wenjing.dao.CostMapper.selectByPrimaryKey" />
+  </resultMap>
+  <select id="selectByCostnumber" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from rolecost where costNumber =#{costNumber}
+  </select>
+  <select id="selectByRoleid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from rolecost where roleId =#{roleId}
+  </select>
+  
+  
+  <sql id="Base_Column_List" >
+    id, roleId, costNumber
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from rolecost
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from rolecost
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByroleId" parameterType="java.lang.String">
+    delete from rolecost
+    where roleId = #{roleId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Rolecost" >
+    insert into rolecost (id, roleId, costNumber
+      )
+    values (#{id,jdbcType=VARCHAR}, #{roleid,jdbcType=VARCHAR}, #{costnumber,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Rolecost" >
+    insert into rolecost
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      roleId,
+      costNumber,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{roleid,jdbcType=VARCHAR},
+      #{costnumber,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Rolecost" >
+    update rolecost
+    <set >
+      <if test="roleid != null" >
+        roleId = #{roleid,jdbcType=VARCHAR},
+      </if>
+      <if test="costnumber != null" >
+        costNumber = #{costnumber,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Rolecost" >
+    update rolecost
+    set roleId = #{roleid,jdbcType=VARCHAR},
+      costNumber = #{costnumber,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <!-- 批量插入 -->
+  <insert id="batchAddRoleCost" parameterType="java.util.List" flushCache="true" >
+    insert into rolecost (id, roleId, costNumber)
+     values
+    <foreach collection="list" item="item" index="index" separator="," >  
+        (#{item.id,jdbcType=VARCHAR}, #{item.roleid,jdbcType=VARCHAR}, #{item.costnumber,jdbcType=VARCHAR}
+        )
+    </foreach>  
+  </insert>
+</mapper>

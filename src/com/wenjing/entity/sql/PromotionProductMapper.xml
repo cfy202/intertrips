@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.PromotionProductMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.PromotionProduct" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="promotionId" property="promotionid" jdbcType="VARCHAR" />
+    <result column="productId" property="productid" jdbcType="VARCHAR" />
+    <association property="productProductid" column="productid" select="com.wenjing.dao.ProductMapper.selectByPrimaryKey" />
+    <association property="promotionPromotionid" column="promotionid" select="com.wenjing.dao.PromotionMapper.selectByPrimaryKey" />
+  </resultMap>
+  <resultMap id="withPromotionMap" type="com.wenjing.entity.PromotionProduct" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="promotionId" property="promotionid" jdbcType="VARCHAR" />
+    <result column="productId" property="productid" jdbcType="VARCHAR" />
+    <association property="promotionPromotionid" column="promotionid" select="com.wenjing.dao.PromotionMapper.selectByPrimaryKey" />
+  </resultMap>
+  <select id="selectByProductid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from promotionproduct where productId =#{productId}
+  </select>
+  <select id="findByProductid" resultMap="withPromotionMap" >
+    select <include refid="Base_Column_List" /> from promotionproduct where productId =#{productId}
+  </select>
+  <select id="selectByPromotionid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from promotionproduct where promotionId =#{promotionId}
+  </select>
+  <sql id="Base_Column_List" >
+    id,promotionId, productId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from promotionproduct
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from promotionproduct
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.PromotionProduct" flushCache="true" >
+    insert into promotionproduct (id, promotionId, productId )
+    values (#{id,jdbcType=VARCHAR} #{promotionid,jdbcType=VARCHAR}, #{productid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.PromotionProduct" flushCache="true" >
+    insert into promotionproduct
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      promotionId,
+      productId,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{promotionid,jdbcType=VARCHAR},
+      #{productid,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.PromotionProduct" flushCache="true" >
+    update promotionproduct
+    <set >
+      <if test="promotionid != null" >
+        promotionId = #{promotionid,jdbcType=VARCHAR},
+      </if>
+      <if test="productid != null" >
+        productId = #{productid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.PromotionProduct" flushCache="true" >
+    update promotionproduct
+    set promotionId = #{promotionid,jdbcType=VARCHAR},
+      productId = #{productid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 批量插入 -->
+ <insert id="batchAdd" parameterType="com.wenjing.entity.PromotionProduct" flushCache="true" >
+    insert into promotionproduct (id, promotionId, productId)
+    values 
+    <foreach collection="list" item="item" index="index" separator="," >  
+        (#{item.id,jdbcType=VARCHAR}, #{item.promotionid,jdbcType=VARCHAR}, #{item.productid,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  
+  <!-- 根据promotionid删除 -->
+  <delete id="deleteBypromotionid" parameterType="java.lang.String" flushCache="true">
+    delete from promotionproduct
+    where promotionId = #{promotionid,jdbcType=VARCHAR}
+  </delete>
+  <!-- 根据产品Id删除 -->
+  <delete id="deleteWithProductId">
+   delete from promotionproduct where productId = #{productId};
+  </delete>
+</mapper>

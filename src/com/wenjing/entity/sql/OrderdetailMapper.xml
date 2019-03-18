@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.OrderdetailMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Orderdetail" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="orderId" property="orderid" jdbcType="VARCHAR" />
+    <result column="days" property="days" jdbcType="INTEGER" />
+    <result column="departureDate" property="departuredate" jdbcType="VARCHAR" />
+    <result column="endDate" property="enddate" jdbcType="VARCHAR" />
+    <result column="depostiDate" property="depostidate" jdbcType="VARCHAR" />
+    <result column="despotPrice" property="despotprice" jdbcType="DECIMAL" />
+    <result column="finalPayDate" property="finalpaydate" jdbcType="VARCHAR" />
+    <result column="finalPrice" property="finalprice" jdbcType="DECIMAL" />
+    <result column="roomCount" property="roomcount" jdbcType="INTEGER" />
+    <result column="adults" property="adults" jdbcType="INTEGER" />
+    <result column="children" property="children" jdbcType="INTEGER" />
+    <result column="babies" property="babies" jdbcType="INTEGER" />
+    <result column="specialRequest" property="specialrequest" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="productId" property="productid" jdbcType="VARCHAR" />
+    <result column="roomInfo" property="roomInfo" jdbcType="VARCHAR" /> 
+    <result column="promotionId" property="promotionId" jdbcType="VARCHAR" />
+    <result column="airportPickUpId" property="airportPickUpId" jdbcType="VARCHAR" />
+    <result column="airTicketPriceId" property="airTicketPriceId" jdbcType="VARCHAR" /> 
+    <result column="selfPayId" property="selfPayId" jdbcType="VARCHAR"/>
+    <result column="tourdateId" property="tourdateId" jdbcType="VARCHAR"/>
+    <result column="couponseId" property="couponseId" jdbcType="VARCHAR" /> 
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+    <result column="currencySign" property="currencySign" jdbcType="VARCHAR"/> 
+    <result column="tripleRoomNumber" property="tripleRoomNumber" jdbcType="INTEGER" />
+    <result column="doubleRoomNumber" property="doubleRoomNumber" jdbcType="INTEGER" />
+    <result column="twinRoomNumber" property="twinRoomNumber" jdbcType="INTEGER" />
+    <result column="singleRoomNumber" property="singleRoomNumber" jdbcType="INTEGER" />
+    <result column="payStatus" property="payStatus" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <resultMap type="com.wenjing.entity.Orderdetail" id="resultWithTourdate" extends="BaseResultMap">
+  	<association property="tourdate" column="tourdateId" select="com.wenjing.dao.TourdateMapper.selectByPrimaryKey"></association>
+  </resultMap>
+  
+  <resultMap id="WholeResultMap" type="com.wenjing.entity.Orderdetail" extends="BaseResultMap">
+    <association property="ordersOrderid" column="orderId" select="com.wenjing.dao.OrdersMapper.selectByPrimaryKey" />
+    <association property="product" column="productId" select="com.wenjing.dao.ProductMapper.selectWithPromotionByPrimaryKey" />
+  </resultMap>
+  
+  <resultMap type="com.wenjing.entity.Orderdetail" id="payInfoResultMap" extends="BaseResultMap">
+  	<association property="product" column="productid" select="com.wenjing.dao.ProductMapper.getWithPageById"></association>
+  	<association property="departure" column="departureId" select="com.wenjing.dao.DepartureMapper.selectByPrimaryKey" />
+  	<collection property="additionalProductList" javaType="java.util.List" column="id" select="com.wenjing.dao.AdditionalProductMapper.findByOrderdetailsId"></collection>
+  </resultMap>
+  
+  <resultMap id="ResultMapWithTourPassengersAndProduct" type="com.wenjing.entity.Orderdetail" extends="BaseResultMap">
+  	<association property="departure" column="departureId" select="com.wenjing.dao.DepartureMapper.selectByPrimaryKey" />
+    <association property="product" column="productId" select="com.wenjing.dao.ProductMapper.selectByPrimaryKey" />
+	<collection property="tourPassengerList" column="id" select="com.wenjing.dao.TourPassengerMapper.findByOrdersId"></collection> 
+	<collection property="additionalProductList" javaType="java.util.List" column="id" select="com.wenjing.dao.AdditionalProductMapper.findByOrderdetailsId"></collection>
+  </resultMap>
+  
+  <resultMap id="ResultMapWithProduct" type="com.wenjing.entity.Orderdetail" extends="BaseResultMap">
+  	<association property="product" column="productId" select="com.wenjing.dao.ProductMapper.selectByPrimaryKey" />
+  	<association property="departure" column="departureId" select="com.wenjing.dao.DepartureMapper.selectByPrimaryKey" />
+  </resultMap>
+  
+   <resultMap id="orderdetailWithProduct" type="com.wenjing.entity.Orderdetail" extends="BaseResultMap">
+   <association property="product" column="productId" select="com.wenjing.dao.ProductMapper.selectByPrimaryKey" />
+  </resultMap>
+  
+  <select id="selectByOrderId" resultMap="ResultMapWithProduct" >
+    select <include refid="Base_Column_List" /> from orderdetail where orderId = #{orderId}
+  </select>
+  
+  <select id="selectByProductId" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from orderdetail where productId = #{productId}
+  </select>
+  
+  <sql id="Base_Column_List" >
+    id, orderId, `days`, departureDate, endDate, depostiDate, despotPrice, finalPayDate, 
+    finalPrice, roomCount, adults, children, babies, specialRequest, price, productId, 
+    costNumber, currencySign, departureId, roomInfo, tripleRoomNumber, doubleRoomNumber,twinRoomNumber,singleRoomNumber,promotionId, couponseId, airportPickUpId, airTicketPriceId,selfPayId,payStatus,tourdateId
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from orderdetail
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectWithTourPassengersAndProductByOrdersId" resultMap="ResultMapWithTourPassengersAndProduct" parameterType="java.lang.String">
+  	SELECT
+  		<include refid="Base_Column_List" />
+  	FROM
+  		orderdetail
+  	WHERE
+  		OrderId = #{ordersId}
+  </select>
+  
+  <select id="findPayInfo" resultMap="payInfoResultMap">
+  	SELECT
+  		<include refid="Base_Column_List" />
+  	FROM
+  		orderdetail
+  	WHERE
+  		OrderId = #{id}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    DELETE FROM orderdetail
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="insert" parameterType="com.wenjing.entity.Orderdetail" flushCache="true" >
+    INSERT INTO orderdetail (id, orderId, `days`, 
+      departureDate, endDate, depostiDate, 
+      despotPrice, finalPayDate, finalPrice, 
+      roomCount, adults, children, 
+      babies, specialRequest, price, 
+      productId, costNumber, currencySign, departureId,
+      roomInfo,tripleRoomNumber, doubleRoomNumber,twinRoomNumber,singleRoomNumber,promotionId,couponseId,airportPickUpId,airTicketPriceId,selfPayId,payStatus,tourdateId)
+    VALUES (#{id,jdbcType=VARCHAR}, #{orderid,jdbcType=VARCHAR}, #{days,jdbcType=INTEGER}, 
+      #{departuredate,jdbcType=VARCHAR}, #{enddate,jdbcType=VARCHAR}, #{depostidate,jdbcType=VARCHAR}, 
+      #{despotprice,jdbcType=DECIMAL}, #{finalpaydate,jdbcType=VARCHAR}, #{finalprice,jdbcType=DECIMAL}, 
+      #{roomcount,jdbcType=INTEGER}, #{adults,jdbcType=INTEGER}, #{children,jdbcType=INTEGER}, 
+      #{babies,jdbcType=INTEGER}, #{specialrequest,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
+      #{productid,jdbcType=VARCHAR}, #{costnumber,jdbcType=VARCHAR}, #{currencySign,jdbcType=VARCHAR}, #{departureId,jdbcType=VARCHAR},
+      #{roomInfo,jdbcType=VARCHAR},#{tripleRoomNumber,jdbcType=INTEGER}, #{doubleRoomNumber,jdbcType=INTEGER}, #{twinRoomNumber,jdbcType=INTEGER}, #{singleRoomNumber,jdbcType=INTEGER},#{promotionId,jdbcType=VARCHAR},#{couponseId,jdbcType=VARCHAR},
+      #{airportPickUpId,jdbcType=VARCHAR},#{airTicketPriceId,jdbcType=VARCHAR},#{selfPayId,jdbcType=VARCHAR},#{payStatus,jdbcType=INTEGER},#{tourdateId,jdbcType=VARCHAR})
+  </insert>
+  
+  <insert id="batchInsert" parameterType="java.util.List">
+  	INSERT INTO orderdetail (id, orderId, `days`, 
+      departureDate, endDate, depostiDate, 
+      despotPrice, finalPayDate, finalPrice, 
+      roomCount, adults, children, 
+      babies, specialRequest, price, 
+      productId, costNumber, currencySign, departureId, roomInfo,tripleRoomNumber,doubleRoomNumber,twinRoomNumber,singleRoomNumber,
+      promotionId,couponseId,airportPickUpId,airTicketPriceId,selfPayId,tourdateId)
+    VALUES	
+   	<foreach collection="orderDetails" item="orderDetail" separator=",">
+   	  (#{orderDetail.id},
+   	   #{orderDetail.orderId},
+   	   #{orderDetail.days},
+   	   #{orderDetail.departureDate},
+   	   #{orderDetail.endDate},
+   	   #{orderDetail.depostiDate},
+   	   #{orderDetail.despotPrice},
+   	   #{orderDetail.finalPayDate},
+   	   #{orderDetail.finalPrice},
+   	   #{orderDetail.roomCount},
+   	   #{orderDetail.adults},
+   	   #{orderDetail.children},
+   	   #{orderDetail.babies},
+   	   #{orderDetail.specialRequest},
+   	   #{orderDetail.price},
+   	   #{orderDetail.productId},
+   	   #{orderDetail.costNumber},
+   	   #{orderDetail.currencySign},
+   	   #{orderDetail.departureId},
+   	   #{orderDetail.roomInfo},
+   	   #{orderDetail.tripleRoomNumber},
+   	   #{orderDetail.doubleRoomNumber},
+   	   #{orderDetail.twinRoomNumber},
+   	   #{orderDetail.singleRoomNumber},   	   
+   	   #{orderDetail.promotionId},
+   	   #{orderDetail.couponseId},
+   	   #{orderDetail.airportPickUpId},
+   	   #{orderDetail.airTicketPriceId},
+   	   #{orderDetail.selfPayId},
+   	   #{orderDetail.tourdateId}
+   	   )
+   	</foreach>
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Orderdetail" flushCache="true" >
+    INSERT INTO orderdetail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      orderId,
+      `days`,
+      departureDate,
+      endDate,
+      depostiDate,
+      despotPrice,
+      finalPayDate,
+      finalPrice,
+      roomCount,
+      adults,
+      children,
+      babies,
+      specialRequest,
+      price,
+      productId,
+      costNumber,
+      currencySign,
+      departureId,
+      roomInfo,
+      tripleRoomNumber,
+      doubleRoomNumber,
+      twinRoomNumber,
+      singleRoomNumber,
+      promotionId,
+      couponseId,
+      airportPickUpId,
+      airTicketPriceId,
+      selfPayId,
+      payStatus,
+      tourdateId
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{orderid,jdbcType=VARCHAR},
+      #{days,jdbcType=INTEGER},
+      #{departuredate,jdbcType=VARCHAR},
+      #{enddate,jdbcType=VARCHAR},
+      #{depostidate,jdbcType=VARCHAR},
+      #{despotprice,jdbcType=DECIMAL},
+      #{finalpaydate,jdbcType=VARCHAR},
+      #{finalprice,jdbcType=DECIMAL},
+      #{roomcount,jdbcType=INTEGER},
+      #{adults,jdbcType=INTEGER},
+      #{children,jdbcType=INTEGER},
+      #{babies,jdbcType=INTEGER},
+      #{specialrequest,jdbcType=VARCHAR},
+      #{price,jdbcType=DECIMAL},
+      #{productid,jdbcType=VARCHAR},
+      #{costnumber,jdbcType=VARCHAR},
+      #{currencySign,jdbcType=VARCHAR},
+      #{departureId,jdbcType=VARCHAR},
+      #{roomInfo,jdbcType=VARCHAR},
+      #{tripleRoomNumber,jdbcType=INTEGER},
+      #{doubleRoomNumber,jdbcType=INTEGER},
+      #{twinRoomNumber,jdbcType=INTEGER},
+      #{singleRoomNumber,jdbcType=INTEGER},      
+      #{promotionId,jdbcType=VARCHAR},
+      #{couponseId,jdbcType=VARCHAR},
+      #{airportPickUpId,jdbcType=VARCHAR},
+      #{airTicketPriceId,jdbcType=VARCHAR},
+      #{selfPayId,jdbcType=VARCHAR},
+      #{payStatus,jdbcType=INTEGER},
+      #{tourdateId,jdbcType=VARCHAR}
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Orderdetail" flushCache="true" >
+    UPDATE orderdetail
+    <set >
+      <if test="orderid != null" >
+        orderId = #{orderid,jdbcType=VARCHAR},
+      </if>
+      <if test="days != null" >
+        `days` = #{days,jdbcType=INTEGER},
+      </if>
+      <if test="departuredate != null" >
+        departureDate = #{departuredate,jdbcType=VARCHAR},
+      </if>
+      <if test="enddate != null" >
+        endDate = #{enddate,jdbcType=VARCHAR},
+      </if>
+      <if test="depostidate != null" >
+        depostiDate = #{depostidate,jdbcType=VARCHAR},
+      </if>
+      <if test="despotprice != null" >
+        despotPrice = #{despotprice,jdbcType=DECIMAL},
+      </if>
+      <if test="finalpaydate != null" >
+        finalPayDate = #{finalpaydate,jdbcType=VARCHAR},
+      </if>
+      <if test="finalprice != null" >
+        finalPrice = #{finalprice,jdbcType=DECIMAL},
+      </if>
+      <if test="roomcount != null" >
+        roomCount = #{roomcount,jdbcType=INTEGER},
+      </if>
+      <if test="adults != null" >
+        adults = #{adults,jdbcType=INTEGER},
+      </if>
+      <if test="children != null" >
+        children = #{children,jdbcType=INTEGER},
+      </if>
+      <if test="babies != null" >
+        babies = #{babies,jdbcType=INTEGER},
+      </if>
+      <if test="specialrequest != null" >
+        specialRequest = #{specialrequest,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="productid != null" >
+        productId = #{productid,jdbcType=VARCHAR},
+      </if>
+      <if test="costnumber != null" >
+        costNumber = #{costnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="currencySign != null">
+      	currencySign = #{currencySign,jdbcType=VARCHAR},
+      </if>
+      <if test="departureId != null">
+      	departureId = #{departureId,jdbcType=VARCHAR},
+      </if>
+      <if test="roomInfo != null">
+      	roomInfo = #{roomInfo,jdbcType=VARCHAR},
+      </if>
+      <if test="tripleRoomNumber != null">
+      	tripleRoomNumber = #{tripleRoomNumber,jdbcType=INTEGER},
+      </if>
+      <if test="doubleRoomNumber != null">
+      	doubleRoomNumber = #{doubleRoomNumber,jdbcType=INTEGER},
+      </if>
+      <if test="twinRoomNumber != null">
+      	twinRoomNumber = #{twinRoomNumber,jdbcType=INTEGER},
+      </if>
+      <if test="singleRoomNumber != null">
+      	singleRoomNumber = #{singleRoomNumber,jdbcType=INTEGER},
+      </if>
+      <if test="promotionId != null">
+      	promotionId = #{promotionId,jdbcType=VARCHAR},
+      </if>
+      <if test="couponseId != null">
+      	couponseId = #{couponseId,jdbcType=VARCHAR},
+      </if>
+      <if test="airportPickUpId != null">
+      	airportPickUpId = #{airportPickUpId,jdbcType=VARCHAR},
+      </if>
+      <if test="airTicketPriceId != null">
+      	airTicketPriceId = #{airTicketPriceId,jdbcType=VARCHAR},
+      </if>
+      <if test="selfPayId != null">
+		selfPayId = #{selfPayId,jdbcType=VARCHAR},      
+      </if>
+      <if test="payStatus != null" >
+        payStatus = #{payStatus,jdbcType=INTEGER},
+      </if>
+      <if test="tourdateId != null">
+       tourdateId = #{tourdateId,jdbcType=VARCHAR}
+      </if>
+    </set>
+    WHERE id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Orderdetail" flushCache="true">
+    UPDATE orderdetail
+    SET orderId = #{orderid,jdbcType=VARCHAR},
+      `days` = #{days,jdbcType=INTEGER},
+      departureDate = #{departuredate,jdbcType=VARCHAR},
+      endDate = #{enddate,jdbcType=VARCHAR},
+      depostiDate = #{depostidate,jdbcType=VARCHAR},
+      despotPrice = #{despotprice,jdbcType=DECIMAL},
+      finalPayDate = #{finalpaydate,jdbcType=VARCHAR},
+      finalPrice = #{finalprice,jdbcType=DECIMAL},
+      roomCount = #{roomcount,jdbcType=INTEGER},
+      adults = #{adults,jdbcType=INTEGER},
+      children = #{children,jdbcType=INTEGER},
+      babies = #{babies,jdbcType=INTEGER},
+      specialRequest = #{specialrequest,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      productId = #{productid,jdbcType=VARCHAR},
+      costNumber = #{costnumber,jdbcType=VARCHAR},
+      currencySign = #{sign,jdbcType=VARCHAR},
+      departureId = #{departureId,jdbcType=VARCHAR},
+      roomInfo = #{roomInfo,jdbcType=VARCHAR},
+      tripleRoomNumber = #{tripleRoomNumber,jdbcType=INTEGER},
+      doubleRoomNumber = #{doubleRoomNumber,jdbcType=INTEGER},
+      twinRoomNumber = #{twinRoomNumber,jdbcType=INTEGER},
+      singleRoomNumber = #{singleRoomNumber,jdbcType=INTEGER},
+      promotionId = #{promotionId,jdbcType=VARCHAR},
+      couponseId = #{couponseId,jdbcType=VARCHAR},
+      airportPickUpId = #{airportPickUpId,jdbcType=VARCHAR},
+      airTicketPriceId = #{airTicketPriceId,jdbcType=VARCHAR},
+      selfPayId = #{selfPayId,jdbcType=VARCHAR},      
+      payStatus = #{payStatus,jdbcType=INTEGER},
+      tourdateId = #{tourdateId,jdbcType=VARCHAR}
+    WHERE id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 订单详情 -->
+  <resultMap id="ResultTourPassengersAndProductMap" type="com.wenjing.entity.Orderdetail" extends="BaseResultMap">
+    <association property="product" column="productId" select="com.wenjing.dao.ProductMapper.selectProductAndPageById" />
+    <association property="departure" column="departureId" select="com.wenjing.dao.DepartureMapper.selectByPrimaryKey"/>
+    <association property="promotion" column="promotionId" select="com.wenjing.dao.PromotionMapper.selectByPrimaryKey"></association>
+	<collection property="tourPassengerList" column="id" select="com.wenjing.dao.TourPassengerMapper.findByOrdersId"></collection> 
+	<collection property="additionalProductList" column="id" select="com.wenjing.dao.AdditionalProductMapper.findByOrderdetailsId"></collection>
+  </resultMap>
+  <select id="GetTourPassengersAndProductByOrdersId" resultMap="ResultTourPassengersAndProductMap" parameterType="java.lang.String">
+  	SELECT
+  		<include refid="Base_Column_List" />
+  	FROM
+  		orderdetail
+  	WHERE
+  		OrderId = #{ordersId}
+  </select>
+  <select id="findByOrderId" resultMap="orderdetailWithProduct" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from orderdetail
+    where orderId = #{orderId,jdbcType=VARCHAR}
+  </select>
+  <update id="updateOrderDetailPart" parameterType="com.wenjing.entity.Orderdetail" flushCache="true">
+    update orderdetail set
+      depostiDate = #{depostidate,jdbcType=VARCHAR},
+      despotPrice = #{despotprice,jdbcType=DECIMAL},
+      finalPrice = #{finalprice,jdbcType=DECIMAL},
+      payStatus = #{payStatus,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+ <select id="selectCountByProductId" parameterType="java.lang.String" resultType="java.lang.Integer">
+  select count(*) from orderdetail where productId = #{productid,jdbcType=VARCHAR}
+ </select>
+ 
+ <select id="findWithTourdateByOrdersId"  resultMap="resultWithTourdate">
+    select 
+    <include refid="Base_Column_List" />
+    from orderdetail
+    where orderId = #{orderId,jdbcType=VARCHAR}	 
+ </select>
+</mapper>

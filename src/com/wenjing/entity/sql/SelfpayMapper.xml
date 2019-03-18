@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.SelfpayMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Selfpay" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="LONGVARCHAR" />
+    <result column="costNumber" property="costnumber" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="imgUrl" property="imgUrl" jdbcType="VARCHAR" />
+    <result column = "destinationName" property = "destinationName" jdbcType = "VARCHAR"/>
+    <association property="cost" javaType="com.wenjing.entity.Cost">
+         <result column="costname" property="name" jdbcType="VARCHAR" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, `name`, price, city, sort, costNumber, remark,type,imgUrl,destinationName
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from selfpay
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from selfpay
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Selfpay" flushCache="true" >
+    insert into selfpay (id, `name`, price, 
+      city, sort, remark, costNumber,type,imgUrl,destinationName
+      )
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, 
+      #{city,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{remark,jdbcType=LONGVARCHAR}, #{costnumber,jdbcType=VARCHAR},#{type,jdbcType=INTEGER}, #{imgUrl,jdbcType=VARCHAR}, #{destinationName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Selfpay" flushCache="true" >
+    insert into selfpay
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      `name`,
+      price,
+      city,
+      sort,
+      remark,
+      costNumber,
+      type,
+      imgUrl,
+      destinationName,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR},
+      #{price,jdbcType=DECIMAL},
+      #{city,jdbcType=VARCHAR},
+      #{sort,jdbcType=INTEGER},
+      #{remark,jdbcType=LONGVARCHAR},
+      #{costnumber,jdbcType=VARCHAR},
+      #{type,jdbcType=INTEGER}, 
+      #{imgUrl,jdbcType=VARCHAR},
+      #{destinationName,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Selfpay" flushCache="true" >
+    update selfpay
+    <set >
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="costnumber != null" >
+        costNumber = #{costnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="imgUrl!= null" >
+        imgUrl = #{imgUrl,jdbcType=VARCHAR},
+      </if>
+       <if test="destinationName!= null" >
+        destinationName = #{destinationName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Selfpay" flushCache="true" >
+    update selfpay
+    set `name` = #{name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      city = #{city,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=LONGVARCHAR},
+      costNumber = #{costnumber,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      imgUrl = #{imgUrl,jdbcType=VARCHAR},
+      destinationName = #{destinationName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <!-- 查询全部自费项目 -->
+  <select id="findAllByCostNumber" resultMap="BaseResultMap">
+    select selfpay.*,cost.name costname from selfpay,cost where selfpay.costNumber=cost.id and costNumber in
+     <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+       #{item}
+     </foreach>
+     order by selfpay.costnumber,selfpay.sort
+  </select>
+  <!-- 查询全部自费项目 -->
+  <select id="findByCostNumber" resultMap="BaseResultMap">
+    select selfpay.*,cost.name costname from selfpay,cost where selfpay.costNumber=cost.id and costNumber = #{costnumber}
+     order by selfpay.costnumber,selfpay.sort
+  </select>
+  
+  <!-- 获取当前sort最大值 -->
+  <select id="getMaxSort" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+     select ifnull(max(sort),0) from selfpay 
+     <!-- where costNumber = #{costnumber} -->
+  </select>
+  
+  <select id="findAll" resultMap="BaseResultMap">
+    select * from selfpay
+  </select>
+  
+  <!--查询目的地关联的自费项 -->
+  <select id="findWithD" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select * from selfpay where city  in
+     <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+       #{item}
+     </foreach>
+  </select>
+  <!-- 查询目的地关联的自费项 -->
+  <select id ="findWithItintarySids" parameterType="java.lang.String">
+    select * from selfpay where FIND_IN_SET('id','#{itintarySids}')
+  </select>
+  <!-- 根据类型查询自费项 -->
+  
+  <select id="findWithType" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+   select * from selfpay where type<![CDATA[!=]]> #{type} and costNumber = #{costnumber,jdbcType=VARCHAR}
+  </select>
+  
+   <select id="selectByDestinationAndSelfPayIds" resultMap="BaseResultMap" parameterType="java.util.Map">
+  	SELECT 
+  		<include refid="Base_Column_List" />
+  	FROM
+  		selfpay
+  	WHERE
+  		city = #{destinationId}
+  	AND
+  		type = 0
+  	AND
+  		id IN
+  	<foreach collection="sIds" item="item" open="(" close=")" separator=",">
+  	    	#{item}
+  	</foreach>	
+  </select>
+  
+  <select id="selectByTourlineId" resultMap="BaseResultMap">
+	SELECT
+		sf.*
+	FROM
+		selfpay sf,
+		tourlineselfpay ts
+	WHERE
+		sf.type != 0
+	AND
+		ts.tourLineId = #{tourlineId}	
+	AND	
+		ts.selfPayId = sf.id
+  </select>
+</mapper>

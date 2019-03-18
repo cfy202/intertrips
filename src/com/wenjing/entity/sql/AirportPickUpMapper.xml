@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.AirportPickUpMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.AirportPickUp" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="tourlineid" property="tourlineid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, title, price, tourlineid
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" flushCache="true">
+    select 
+    <include refid="Base_Column_List" />
+    from airportpickup
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true">
+    delete from airportpickup
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.AirportPickUp" flushCache="true">
+    insert into airportpickup ( id, title, price, tourlineid )
+    values (#{id,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{tourlineid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.AirportPickUp" flushCache="true">
+    insert into airportpickup
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+     id, title, price, tourlineid,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+    #{id,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{tourlineid,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.AirportPickUp" flushCache="true">
+    update airportpickup
+    set title = #{title,jdbcType=VARCHAR},
+        price = #{price,jdbcType=DECIMAL},
+        tourlineid = #{tourlineid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 批量插入数据 -->
+   <insert id="batchAdd" parameterType="java.util.List" flushCache="true" >
+    insert into airportpickup ( id, title, price, tourlineid )
+    values
+    <foreach collection="list" item="item" index="index" separator="," >  
+        (#{item.id,jdbcType=VARCHAR}, #{item.title,jdbcType=VARCHAR},
+         #{item.price,jdbcType=DECIMAL}, #{item.tourlineid,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+  
+  <!-- 根据tourlineid查询 -->
+  <select id="findAllApickUpsBytourId" resultMap="BaseResultMap" parameterType="java.lang.String" flushCache="true">
+    SELECT 
+    <include refid="Base_Column_List" />
+    FROM airportpickup
+    WHERE tourlineid = #{tourlineid,jdbcType=VARCHAR} 
+    ORDER BY price
+  </select>
+  
+  <!-- 根据出发地ID和费用ID查找出机票费用 -->
+  <select id="getAirTicketPriceByTourpriceId" resultMap="BaseResultMap">
+	SELECT
+	<include refid="Base_Column_List" /> 
+	FROM airportpickup
+	WHERE tourpriceId = #{tourpriceId,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 根据tourlineid删除 -->
+  <delete id="deleteAirportBytourlineId" parameterType="java.lang.String" flushCache="true">
+    delete from airportpickup
+    where tourlineid = #{tourlineid,jdbcType=VARCHAR}
+  </delete>
+</mapper>

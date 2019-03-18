@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"  >
+<mapper namespace="com.wenjing.dao.AdditionalProductMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.AdditionalProduct" >
+    <result column="id" property="id" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="type" property="type" jdbcType="BIT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="itinerarayId" property="itinerarayid" jdbcType="VARCHAR" />
+    <result column="itinerarayDay" property="itinerarayDay" jdbcType="VARCHAR" />
+    <result column="destinationId" property="destinationid" jdbcType="VARCHAR" />
+    <result column="destinationName" property="destinationName" jdbcType="VARCHAR" />
+    <result column="productId" property="productid" jdbcType="VARCHAR" />
+    <result column="quantity" property="quantity" jdbcType="TINYINT" />
+    <result column="unitCost" property="unitcost" jdbcType="DECIMAL" />
+    <result column="discription" property="discription" jdbcType="VARCHAR" />
+    <result column="orderDetailId" property="orderdetailid" jdbcType="VARCHAR" />
+    <result column="imageUrl" property="imageurl" jdbcType="LONGVARCHAR" />
+    <result column="date" property="date" jdbcType="DATE" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, price, `type`, `name`, itinerarayId, itinerarayDay, destinationId, destinationName, productId, quantity, unitCost, 
+    discription, orderDetailId,imageUrl,date
+  </sql>
+  
+  <insert id="insert" parameterType="com.wenjing.entity.AdditionalProduct" >
+    insert into additionalproduct (id, price, `type`, 
+      `name`, itinerarayId, itinerarayDay,destinationId, destinationName,
+      productId, quantity, unitCost, 
+      discription, orderDetailId, imageUrl,date
+      )
+    values (#{id,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{type,jdbcType=BIT}, 
+      #{name,jdbcType=VARCHAR}, #{itinerarayid,jdbcType=VARCHAR}, #{itinerarayDay,jdbcType=VARCHAR},#{destinationid,jdbcType=VARCHAR}, #{destinationName,jdbcType=VARCHAR}, 
+      #{productid,jdbcType=VARCHAR}, #{quantity,jdbcType=TINYINT}, #{unitcost,jdbcType=DECIMAL}, 
+      #{discription,jdbcType=VARCHAR}, #{orderdetailid,jdbcType=VARCHAR}, #{imageurl,jdbcType=LONGVARCHAR},#{date}
+      )
+  </insert>
+  
+  <insert id="insertSelective" parameterType="com.wenjing.entity.AdditionalProduct" >
+    insert into additionalproduct
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      price,
+      `type`,
+      `name`,
+      itinerarayId,
+      itinerarayDay,
+      destinationId,
+      destinationName,
+      productId,
+      quantity,
+      unitCost,
+      discription,
+      orderDetailId,
+      imageUrl,
+      date
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{price,jdbcType=DECIMAL},
+      #{type,jdbcType=BIT},
+      #{name,jdbcType=VARCHAR},
+      #{itinerarayid,jdbcType=VARCHAR},
+      #{itinerarayDay,jdbcType=VARCHAR},      
+      #{destinationid,jdbcType=VARCHAR},
+      #{destinationName,jdbcType=VARCHAR},      
+      #{productid,jdbcType=VARCHAR},
+      #{quantity,jdbcType=TINYINT},
+      #{unitcost,jdbcType=DECIMAL},
+      #{discription,jdbcType=VARCHAR},
+      #{orderdetailid,jdbcType=VARCHAR},
+      #{imageurl,jdbcType=LONGVARCHAR},
+      #{date}
+    </trim>
+  </insert>
+  
+  <insert id="insertBatch" parameterType="java.util.List">
+  	 insert into additionalproduct(id, price, `type`, `name`, itinerarayId, itinerarayDay, destinationId, destinationName, 
+      productId, quantity, unitCost,  discription, orderDetailId, imageUrl,date )
+     values
+     <foreach collection="additionalProductList"  item="item" open="" separator="," close="">
+	    (#{item.id}, #{item.price}, #{item.type}, #{item.name}, #{item.itinerarayid},#{item.itinerarayDay}, #{item.destinationid}, #{item.destinationName}, 
+	      #{item.productid}, #{item.quantity}, #{item.unitcost}, #{item.discription}, #{item.orderdetailid}, #{item.imageurl},#{item.date}
+	      )
+     </foreach> 
+  </insert>
+  
+  <select id="findByOrderdetailsId" resultMap="BaseResultMap" >
+  	SELECT
+  	  <include refid="Base_Column_List"/>
+  	FROM
+  	  additionalproduct
+  	WHERE
+  		orderDetailId = #{id}
+  </select>
+</mapper>

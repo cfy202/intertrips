@@ -1,0 +1,848 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.TourdateMapper">
+	<cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+	<resultMap id="BaseResultMap" type="com.wenjing.entity.Tourdate">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="startDate" property="startdate" jdbcType="INTEGER" />
+		<result column="totalNum" property="totalnum" jdbcType="INTEGER" />
+		<result column="soldNum" property="soldnum" jdbcType="INTEGER" />
+		<result column="remainNum" property="remainnum" jdbcType="INTEGER" />
+		<result column="isShow" property="isshow" jdbcType="BIT" />
+		<result column="isHot" property="ishot" jdbcType="BIT" />
+		<result column="isCall" property="iscall" jdbcType="BIT" />
+		<result column="callNumber" property="callNumber" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="updateTime" property="updatetime" jdbcType="TIMESTAMP" />
+		<result column="editor" property="editor" jdbcType="VARCHAR" />
+		<result column="sort" property="sort" jdbcType="INTEGER" />
+		<result column="productId" property="productid" jdbcType="VARCHAR" />
+		<result column="endDate" property="enddate" jdbcType="INTEGER" />
+		<result column="costNumber" property="costNumber" jdbcType="VARCHAR" />
+		<result column="dateWeek" property="dateweek" jdbcType="VARCHAR" />
+		<result column="days" property="days" jdbcType="INTEGER" />
+		<result column="sealGroupDate" property="sealGroupDate"
+			jdbcType="INTEGER" />
+		<!-- <association property="tourlineTourlineid" column="tourlineid" select="com.wenjing.dao.TourlineMapper.selectByPrimaryKey" 
+			/> <collection property="tourpricesTourdateid" ofType="com.wenjing.entity.Tourprice" 
+			column="id" select="com.wenjing.dao.TourpriceMapper.selectByTourdateid" /> -->
+	</resultMap>
+
+	<resultMap type="com.wenjing.entity.Tourdate" id="resultWithPrice"
+		extends="BaseResultMap">
+		<result column="price" property="price" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<resultMap id="GeneralResultMap" type="com.wenjing.entity.Tourdate"
+		extends="BaseResultMap">
+		<association property="tourlineTourlineid" column="tourlineid"
+			select="com.wenjing.dao.TourlineMapper.findByProductId" />
+		<collection property="tourpricesTourdateid" ofType="com.wenjing.entity.Tourprice"
+			column="id" select="com.wenjing.dao.TourpriceMapper.selectByTourdateid" />
+	</resultMap>
+
+	<select id="selectByProductId" resultMap="ResultTourDateAndPrice">
+		select
+		<include refid="Base_Column_List" />
+		from tourdate where productId =#{productid}
+		and tourdate.isshow = true order by startDate
+	</select>
+	<sql id="Base_Column_List">
+		id, startDate, totalNum, soldNum, remainNum, isShow, isHot, isCall,callNumber,
+		remark, updateTime,
+		editor, sort, productId, endDate, dateWeek, costNumber, days, sealGroupDate
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="GeneralResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from tourdate
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String"
+		flushCache="true">
+		delete from tourdate
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="com.wenjing.entity.Tourdate"
+		flushCache="true">
+		insert into tourdate (id, startDate, totalNum,
+		soldNum, remainNum, isShow,
+		isHot, isCall, callNumber,remark, updateTime,
+		editor, sort, productId, endDate, dateWeek, costNumber, days, sealGroupDate
+		)
+		values (#{id,jdbcType=VARCHAR}, #{startdate,jdbcType=INTEGER},
+		#{totalnum,jdbcType=INTEGER},
+		#{soldnum,jdbcType=INTEGER}, #{remainnum,jdbcType=INTEGER}, #{isshow,jdbcType=BIT},
+		#{ishot,jdbcType=BIT}, #{iscall,jdbcType=BIT},#{callNumber,jdbcType=VARCHAR},
+		#{remark,jdbcType=VARCHAR}, #{updatetime,jdbcType=TIMESTAMP},
+		#{editor,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER},
+		#{productid,jdbcType=VARCHAR}, #{enddate,jdbcType=INTEGER},
+		#{dateweek,jdbcType=VARCHAR},
+		#{costNumber,jdbcType=VARCHAR}, #{days,jdbcType=INTEGER}, #{sealGroupDate,jdbcType=INTEGER}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.wenjing.entity.Tourdate"
+		flushCache="true">
+		insert into tourdate
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			id,
+			startDate,
+			totalNum,
+			soldNum,
+			remainNum,
+			isShow,
+			isHot,
+			isCall,
+			callNumber,
+			remark,
+			updateTime,
+			editor,
+			sort,
+			productId,
+			endDate,
+			dateWeek,
+			costNumber,
+			days,
+			sealGroupDate
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			#{id,jdbcType=VARCHAR},
+			#{startdate,jdbcType=INTEGER},
+			#{totalnum,jdbcType=INTEGER},
+			#{soldnum,jdbcType=INTEGER},
+			#{remainnum,jdbcType=INTEGER},
+			#{isshow,jdbcType=BIT},
+			#{ishot,jdbcType=BIT},
+			#{iscall,jdbcType=BIT},
+			#{callNumber,jdbcType=VARCHAR},
+			#{remark,jdbcType=VARCHAR},
+			#{updatetime,jdbcType=TIMESTAMP},
+			#{editor,jdbcType=VARCHAR},
+			#{sort,jdbcType=INTEGER},
+			#{productid,jdbcType=VARCHAR},
+			#{enddate,jdbcType=INTEGER},
+			#{dateweek,jdbcType=VARCHAR},
+			#{costNumber,jdbcType=VARCHAR},
+			#{days,jdbcType=INTEGER},
+			#{sealGroupDate,jdbcType=INTEGER}
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Tourdate"
+		flushCache="true">
+		update tourdate
+		<set>
+			<if test="startdate != null">
+				startDate = #{startdate,jdbcType=INTEGER},
+			</if>
+			<if test="totalnum != null">
+				totalNum = #{totalnum,jdbcType=INTEGER},
+			</if>
+			<if test="soldnum != null">
+				soldNum = #{soldnum,jdbcType=INTEGER},
+			</if>
+			<if test="remainnum != null">
+				remainNum = #{remainnum,jdbcType=INTEGER},
+			</if>
+			<if test="isshow != null">
+				isShow = #{isshow,jdbcType=BIT},
+			</if>
+			<if test="ishot != null">
+				isHot = #{ishot,jdbcType=BIT},
+			</if>
+			<if test="iscall != null">
+				isCall = #{iscall,jdbcType=BIT},
+			</if>
+			<if test="callNumber != null">
+				callNumber = #{callNumber,jdbcType=VARCHAR},			
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="updatetime != null">
+				updateTime = #{updatetime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="editor != null">
+				editor = #{editor,jdbcType=VARCHAR},
+			</if>
+			<if test="sort != null">
+				sort = #{sort,jdbcType=INTEGER},
+			</if>
+			<if test="productid != null">
+				productId = #{productid,jdbcType=VARCHAR},
+			</if>
+			<if test="enddate != null">
+				endDate = #{enddate,jdbcType=INTEGER},
+			</if>
+			<if test="dateweek != null">
+				dateWeek = #{dateweek,jdbcType=VARCHAR},
+			</if>
+			<if test="costNumber != null">
+				costNumber = #{costNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="days != null">
+				days = #{days,jdbcType=INTEGER},
+			</if>
+			<if test="sealGroupDate != null">
+				sealGroupDate = #{sealGroupDate,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateDatePeopleRemain">
+		UPDATE tourdate
+		SET 
+			remainNum = remainNum - #{orderPeople}
+		WHERE
+			id = #{tourDateId}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Tourdate"
+		flushCache="true">
+		update tourdate
+		set startDate = #{startdate,jdbcType=INTEGER},
+		totalNum = #{totalnum,jdbcType=INTEGER},
+		soldNum = #{soldnum,jdbcType=INTEGER},
+		remainNum = #{remainnum,jdbcType=INTEGER},
+		isShow = #{isshow,jdbcType=BIT},
+		isHot = #{ishot,jdbcType=BIT},
+		isCall = #{iscall,jdbcType=BIT},
+		callNumber = #{callNumber,jdbcType=VARCHAR},
+		remark = #{remark,jdbcType=VARCHAR},
+		updateTime = #{updatetime,jdbcType=TIMESTAMP},
+		editor = #{editor,jdbcType=VARCHAR},
+		sort = #{sort,jdbcType=INTEGER},
+		productId = #{productid,jdbcType=VARCHAR},
+		endDate = #{enddate,jdbcType=INTEGER},
+		dateWeek = #{dateweek,jdbcType=VARCHAR},
+		costNumber = #{costNumber,jdbcType=VARCHAR},
+		days = #{days,jdbcType=INTEGER},
+		sealGroupDate = #{sealGroupDate,jdbcType=INTEGER}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<!-- 查询全部 -->
+	<resultMap id="ResultTourDateAndPrice" type="com.wenjing.entity.Tourdate" extends="BaseResultMap">
+		<association property="tourprice" javaType="com.wenjing.entity.Tourprice">
+			<id column="priceid" property="id" jdbcType="VARCHAR" />
+			<result column="markedPrice" property="markedprice" jdbcType="DECIMAL" />
+			<result column="sellingPrice" property="sellingprice"
+				jdbcType="DECIMAL" />
+			<result column="singleRoomPrice" property="singleroomprice"
+				jdbcType="DECIMAL" />
+			<result column="extraBedPrice" property="extrabedprice"
+				jdbcType="DECIMAL" />
+			<result column="noBedPrice" property="nobedprice" jdbcType="DECIMAL" />
+			<result column="currencyId" property="currencyid" jdbcType="VARCHAR" />
+			<result column="tourDateId" property="tourdateid" jdbcType="VARCHAR" />
+			<result column="priceCostNum" property="costnumber" jdbcType="VARCHAR" />
+			<result column="threesellingPrice" property="threesellingprice"
+				jdbcType="DECIMAL" />
+			<result column="foursellingPrice" property="foursellingprice"
+				jdbcType="DECIMAL" />
+			<result column="babyPrice" property="babyPrice" jdbcType="DECIMAL" />
+			<result column="childPrice" property="childPrice" jdbcType="DECIMAL" />
+		</association>
+		<association property="cost" javaType="com.wenjing.entity.Cost">
+			<result column="costname" property="name" jdbcType="VARCHAR" />
+			<result column="costCode" property="code" jdbcType="VARCHAR" />
+		</association>
+		<collection property="departureList" ofType="com.wenjing.entity.Departure" column="id" select="com.wenjing.dao.DepartureMapper.findByTourDateId"></collection>
+	</resultMap>
+	
+   <select id="getDateAndPriceByTourlineid" parameterType="java.lang.String" resultMap="ResultTourDateAndPrice">
+     select tourdate.*,
+            tourprice.id priceid,
+            tourprice.markedPrice, 
+            tourprice.sellingPrice, 
+            tourprice.singleRoomPrice, 
+            tourprice.extraBedPrice, 
+            tourprice.noBedPrice, 
+            tourprice.currencyId, 
+            tourprice.tourDateId, 
+            tourprice.costNumber as priceCostNum, 
+            tourprice.threesellingPrice, 
+            tourprice.foursellingPrice, 
+            tourprice.babyPrice, 
+            tourprice.childPrice,
+            price.sharePrice
+           from tourdate as tourdate,tourprice as tourprice 
+   where tourdate.tourLineId=#{tourlineid,jdbcType=VARCHAR} 
+   and tourdate.isShow = 1
+   and tourdate.id=tourprice.tourDateId
+   and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+   order by tourdate.startDate
+   </select>	
+	
+	<select id="findByProductId" resultMap="ResultTourDateAndPrice">
+		select date.*,
+		price.id priceid,
+		price.markedPrice,
+		price.sellingPrice,
+		price.singleRoomPrice,
+		price.extraBedPrice,
+		price.noBedPrice,
+		price.currencyId,
+		price.tourDateId,
+		price.costNumber as priceCostNum,
+		price.threesellingPrice,
+		price.foursellingPrice,
+		price.babyPrice,
+		price.childPrice,
+		cost.name costname,
+		cost.code costCode
+		from tourdate date,tourprice price,cost cost
+		where date.id=price.tourDateId and
+		price.costNumber=cost.id and
+		date.productId=#{productid,jdbcType=VARCHAR} and
+		price.costNumber in
+		<foreach collection="costnumber" item="item" index="index"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+		order by price.costNumber,date.startDate
+	</select>
+	<!-- 获取当前sort最大值 -->
+	<select id="getMaxSort" resultType="java.lang.Integer"
+		parameterType="java.lang.String">
+		select ifnull(max(date.sort),0)
+		from tourdate date,tourprice price
+		where date.id=price.tourDateId and price.costNumber= #{costnumber}
+	</select>
+	<!-- 获取当前线路sort最大值 -->
+	<select id="getMaxSortByproductid" resultType="java.lang.Integer">
+		select ifnull(max(sort),0) from tourdate date where productId = #{productid}
+		and costNumber=#{costNum}
+	</select>
+
+	<!-- 根据tourdate的id查询 -->
+	<select id="findByTourDateId" resultMap="ResultTourDateAndPrice"
+		parameterType="java.lang.String">
+		select date.*,
+		price.id priceid,
+		price.markedPrice,
+		price.sellingPrice,
+		price.singleRoomPrice,
+		price.extraBedPrice,
+		price.noBedPrice,
+		price.currencyId,
+		price.tourDateId,
+		price.costNumber as priceCostNum,
+		price.threesellingPrice,
+		price.foursellingPrice,
+		price.babyPrice,
+		price.childPrice,
+		cost.name costname
+		from tourdate date,tourprice price,cost cost
+		where date.id=price.tourDateId and
+		price.costNumber=cost.id and
+		date.id=#{id,jdbcType=VARCHAR}
+		order by price.costNumber,date.sort
+	</select>
+
+	<!-- -->
+	<select id="findByProductidAndCostnumberAndDepartureDate"
+		resultMap="ResultTourDateAndPrice">
+		select
+		td.*,
+		tp.id priceid,
+		tp.markedPrice,
+		tp.sellingPrice,
+		tp.singleRoomPrice,
+		tp.extraBedPrice,
+		tp.noBedPrice,
+		tp.currencyId,
+		tp.tourDateId,
+		tp.costNumber as priceCostNum,
+		tp.threesellingPrice,
+		tp.foursellingPrice,
+		tp.babyPrice,
+		tp.childPrice
+		from
+		tourdate td,
+		tourprice tp
+		where
+		td.id = tp.tourdateId
+		and
+		td.productId = #{productid,jdbcType=VARCHAR}
+		and
+		tp.costNumber = #{costnumber,jdbcType=VARCHAR}
+		and
+		td.startDate <![CDATA[<=]]>
+		#{departureDate,jdbcType=INTEGER}
+		and
+		td.endDate <![CDATA[>=]]>
+		#{departureDate,jdbcType=INTEGER}
+	</select>
+	<!-- 根据tourdate的id和costnumber查询 -->
+	<select id="findByproductAndcostnum" resultMap="ResultTourDateAndPrice">
+		select date.*,
+		price.id priceid,
+		price.markedPrice,
+		price.sellingPrice,
+		price.singleRoomPrice,
+		price.extraBedPrice,
+		price.noBedPrice,
+		price.currencyId,
+		price.tourDateId,
+		price.costNumber as priceCostNum,
+		price.threesellingPrice,
+		price.foursellingPrice,
+		price.babyPrice,
+		price.childPrice,
+		cost.name costname
+		from tourdate date,tourprice price,cost cost
+		where date.id=price.tourDateId and
+		price.costNumber=cost.id and
+		date.productId=#{productid,jdbcType=VARCHAR} and
+		price.costNumber=#{costnumber}
+		order by price.costNumber,date.sort
+	</select>
+	
+	<select id="findByProductIdAndCostnumberAndDepartureId" resultMap="ResultTourDateAndPrice">
+		SELECT
+			td.*,
+			tp.id priceid,
+			tp.markedPrice,
+			tp.sellingPrice,
+			tp.singleRoomPrice,
+			tp.extraBedPrice,
+			tp.noBedPrice,
+			tp.currencyId,
+			tp.tourDateId,
+			tp.costNumber as priceCostNum,
+			tp.threesellingPrice,
+			tp.foursellingPrice,
+			tp.babyPrice,
+			tp.childPrice  
+		FROM
+			tourprice tp,
+			tourdate td,
+			departuredate dd
+		WHERE
+			tp.costNumber = #{costnumber,jdbcType=VARCHAR}
+		AND
+			dd.departureid = #{departureId,jdbcType=VARCHAR}		
+		AND
+			td.productId = #{productId,jdbcType=VARCHAR}
+		AND
+			td.endDate >= #{firstDate,jdbcType=VARCHAR}
+		AND
+			td.isShow = 1
+		AND
+			tp.tourDateId = td.id
+		AND
+			dd.tourdateid = td.id
+	</select>
+	
+	<select id="findByProductIdAndCostnumber" resultMap="ResultTourDateAndPrice">
+		SELECT
+			td.*,
+			tp.id priceid,
+			tp.markedPrice,
+			tp.sellingPrice,
+			tp.singleRoomPrice,
+			tp.extraBedPrice,
+			tp.noBedPrice,
+			tp.currencyId,
+			tp.tourDateId,
+			tp.costNumber as priceCostNum,
+			tp.threesellingPrice,
+			tp.foursellingPrice,
+			tp.babyPrice,
+			tp.childPrice  
+		FROM
+			tourprice tp,
+			tourdate td
+		WHERE
+			tp.costNumber = #{costnumber,jdbcType=VARCHAR}
+		AND
+			td.productId = #{productId,jdbcType=VARCHAR}
+		AND
+			td.endDate >= #{firstDate,jdbcType=VARCHAR}
+		AND
+			td.isShow = 1
+		AND
+			tp.tourDateId = td.id;
+	</select>	
+
+	<!-- 批量插入 -->
+	<insert id="batchAddDate" parameterType="java.util.List"
+		flushCache="true">
+		insert into tourdate (id, startDate, totalNum,
+		soldNum, remainNum, isShow,
+		isHot, isCall, callNumber,remark, updateTime,
+		editor, sort, productId, endDate, dateWeek,costNumber,days, sealGroupDate
+		)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.id,jdbcType=VARCHAR}, #{item.startdate,jdbcType=INTEGER},
+			#{item.totalnum,jdbcType=INTEGER},
+			#{item.soldnum,jdbcType=INTEGER}, #{item.remainnum,jdbcType=INTEGER}, #{item.isshow,jdbcType=BIT},
+			#{item.ishot,jdbcType=BIT}, #{item.iscall,jdbcType=BIT},#{item.callNumber,jdbcType=VARCHAR},
+			#{item.remark,jdbcType=VARCHAR},
+			#{item.updatetime,jdbcType=TIMESTAMP},
+			#{item.editor,jdbcType=VARCHAR}, #{item.sort,jdbcType=INTEGER},
+			#{item.productid,jdbcType=VARCHAR}, #{item.enddate,jdbcType=INTEGER},
+			#{item.dateweek,jdbcType=VARCHAR},
+			#{item.costNumber,jdbcType=VARCHAR}, #{item.days,jdbcType=INTEGER},
+			#{item.sealGroupDate,jdbcType=INTEGER}
+			)
+		</foreach>
+	</insert>
+	<!-- <select id="getMinStartDate" resultType="java.lang.Integer"> select 
+		min(startDate) from tourdate where tourLineId=#{tourlineid,jdbcType="VARCHAR"} 
+		</select> <select id="getMaxEndDate" resultType="java.lang.Integer"> select 
+		max(endDate) from tourdate where tourLineId=#{tourlineid,jdbcType="VARCHAR"} 
+		</select> -->
+
+	<!-- 根据产品ID查询出发日期 -->
+	<select id="findByProductIdAndDepartureDate" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		(SELECT
+		*,(endDate-startDate) AS dateInterval
+		FROM
+		tourdate
+		WHERE
+		productId = #{productid,jdbcType=VARCHAR}
+		AND
+		costNumber = #{costNumber,jdbcType=VARCHAR}
+		AND
+		startDate <![CDATA[<=]]>
+		#{departureDate,jdbcType=INTEGER}
+		AND
+		endDate <![CDATA[>=]]>
+		#{departureDate,jdbcType=INTEGER}
+		ORDER BY
+		dateInterval) base
+		LIMIT
+		0,1
+	</select>
+
+	<select id="getDateAndPriceByProductid" parameterType="java.lang.String"
+		resultMap="ResultTourDateAndPrice">
+		select tourdate.*,
+		tourprice.id priceid,
+		tourprice.markedPrice,
+		tourprice.sellingPrice,
+		tourprice.singleRoomPrice,
+		tourprice.extraBedPrice,
+		tourprice.noBedPrice,
+		tourprice.currencyId,
+		tourprice.tourDateId,
+		tourprice.costNumber as priceCostNum,
+		tourprice.threesellingPrice,
+		tourprice.foursellingPrice,
+		tourprice.babyPrice,
+		tourprice.childPrice
+		from tourdate as tourdate,tourprice as tourprice
+		where tourdate.productId=#{productid,jdbcType=VARCHAR}
+		and tourdate.isShow = 1
+		and tourdate.id=tourprice.tourDateId
+		and tourprice.costNumber = #{costnumber,jdbcType=VARCHAR}
+		order by tourdate.startDate
+	</select>
+
+	<!-- 根据销售中心查询所有日期和价格（复制日期和价格） -->
+	<resultMap id="CostNumDateAndPriceMap" type="com.wenjing.entity.Tourdate"
+		extends="BaseResultMap">
+		<association property="tourprice" javaType="com.wenjing.entity.Tourprice">
+			<id column="priceid" property="id" jdbcType="VARCHAR" />
+			<result column="markedPrice" property="markedprice" jdbcType="DECIMAL" />
+			<result column="sellingPrice" property="sellingprice"
+				jdbcType="DECIMAL" />
+			<result column="singleRoomPrice" property="singleroomprice"
+				jdbcType="DECIMAL" />
+			<result column="extraBedPrice" property="extrabedprice"
+				jdbcType="DECIMAL" />
+			<result column="noBedPrice" property="nobedprice" jdbcType="DECIMAL" />
+			<result column="currencyId" property="currencyid" jdbcType="VARCHAR" />
+			<result column="tourDateId" property="tourdateid" jdbcType="VARCHAR" />
+			<result column="priceCostNum" property="costnumber" jdbcType="VARCHAR" />
+			<result column="babyPrice" property="babyPrice" jdbcType="DECIMAL" />
+			<result column="childPrice" property="childPrice" jdbcType="DECIMAL" />
+			<result column="threesellingPrice" property="threesellingprice"
+				jdbcType="DECIMAL" />
+			<result column="foursellingPrice" property="foursellingprice"
+				jdbcType="DECIMAL" />
+		</association>
+		<!-- <collection property="airTicketPriceList" javaType="java.util.List" 
+			ofType="com.wenjing.entity.Orderdetail" column="id" select="com.wenjing.dao.OrderdetailMapper.selectByOrderId"/> 
+			<collection property="departureDateList" javaType="java.util.List" ofType="com.wenjing.entity.Orderdetail" 
+			column="id" select="com.wenjing.dao.OrderdetailMapper.selectByOrderId"/> -->
+	</resultMap>
+
+	<select id="findAllDateAndPriceByCostnum" parameterType="java.lang.String"
+		resultMap="CostNumDateAndPriceMap">
+		select date.*,
+		price.id priceid,
+		price.markedPrice,
+		price.sellingPrice,
+		price.singleRoomPrice,
+		price.extraBedPrice,
+		price.noBedPrice,
+		price.currencyId,
+		price.tourDateId,
+		price.costNumber as priceCostNum,
+		price.threesellingPrice,
+		price.foursellingPrice,
+		price.babyPrice,
+		price.childPrice
+		from tourdate as date,
+		tourprice as price
+		where date.id=price.tourDateId
+		and price.costNumber=#{costnum}
+	</select>
+
+	<select id="getMinSellPrice" resultType="java.math.BigDecimal">
+		select
+			MIN(tp.sellingPrice)
+		from
+			`tourprice` tp,
+			tourdate td
+		where
+		  CASE
+				 WHEN
+						(SELECT excludeLandPrice FROM product WHERE id = #{productid,jdbcType=VARCHAR}) = 1
+				 THEN
+		                tp.tourDateId = td.id
+					and
+						td.productId = #{productid,jdbcType=VARCHAR}
+					and
+						td.isshow = true
+					and
+						tp.costNumber = #{costnumber,jdbcType=VARCHAR}
+					AND
+						td.endDate <![CDATA[>=]]> #{time,jdbcType=INTEGER}
+					and
+						tp.sellingPrice != 0
+					AND
+						NOT EXISTS (
+							 SELECT
+									id
+							 FROM
+									departuredate
+							 WHERE
+									departureid = '2c4e1f27d1e346a7a9cd69ca557f51ac'
+							 AND
+									tourDateId = td.id
+						 )
+				 ELSE
+						tp.tourDateId = td.id
+					and
+						td.productId = #{productid,jdbcType=VARCHAR}
+					and
+						td.isshow = true
+					and
+						tp.costNumber = #{costnumber,jdbcType=VARCHAR}
+					AND
+						td.endDate <![CDATA[>=]]> #{time,jdbcType=INTEGER}
+					and
+						tp.sellingPrice != 0
+			END	 
+	</select>
+	<select id="getMinSellPriceIncludeLandPrice" resultType="java.math.BigDecimal">
+		select MIN(tp.sellingPrice) from `tourprice` tp, tourdate td,product p,departuredate  dd
+		where  p.excludeLandPrice=1 and dd.departureid != '2c4e1f27d1e346a7a9cd69ca557f51ac'
+		AND dd.tourDateId = td.id and p.id =td.productId and tp.tourDateId = td.id
+		and td.productId =  #{productid,jdbcType=VARCHAR} and td.isshow = true
+		and tp.costNumber =   #{costnumber,jdbcType=VARCHAR}
+		AND td.endDate<![CDATA[>=]]> #{time,jdbcType=INTEGER} and tp.sellingPrice != 0
+
+
+	</select>
+
+
+
+	<select id="getMinSellPriceExcludeLandPrice" resultType="java.math.BigDecimal">
+		select MIN(tp.sellingPrice) from `tourprice` tp, tourdate td,product p
+		where  p.excludeLandPrice=0 and p.id =td.productId and tp.tourDateId = td.id and
+		td.productId =  #{productid,jdbcType=VARCHAR} and td.isshow = true and
+		tp.costNumber =  #{costnumber,jdbcType=VARCHAR} AND td.endDate <![CDATA[>=]]> #{time,jdbcType=INTEGER}
+		and tp.sellingPrice != 0
+
+	</select>
+
+	<select id="getTourdateWithMinSellPriceWithoutLand" resultMap="resultWithPrice">
+		select
+		td.*,tp.sellingPrice as price
+		from
+		`tourprice` tp,
+		tourdate td
+		where
+		tp.tourDateId = td.id
+		and
+		td.productId = #{productid,jdbcType=VARCHAR}
+		and
+		td.isshow = true
+		and
+		tp.costNumber = #{costnumber,jdbcType=VARCHAR}
+		and
+		td.endDate <![CDATA[>=]]>
+		#{time,jdbcType=INTEGER}
+		and
+		tp.sellingPrice = (
+		select
+		min(sellingPrice)
+		from
+		`tourprice` tp,
+		tourdate td
+		where
+		tp.tourDateId = td.id
+		and
+		td.productId = #{productid,jdbcType=VARCHAR}
+		and
+		td.isshow = true
+		and
+		tp.costNumber = #{costnumber,jdbcType=VARCHAR}
+		and
+		td.endDate <![CDATA[>=]]>
+		#{time,jdbcType=INTEGER}
+		and
+		tp.sellingPrice != 0
+		)
+	</select>
+
+	<select id="getTourdateWithMinMPrice" resultMap="resultWithPrice">
+		select
+		td.*,tp.markedPrice as price
+		from
+		`tourprice` tp,
+		tourdate td
+		where
+		tp.tourDateId = td.id
+		and
+		td.productId = #{productid,jdbcType=VARCHAR}
+		and
+		td.isshow = true
+		and
+		tp.costNumber = #{costnumber,jdbcType=VARCHAR}
+		and
+		td.endDate <![CDATA[>=]]>
+		#{time,jdbcType=INTEGER}
+		and
+		tp.markedPrice = (
+		select
+		min(markedPrice)
+		from
+		`tourprice` tp,
+		tourdate td
+		where
+		tp.tourDateId = td.id
+		and
+		td.productId = #{productid,jdbcType=VARCHAR}
+		and
+		td.isshow = true
+		and
+		tp.costNumber = #{costnumber,jdbcType=VARCHAR}
+		and
+		td.endDate <![CDATA[>=]]>
+		#{time,jdbcType=INTEGER}
+		)
+	</select>
+
+	<select id="findByCostNumAndDateIds" parameterType="java.lang.String"
+		resultMap="CostNumDateAndPriceMap">
+		<!-- select date.*, price.id priceid, price.markedPrice, price.sellingPrice, 
+			price.singleRoomPrice, price.extraBedPrice, price.noBedPrice, price.currencyId, 
+			price.tourDateId, price.costNumber as priceCostNum, price.threesellingPrice, 
+			price.foursellingPrice, price.babyPrice, price.childPrice from tourdate as 
+			date, tourprice as price where date.id=price.tourDateId and price.costNumber=#{costNum} 
+			and date.id in <foreach collection="dateIdList" item="item" index="index" 
+			open="(" separator="," close=")"> #{item} </foreach> -->
+		select date.*,
+		price.id priceid,
+		price.markedPrice,
+		price.sellingPrice,
+		price.singleRoomPrice,
+		price.extraBedPrice,
+		price.noBedPrice,
+		price.currencyId,
+		price.tourDateId,
+		price.costNumber as priceCostNum,
+		price.threesellingPrice,
+		price.foursellingPrice,
+		price.babyPrice,
+		price.childPrice
+		from tourdate as date,
+		tourprice as price,
+		tourline tourline
+		where date.id=price.tourDateId
+		and date.productId = tourline.productId
+		and price.costNumber=#{costNum}
+		and tourline.productId=#{productid}
+	</select>
+
+	<select id="findAllDateAndPriceByCostnum2" parameterType="java.lang.String"
+		resultMap="CostNumDateAndPriceMap">
+		select date.*,
+		price.id priceid,
+		price.markedPrice,
+		price.sellingPrice,
+		price.singleRoomPrice,
+		price.extraBedPrice,
+		price.noBedPrice,
+		price.currencyId,
+		price.tourDateId,
+		price.costNumber as priceCostNum,
+		price.threesellingPrice,
+		price.foursellingPrice,
+		price.babyPrice,
+		price.childPrice
+		from tourdate as date,tourprice as price,tourline as tourline
+		where date.id=price.tourDateId
+		and tourline.productId = date.productId
+		and price.costNumber=#{costnum}
+		and tourline.sort > 251
+		and tourline.costNumberIds='33e25a5f67274fab94b84e21adb95ef0'
+	</select>
+	<!-- 根据线路Id删除出发日期 -->
+	<delete id="deleteWithProductid" flushCache="true">
+		delete from tourdate where productId = #{productid}
+	</delete>
+	<select id="getDistinctTourdate" resultMap="BaseResultMap">
+		select DISTINCT productId,costNumber from tourdate ORDER BY costNumber;
+	</select>
+	<select id="findByIdAndCost" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select * from tourdate where productId=#{productid} and
+		costNumber=#{costnumber};
+	</select>
+	<select id="getAllTourdate" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select * from tourdate where productId=#{productid}
+	</select>
+
+	<!-- 查询该线路下不是此销售中心的日期和价格 -->
+	<select id="findDateBytourIdNotCostNum" resultType="java.lang.String">
+		select id
+		from tourdate
+		where tourdate.productId=#{productid}
+		and tourdate.costNumber = #{costNum}
+	</select>
+
+	<!-- 根据线路Id删除出发日期 -->
+	<delete id="batchDelete" flushCache="true">
+		delete from tourdate where id in
+		<foreach collection="dateIdList" index="index" item="item"
+			open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	<!-- 查询最早出发日期 -->
+	
+	<select id="findMineDate" resultType="java.lang.Integer" parameterType="java.lang.String">
+	  select min(startDate) from tourdate where productId= #{productId}
+	</select>
+	
+  <update id="updateStore" >  
+		UPDATE
+			tourdate
+		SET
+			soldNum = soldNum + #{sail,jdbcType=INTEGER},
+			remainNum = remainNum - #{sail,jdbcType=INTEGER}
+		WHERE
+			id = #{tourdateId,jdbcType=VARCHAR}
+	</update>
+</mapper>

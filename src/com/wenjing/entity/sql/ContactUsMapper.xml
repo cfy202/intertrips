@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.ContactUsMapper" >
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.ContactUs" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="nationality" property="nationality" jdbcType="VARCHAR" />
+    <result column="phoneNo" property="phoneNo" jdbcType="VARCHAR" />
+    <result column="subject" property="subject" jdbcType="VARCHAR" />
+    <result column="comments" property="comments" jdbcType="VARCHAR" />
+    <result column="createDate" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="IP" property="ip" jdbcType="VARCHAR" />
+    <result column="costnumber" property="costnumber" jdbcType="VARCHAR"/>
+  </resultMap>
+  <resultMap type="com.wenjing.entity.ContactUs" id="resultMapWithCost" extends="BaseResultMap">
+  	<association property="cost" column="costnumber" select="com.wenjing.dao.CostMapper.selectByPrimaryKey"></association>
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, email, `name`, nationality, phoneNo, subject, comments, createDate, IP,costnumber
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from contactus
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from contactus
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.ContactUs" useGeneratedKeys="true" keyProperty="id" >
+    insert into contactus (id,email, `name`, nationality, 
+      phoneNo, subject, comments, 
+      createDate, IP,costnumber)
+    values (#{id,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{nationality,jdbcType=VARCHAR}, 
+      #{phoneNo,jdbcType=VARCHAR}, #{subject,jdbcType=VARCHAR}, #{comments,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{ip,jdbcType=VARCHAR},#{costnumber,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.ContactUs" useGeneratedKeys="true" keyProperty="id" >
+    insert into contactus
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      email,
+      `name`,
+      nationality,
+      phoneNo,
+      subject,
+      comments,
+      createDate,
+      IP,
+      costnumber
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{email,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR},
+      #{nationality,jdbcType=VARCHAR},
+      #{phoneNo,jdbcType=VARCHAR},
+      #{subject,jdbcType=VARCHAR},
+      #{comments,jdbcType=VARCHAR},
+      #{createDate,jdbcType=TIMESTAMP},
+      #{ip,jdbcType=VARCHAR},
+      #{costnumber,jdbcType=VARCHAR}
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.ContactUs" >
+    update contactus
+    <set >
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="nationality != null" >
+        nationality = #{nationality,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNo != null" >
+        phoneNo = #{phoneNo,jdbcType=VARCHAR},
+      </if>
+      <if test="subject != null" >
+        subject = #{subject,jdbcType=VARCHAR},
+      </if>
+      <if test="comments != null" >
+        comments = #{comments,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        createDate = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ip != null" >
+        IP = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="costnumber != null">
+		costnumber = #{costnumber,jdbcType=VARCHAR}
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.ContactUs" >
+    update contactus
+    set email = #{email,jdbcType=VARCHAR},
+      `name` = #{name,jdbcType=VARCHAR},
+      nationality = #{nationality,jdbcType=VARCHAR},
+      phoneNo = #{phoneNo,jdbcType=VARCHAR},
+      subject = #{subject,jdbcType=VARCHAR},
+      comments = #{comments,jdbcType=VARCHAR},
+      createDate = #{createDate,jdbcType=TIMESTAMP},
+      IP = #{ip,jdbcType=VARCHAR},
+      costnumber = #{costnumber,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByCostNumbers" resultMap="resultMapWithCost">
+  	SELECT
+  		<include refid="Base_Column_List" />
+  	FROM
+  		contactus
+  	WHERE 
+  		costnumber IN 			
+  		<foreach collection="costNumberList" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>	
+	ORDER BY
+		createDate DESC
+  </select>
+  
+  <select id="selectByIdWithCost" resultMap="resultMapWithCost">
+    select 
+    <include refid="Base_Column_List" />
+    from contactus
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+</mapper>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenjing.dao.TourlineimageMapper" >
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache" />
+  <resultMap id="BaseResultMap" type="com.wenjing.entity.Tourlineimage" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="tourLineId" property="tourlineid" jdbcType="VARCHAR" />
+    <result column="imageId" property="imageid" jdbcType="VARCHAR" />
+    <association property="tourlineTourlineid" column="tourlineid" select="com.wenjing.dao.TourlineMapper.selectByPrimaryKey" />
+    <association property="imageImageid" column="imageid" select="com.wenjing.dao.ImageMapper.selectByPrimaryKey" />
+  </resultMap>
+  <select id="selectByTourlineid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from tourlineimage where tourLineId =#{tourLineId}
+  </select>
+  <select id="selectByImageid" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List" /> from tourlineimage where imageId =#{imageId}
+  </select>
+  <sql id="Base_Column_List" >
+    id, tourLineId, imageId
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tourlineimage
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" flushCache="true" >
+    delete from tourlineimage
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenjing.entity.Tourlineimage" flushCache="true" >
+    insert into tourlineimage (id, tourLineId, imageId
+      )
+    values (#{id,jdbcType=VARCHAR}, #{tourlineid,jdbcType=VARCHAR}, #{imageid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenjing.entity.Tourlineimage" flushCache="true" >
+    insert into tourlineimage
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      id,
+      tourLineId,
+      imageId,
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      #{id,jdbcType=VARCHAR},
+      #{tourlineid,jdbcType=VARCHAR},
+      #{imageid,jdbcType=VARCHAR},
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenjing.entity.Tourlineimage" flushCache="true" >
+    update tourlineimage
+    <set >
+      <if test="tourlineid != null" >
+        tourLineId = #{tourlineid,jdbcType=VARCHAR},
+      </if>
+      <if test="imageid != null" >
+        imageId = #{imageid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenjing.entity.Tourlineimage" flushCache="true" >
+    update tourlineimage
+    set tourLineId = #{tourlineid,jdbcType=VARCHAR},
+      imageId = #{imageid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <delete id="deleteByTourlineId" parameterType="java.lang.String" flushCache="true">
+   delete from tourlineimage where tourLineId = #{tourlineId}
+  </delete>
+  
+  <delete id="deleteByImageId" parameterType="java.lang.String" flushCache="true" >
+    delete from tourlineimage
+    where imageId = #{imageId,jdbcType=VARCHAR} and tourLineId = #{tourlineId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByImageId2" parameterType="java.lang.String" flushCache="true" >
+    delete from tourlineimage
+    where imageId = #{imageId,jdbcType=VARCHAR}
+  </delete>
+</mapper>

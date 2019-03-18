@@ -1,0 +1,39 @@
+@charset "utf-8";
+/* CSS Document */
+body { margin: 0; padding: 0; background: #002d15; }
+ul li{ list-style:none;}
+#top { height: 81px; }
+.top_bg { position: relative; z-index: 1; height: 81px; background: url(award/top.png) repeat-x top; }
+#container { margin: 0 auto; width: 909px; font-family:'Arial', Helvetica, Arial, sans-serif;}
+.banner { width: 909px; height: 774px; background: url(award/mc_bg.jpg) no-repeat;  position: absolute; top: 0; text-align:center; }
+.banner_top{width:909px; position:absolute; top:9px; z-index:2; left:0;}
+.banner_lead{ font-size:14px; line-height:22px; color:#ffffff; width:686px; position:absolute; top:382px; text-align:left; z-index:2; left:135px;}
+.banner_egg{ width:909px; height:319px; top:454px;position:absolute; z-index:555; left:0; }
+.line{ width:909px; height:256px; position:absolute; top:647px; z-index:4;}
+.content{ width:909px; height:596px; background:url(award/mc_main.jpg) no-repeat; top:690px; position:relative; font-size:16px;}
+.mc_left{ float:left; width:520px;}
+.mc_left_title{ width:190px; height:39px; margin:70px 0 10px 90px;}
+.mc_left ul{ margin:0; padding:0; float:left; margin-left:70px;}
+.mc_left ul li{ padding-left:26px; background:url(award/mc_icon.png) 0 5px no-repeat; line-height:30px;}
+.mc_left ul li a{ color:#000000;}
+.mc_left ul li a:hover{ text-decoration:none;}
+.list{ width:275px; height:260px; position:absolute; top:160px; right:79px;overflow:hidden;}
+.list ul li{float:left; width:500px; padding:2px; line-height:20px;margin-left: -40px;font-family: Arial,Helvetica,sans-serif; 
+color: #3d3624; font-size:12px;}
+.couponsname{ width:160px;display: inline-block;}
+.box{width:680px; height:479px !important; background:url(award/mcpop_bg.png) no-repeat;color:#333;overflow:hidden;display:none;
+	}
+ .box .close{ color:#000000;display:inline-block;font-size:28px;height:30px;width:30px;line-height:25px;outline:none;overflow:hidden;position:absolute;
+ 			 right:76px;top:247px;text-align:center;text-decoration:none;}
+ .box .close:hover{text-decoration:none;color:#666;}
+ .box .pic{margin: 256px 0 0 87px; float:left; width:146px;}
+ .box .mc_header{ float:left; margin: 278px 0 0 17px; width:350px; height:22px;}
+ .box .title{float:left;margin: 10px 0 10px 17px; width: 350px; font: 16px/22px 'Arial', Helvetica, Arial, sans-serif;font-weight: 600; color: #b60005;}
+ .box .description{float:left;margin:0 0 0 17px;width:350px;line-height:26px;font: 14px/22px 'Arial', Helvetica, Arial, sans-serif; color:#525252;}
+  .box .description p{ margin:0; margin-bottom:10px; }
+  .box .description label{ display:inline-block; width:102px;}
+  .box .description input{ margin:0;}
+  .box .description select{ margin:0;}
+  .box .description p span{ font-size:14px; color:#b60005; }
+  .box .description .des_submit{ background:url(award/mc_buttonbg.jpg) repeat-x; border:0; font: 16px/22px 'Arial', Helvetica, Arial, sans-serif; margin-left:106px;
+  								width:130px; height:25px; color:#ffffff; cursor:pointer;}
