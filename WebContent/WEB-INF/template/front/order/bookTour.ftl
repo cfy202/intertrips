@@ -56,8 +56,8 @@
                   <input class="guideServeIdInput" type="hidden" name="guideServeId" />
                   <input class="steamPriceIdInput" type="hidden" name="steamPriceId" />
                   <input class="tourlineIdInput" type="hidden" name="tourlineId" />
-                  <input class="voucherNumberInput" type="hidden" id="voucherNumber" name="voucherNumber" value="${(shoppingCart.voucherNumber)!''}"/>
-                  <input class="pnumInput" type="hidden" id="pnum" name="pnum" value="${(shoppingCart.pnum)!'0'}"/>
+                  <input class="voucherNumberInput" type="hidden" name="voucherNumber" value="${(shoppingCart.voucherNumber)!''}"/>
+                  <input class="pnumInput" type="hidden" name="pnum" value="${(shoppingCart.pnum)!'0'}"/>
                   <input id="windowDepartureDateInput" type="hidden" class="departureDateInput" name="departureDate" value="${shoppingCart.departureDate?string('MM/dd/yyyy')}"/>
                   <!--
                   <input id="address" type="hidden" name="address" value="${(shoppingCart.departCity)!''}"/>
@@ -488,8 +488,8 @@
 			                  <input class="guideServeIdInput" type="hidden" name="guideServeId" />
 			                  <input class="steamPriceIdInput" type="hidden" name="steamPriceId" />
 			                  <input class="tourlineIdInput" type="hidden" name="tourlineId"/>
-			                  <input class="voucherNumberInput" type="hidden" id="voucherNumber" name="voucherNumber" value="${(shoppingCart.voucherNumber)!''}"/>
-                  			  <input class="pnumInput" type="hidden" id="pnum" name="pnum" value="${(shoppingCart.pnum)!'0'}"/>
+			                  <input class="voucherNumberInput" type="hidden" name="voucherNumber" value="${(shoppingCart.voucherNumber)!''}"/>
+                  			  <input class="pnumInput" type="hidden" name="pnum" value="${(shoppingCart.pnum)!'0'}"/>
 			                  <input id="mobileDepartureDateInput" type="hidden" class="departureDateInput" name="departureDate" value="${shoppingCart.departureDate?string('MM/dd/yyyy')}"/>
 			                  <!--
 			                  <input id="address" type="hidden" name="address" value="${(shoppingCart.departCity)!''}"/>
@@ -1521,7 +1521,11 @@ $(function(){
 	$("#submitButton").removeAttr("onclick").attr("onclick","submitForm();").hide();
 	
 	//显示单价
-	$("#priceShow").html(sign + formatPrice(sellingPrice));
+	if($(".voucherNumberInput").val()!=''){
+	  $("#priceShow").html(sign + formatPrice(0));
+	}else{
+	  $("#priceShow").html(sign + formatPrice(sellingPrice));
+	}
 
 //	if(haveChina == 'false'){
         //减少自定义产品数量
@@ -1663,7 +1667,12 @@ $(function(){
 		if(!($departureInput.val() == startTime && !tabIsLocked)){
 			$departureInput.val(startTime);
 			
-			$("#priceShow").html(sign + formatPrice(sellingPrice));	
+			if($(".voucherNumberInput").val()!=''){
+			  $("#priceShow").html(sign + formatPrice(0));
+			}else{
+			  $("#priceShow").html(sign + formatPrice(sellingPrice));
+			}
+			//$("#priceShow").html(sign + formatPrice(sellingPrice));	
 			$(".tourPriceIdInput").val(tourPriceId);
 			
 		    // 异步获取机票价格选项 
@@ -2931,8 +2940,8 @@ $(function(){
 		}
 		var optionalTourTotalPrice = 0;
 		
-		if($("#voucherNumber").val()!=''){
-		  tourFee=sellingPrice * (adultsNumber-$("#pnum").val()) + childPrice * childrenNumber + babyPrice * infantsNumber;
+		if($(".voucherNumberInput").val()!=''){
+		  tourFee=sellingPrice * (adultsNumber-$(".pnumInput").val()) + childPrice * childrenNumber + babyPrice * infantsNumber;
 		}else{
 		  tourFee = sellingPrice * adultsNumber + childPrice * childrenNumber + babyPrice * infantsNumber;
 		}
