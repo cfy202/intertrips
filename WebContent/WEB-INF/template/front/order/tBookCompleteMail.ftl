@@ -150,10 +150,8 @@
                 Visa processing fee is $35 for American and $42 for Canadian, please have cash ready.<br/>
                 JAPAN/SOUTH KOREA/TAIWAN/HONG KONG/SINGAPORE: U.S. citizens carrying a tourist passport and in possession of an onward or return airline ticket do not require a visa for short-term stay less than 30 days.
             </p>
-            <p>7.Travel Insurance<br/>Lots of things can happen to interrupt your travel (disease, wars, and weather conditions), we strongly suggest you purchase <br/>
-                travel insurance to protect your trip. We carry Platinum Plan travel insurance which is 6% of your trip cost. Emergency Medical <br/>
-                Insurance and Trip Cancellation Insurance will be included. To find more details about the insurance, or purchase, please click this <br/>
-                link: <a href="https://intertrips.archinsurancesolutions.com/">https://intertrips.archinsurancesolutions.com/</a><br/>
+            <p>7.Travel Insurance<br/>Lots of things can happen to interrupt your travel (disease, wars, and weather conditions), We strongly recommend that you purchase a travel protection plan to help protect you and your travel investment against the unexpected. For your convenience, we offer travel protection through Travelex Insurance Services. <br/>
+                 For more information on the available plans or to enroll, go to <a href="www.travelexinsurance.com">www.travelexinsurance.com</a> or contact Travelex Insurance Services at 800-228-9792 and reference location number 05-1795.<br/>
             <p>
             <p>8.Baggage Allowance<br/>We strongly suggest you travel light, please only bring one check in luggage under 44LB/20KG, and one carryon luggage under 11LB/5KG. Luggage fee may apply on some flights.</p>
             <p>9.Options<br/>Optional tours:<br/>
