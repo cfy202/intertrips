@@ -168,9 +168,24 @@
 						  <button type="button" class="btn_1" onclick="addRow()" style="margin: 0 4px;font-size:18px;">&nbsp;+&nbsp;</button>
 						</div>
 					</div>
-					
+					<div id="num2">
+						<div class="form-block-item form-block-field-name" style="width:90%;float:left">
+							<input name="index" value="" type="hidden" id="index">
+						  <input name="num" value="" type="text" placeholder="Redemption Code 2" onchange="checkNum(this);">
+						  <i class="fa fa-user"></i> 
+						</div>
+						<div class="form-block-item form-block-field-name" style="width:8%;float:left">
+						  <button type="button" class="btn_1" onclick="deleteRow('num2')" style="margin: 0 4px;font-size:18px;">&nbsp;-&nbsp;</button>
+						</div>
+					</div>
 				</div>
 				<br/>
+				<input class="form-block-button" onclick="addRow()" type="button" value="Add More Redemption Codes" style="margin:20px 0;background: #0db4ff">
+				<!-- 
+				<div class="form-block-item form-block-field-name">
+				  <button type="button" class="btn_1" onclick="addRow()" style="margin: 0 4px;font-size:18px;">Add More Redemption Codes</button>
+				</div>
+				 -->
 	            <input class="form-block-button" id="submitButton" type="button" value="Confirm" style="margin:20px 0;">
 	          </form>
            </div>
@@ -700,7 +715,7 @@ $(function(){
 	});	
 });
 var ID = {
-		start: 1,
+		start: 2,
 		getId: function() {
 			this.start += 1;
 			return  this.start;
