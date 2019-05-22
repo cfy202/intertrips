@@ -159,10 +159,10 @@
 	                <div class="atgrid-item-price-button">
 	                <#if tourlinelist.discountPrice?? && tourlinelist.lowsprice?? && tourlinelist.discountPrice = tourlinelist.lowsprice>
 	                    <del><span class="amount">${(tourlinelist.cost.sign)!}${(tourlinelist.lowmprice)!}</span></del> 
-	                    <ins><span class="amount">${(tourlinelist.cost.sign)!}${(tourlinelist.lowsprice)!}</span></ins>
+	                    <ins><span class="amount">From ${(tourlinelist.cost.sign)!}${(tourlinelist.lowsprice)!}</span></ins>
                     <#else>
                     	<del><span class="amount">${(tourlinelist.cost.sign)!}${(tourlinelist.lowsprice)!}</span></del> 
-	                    <ins><span class="amount">${(tourlinelist.cost.sign)!}${(tourlinelist.discountPrice)!}</span></ins>
+	                    <ins><span class="amount">From ${(tourlinelist.cost.sign)!}${(tourlinelist.discountPrice)!}</span></ins>
                     </#if>
 	                </div>
 	            </div>	
