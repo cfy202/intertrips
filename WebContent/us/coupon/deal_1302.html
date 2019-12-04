@@ -85,7 +85,7 @@
             </ul>
           </li>
       	  <li id="menu-item-138" class="menu-item menu-item-type-post_type menu-item-object-page current_page_parent menu-item-138">
-          	<a href="/us/group-tours.htm">Group Tours</a>
+          	<a href="/us/group-tours.htm">Escort Tours</a>
           </li>
       	  <li id="menu-item-138" class="menu-item menu-item-type-post_type menu-item-object-page current_page_parent menu-item-138">
           	<a href="/us/special-offers.htm">Special Offers</a>
@@ -144,7 +144,7 @@
 
 					7. Please redeem your voucher(s) and make tour reservation online. Please call us at 1-888-410-4111 during our working hours 9-6 PST, M-S  <br/>
 
-					8. Your voucher is only valid for the specific gateway and date you selected on Groupon. When book, please Click ‘DATES & RATES’, then select your Departure City you purchased from Groupon, then select the Date, then fill in your information on the right side. Follow the steps by filling in your passport information (please provide your passport info within one week if you do not have it now, by sending e-mails to  <a href="mailto:info@intertrips.com" target="_blank">info@intertrips.comalong</a> with your booking number).<br/>
+					8. Your voucher is only valid for the specific gateway and date you selected on Groupon. When book, please Click ‘DATES & RATES’, then select your Departure City you purchased from Groupon, then select the Date, then fill in your information on the right side. Follow the steps by filling in your passport information (please provide your passport info within one week if you do not have it now, by sending e-mails to  <a href="mailto:info@intertrips.com" target="_blank">info@intertrips.com</a> along with your booking number).<br/>
 
 					9. We will provide final documents (flight information, local contact number, hotel list etc.) in about one month before your departure date.  If you have also purchased China Visa Service from us, our agent will contact you in about 2-3 months before your departure.<br/>
 
@@ -168,9 +168,24 @@
 						  <button type="button" class="btn_1" onclick="addRow()" style="margin: 0 4px;font-size:18px;">&nbsp;+&nbsp;</button>
 						</div>
 					</div>
-					
+					<div id="num2">
+						<div class="form-block-item form-block-field-name" style="width:90%;float:left">
+							<input name="index" value="" type="hidden" id="index">
+						  <input name="num" value="" type="text" placeholder="Redemption Code 2" onchange="checkNum(this);">
+						  <i class="fa fa-user"></i> 
+						</div>
+						<div class="form-block-item form-block-field-name" style="width:8%;float:left">
+						  <button type="button" class="btn_1" onclick="deleteRow('num2')" style="margin: 0 4px;font-size:18px;">&nbsp;-&nbsp;</button>
+						</div>
+					</div>
 				</div>
 				<br/>
+				<input class="form-block-button" onclick="addRow()" type="button" value="Add More Redemption Codes" style="margin:20px 0;background: #0db4ff">
+				<!-- 
+				<div class="form-block-item form-block-field-name">
+				  <button type="button" class="btn_1" onclick="addRow()" style="margin: 0 4px;font-size:18px;">Add More Redemption Codes</button>
+				</div>
+				 -->
 	            <input class="form-block-button" id="submitButton" type="button" value="Confirm" style="margin:20px 0;">
 	          </form>
            </div>
@@ -700,7 +715,7 @@ $(function(){
 	});	
 });
 var ID = {
-		start: 1,
+		start: 2,
 		getId: function() {
 			this.start += 1;
 			return  this.start;
